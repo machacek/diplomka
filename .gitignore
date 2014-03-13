@@ -1,5 +1,9 @@
 *.py[cod]
 
+data/align/
+data/parsed/
+data/tokenized/
+
 # C extensions
 *.so
 
