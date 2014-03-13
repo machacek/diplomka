@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+from nltk.tree import Tree
+from nltk.align import Alignment
+from itertools import izip
+import argparse
+
+class SegmentedTree(Tree):
+    def segments_with_indexes(self, max_length):
+        last_index = 0
+        for segment in self.segments(max_length):
+            new_last_index = last_index + len(segment)
+            yield (segment, list(range(last_index, new_last_index)))
+            last_index = new_last_index
+
+    def segments(self, max_length):
+        if self.covers() <= max_length:
+            yield list(self.leaves())
+        else:
+            for child in self:
+                if isinstance(child, SegmentedTree):
+                    for segment in child.segments(max_length):
+                        yield segment
+                else:
+                    yield [child]
+
+    def covers(self):
+        return len(self.leaves())
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Generates segments of MT output to anotate.", 
+        epilog="Author: Matous Machacek <machacekmatous@gmail.com>")
+
+    parser.add_argument("--parsed",
+            help="A file with parsed source sentences",
+            required=True,
+            type=argparse.FileType('r'),
+            dest="parsed")
+    
+    parser.add_argument("--align",
+            help="A file with source-target alignment",
+            required=True,
+            type=argparse.FileType('r'),
+            dest="ali")
+    
+    parser.add_argument("--target",
+            help="A file with tokenized MT output",
+            required=True,
+            type=argparse.FileType('r'),
+            dest="target")
+    
+    parser.add_argument("--maxlength",
+            help="A file with tokenized MT output",
+            default=4,
+            metavar='N',
+            type=int,
+            dest="max_length")
+
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+    for parse_str, ali_str, target_str in izip(args.parsed, args.ali, args.target):
+        target_tokenized = target_str.split()
+        tree = SegmentedTree.convert(Tree(parse_str))
+        alignment = Alignment(ali_str)
+        print "Sentence: %s" % " ".join(tree.leaves())
+        for segment, indexes in tree.segments_with_indexes(args.max_length):
+            mapped_indexes = alignment.range(indexes)
+            mapped_segment = [target_tokenized[index] for index in mapped_indexes] 
+
+            print "\t%s	->	%s" % (" ".join(segment), " ".join(mapped_segment))
+
+
+
+if __name__ == '__main__':
+    main()
