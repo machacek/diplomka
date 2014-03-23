@@ -1,0 +1,27 @@
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Annotate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Annotate</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+</div>
+{% bootstrap_messages %}
+{% block content %}{% endblock %}
+</body>
+</html>
