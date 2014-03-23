@@ -9,6 +9,7 @@ import ranks.urls
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
+    url(r'accounts/', include('registration.backends.default.urls')),
     url(r'^ranks/', include(ranks.urls)),
     url(r'^about/', AboutView.as_view()),
 )
