@@ -1,5 +1,7 @@
 *.py[cod]
 
+db.sqlite3
+
 data/align/
 data/parsed/
 data/tokenized/
