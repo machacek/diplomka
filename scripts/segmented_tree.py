@@ -50,6 +50,12 @@ def parse_args():
             type=argparse.FileType('r'),
             dest="target")
     
+    parser.add_argument("--reference",
+            help="A file with reference translation",
+            required=True,
+            type=argparse.FileType('r'),
+            dest="reference")
+    
     parser.add_argument("--maxlength",
             help="Maximal length of a segment",
             default=4,
@@ -68,17 +74,18 @@ def parse_args():
 
 def main():
     args = parse_args()
-    for i, parse_str, ali_str, target_str in izip(count(1), args.parsed, args.ali, args.target):
+    for i, parse_str, ali_str, target_str, reference_str in izip(count(1), args.parsed, args.ali, args.target, args.reference):
         tree = SegmentedTree.convert(Tree(parse_str))
         target_tokenized = target_str.split()
         source_tokenized = tree.leaves()
+        reference_str = reference_str.strip()
         alignment = Alignment(ali_str)
         for segment, indexes in tree.segments_with_indexes(args.max_length):
             if len(segment) < args.min_length:
                 continue
             mapped_indexes = alignment.range(indexes)
             mapped_segment = [target_tokenized[index] for index in mapped_indexes] 
-            print(i, " ".join(source_tokenized), " ".join(segment), " ".join(mapped_segment), sep='\t')
+            print(i, " ".join(source_tokenized), reference_str, " ".join(segment), " ".join(mapped_segment), sep='\t')
 
 
 
