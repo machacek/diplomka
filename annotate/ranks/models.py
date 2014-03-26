@@ -6,15 +6,19 @@ from django.contrib.auth.models import User
 class RankProject(Project):
     instructions = models.TextField()
 
-class Item(models.Model):
-    project = models.ForeignKey(RankProject, related_name='items')
+class Sentence(models.Model):
+    project = models.ForeignKey(RankProject, related_name='sentences')
     sentence_id = models.IntegerField()
-    source_sen = models.TextField()
-    source_seg = models.TextField()
-    candidate_segs = models.TextField()
+    source_str = models.TextField()
+    reference_str = models.TextField()
+
+class Segment(models.Model):
+    sentence = models.ForeignKey(Sentence, related_name='segments')
+    segment_str = models.TextField()
+    candidates_str = models.TextField()
 
 class Annotation(models.Model):
-    annotated_item = models.ForeignKey(Item, related_name='annotations')
+    annotated_segment = models.ForeignKey(Segment, related_name='annotations')
     ranks = models.TextField()
     annotator = models.ForeignKey(User)
     created = models.DateTimeField(auto_now_add=True)    
