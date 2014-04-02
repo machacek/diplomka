@@ -1,0 +1,13 @@
+.alert.sentence {
+    margin-bottom: 5px;
+    padding: 10px;
+}
+
+ul.ranklist {
+    list-style-type: none;
+}
+
+ul.ranklist li {
+    float: left;
+}
+

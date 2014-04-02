@@ -1,6 +1,106 @@
 {% extends "annotate/base.html" %}
 
 {% block content %}
-    <h2>Annotate Ranks</h2>
-    <p>Stuff etc etc.</p>
+
+<div>
+    <h1>Sentence {{ sentence.pk }}</h1>
+    <div class="alert alert-success alert sentence">
+        <p><b>Source:</b> {{ sentence.source_str }}</p>
+    </div>
+
+    <div class="alert alert-info sentence">
+        <p><b>Reference:</b> {{ sentence.reference_str }}</p>
+    </div>
+
+    <div class="alert alert-warning segment-annotation containment">
+        <div class="sentence-segment">
+
+        </div>
+        <div class="unanotated snap">
+            <p>
+            <b>Unannotated: </b>
+            <ul class="ranklist">
+                {% for candidate in candidates_str %}
+                <li>
+                    <span class="label label-success candidate-draggable"> {{ candidate }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            </p>
+        </div>
+
+        <div class="bins">
+            <div class="bin-droppable snap">
+                <b>Rank 1</b>
+                <ul class="ranklist">
+                    <li>dlfjldfjd</li>
+                </ul>
+            </div>
+            <div class="bin-droppable snap">
+                <b>Rank 2</b>
+                <ul class="ranklist">
+                </ul>
+            </div>
+            <div class="bin-droppable snap">
+                <b>Rank 3</b>
+                <ul class="ranklist">
+                </ul>
+            </div>
+            <div class="bin-droppable snap">
+                <b>Rank 4</b>
+                <ul class="ranklist">
+                </ul>
+            </div>
+            <div class="bin-droppable snap">
+                <b>Rank 5</b>
+                <ul class="ranklist">
+                    <li>Ahoj</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+$(document).ready(function(){
+
+
+        $('.ranklist').sortable({
+            connectWith: '.ranklist',
+        }).disableSelection();
+
+
+
+        /*
+        function handleStartEvent(event, ui){
+            $(ui.helper).addClass('label-warning').removeClass('label-success');
+        }
+        
+        function handleStopEvent(event, ui){
+            $(ui.helper).addClass('label-success').removeClass('label-warning');
+        }
+        
+        function handleDropEvent(event, ui){
+            var draggable = ui.draggable;
+            // $(dragable).position({ of: $(this), my: 'left top', at: 'left top' });
+            $(this).append($(draggable));
+        }
+
+
+        $('.candidate-draggable').draggable({
+            containment : '.containment',
+            cursor : 'move',
+            stack : '.candidate-draggable',
+            revert : true,
+            start : handleStartEvent,
+            stop : handleStopEvent,
+            });
+        
+        $('.bin-droppable').droppable({
+            drop : handleDropEvent,
+            });
+        */
+        });
+    </script>
+</div>
+
 {% endblock %}
