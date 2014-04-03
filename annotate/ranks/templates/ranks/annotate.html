@@ -17,44 +17,42 @@
 
         </div>
         <div class="unanotated snap">
-            <p>
             <b>Unannotated: </b>
-            <ul class="ranklist">
-                {% for candidate in candidates_str %}
-                <li>
-                    <span class="label label-success candidate-draggable"> {{ candidate }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-            </p>
+            <div>
+                <ul class="ranklist">
+                    {% for candidate in candidates_str %}
+                    <li>
+                        <span class="label label-success candidate-draggable"> {{ candidate }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
         <div class="bins">
             <div class="bin-droppable snap">
-                <b>Rank 1</b>
                 <ul class="ranklist">
-                    <li>dlfjldfjd</li>
+                    <li class="rank-label"><span class="label label-danger ">Rank 1</span></li>
                 </ul>
             </div>
             <div class="bin-droppable snap">
-                <b>Rank 2</b>
                 <ul class="ranklist">
+                    <li class="rank-label"><span class="label label-danger ">Rank 2</span></li>
                 </ul>
             </div>
             <div class="bin-droppable snap">
-                <b>Rank 3</b>
                 <ul class="ranklist">
+                    <li class="rank-label"><span class="label label-danger ">Rank 3</span></li>
                 </ul>
             </div>
             <div class="bin-droppable snap">
-                <b>Rank 4</b>
                 <ul class="ranklist">
+                    <li class="rank-label"><span class="label label-danger">Rank 4</span></li>
                 </ul>
             </div>
             <div class="bin-droppable snap">
-                <b>Rank 5</b>
                 <ul class="ranklist">
-                    <li>Ahoj</li>
+                    <li class="rank-label"><span class="label label-danger">Rank 5</span></li>
                 </ul>
             </div>
         </div>
@@ -63,42 +61,15 @@
     <script type="text/javascript">
 $(document).ready(function(){
 
-
         $('.ranklist').sortable({
             connectWith: '.ranklist',
+            items: '.candidate-draggable',
+            
+            //cancel: '.candidate-draggable',
+            
         }).disableSelection();
 
 
-
-        /*
-        function handleStartEvent(event, ui){
-            $(ui.helper).addClass('label-warning').removeClass('label-success');
-        }
-        
-        function handleStopEvent(event, ui){
-            $(ui.helper).addClass('label-success').removeClass('label-warning');
-        }
-        
-        function handleDropEvent(event, ui){
-            var draggable = ui.draggable;
-            // $(dragable).position({ of: $(this), my: 'left top', at: 'left top' });
-            $(this).append($(draggable));
-        }
-
-
-        $('.candidate-draggable').draggable({
-            containment : '.containment',
-            cursor : 'move',
-            stack : '.candidate-draggable',
-            revert : true,
-            start : handleStartEvent,
-            stop : handleStopEvent,
-            });
-        
-        $('.bin-droppable').droppable({
-            drop : handleDropEvent,
-            });
-        */
         });
     </script>
 </div>

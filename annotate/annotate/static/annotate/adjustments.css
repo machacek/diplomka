@@ -5,9 +5,12 @@
 
 ul.ranklist {
     list-style-type: none;
+    overflow: display;
+    //width: 100%;
 }
 
 ul.ranklist li {
-    float: left;
+    display: inline-block;
+    list-style-type: none;
 }
 
