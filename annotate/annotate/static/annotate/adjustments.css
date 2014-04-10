@@ -14,3 +14,14 @@ ul.ranklist li {
     list-style-type: none;
 }
 
+ul.srcsegment {
+    list-style-type: none;
+    overflow: display;
+    //width: 100%;
+}
+
+ul.srcsegment li {
+    display: inline-block;
+    list-style-type: none;
+}
+

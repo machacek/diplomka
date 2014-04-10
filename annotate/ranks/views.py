@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, DetailView, ListView
 from django.db.models import Count
-from ranks.models import RankProject, Segment
+from ranks.models import RankProject, Segment, Sentence
 #from django.shortcuts import render
 
 # Create your views here.
@@ -20,6 +20,8 @@ class AnnotateView(TemplateView):
                 .first()\
                 .sentence
 
+        sentence = Sentence.objects.order_by('?')[0]
+
         return sentence
 
     def get_context_data(self, *args, **kwargs):
@@ -27,8 +29,9 @@ class AnnotateView(TemplateView):
         sentence = self.get_sentence()
         context['sentence'] = sentence
 
-        segment = sentence.segments.all().first()
-        context['candidates_str'] = segment.candidates_str.split('\n')
-
+        segments = list(sentence.segments.all())
+        for segment in segments:
+            segment.candidates_split = segment.candidates_str.split('\n')
+        context['segments'] = segments
 
         return context

@@ -12,21 +12,24 @@
         <p><b>Reference:</b> {{ sentence.reference_str }}</p>
     </div>
 
-    <div class="alert alert-warning segment-annotation containment">
-        <div class="sentence-segment">
+    {% for segment in segments %}
 
+    <div class="alert alert-danger segment-annotation containment">
+        <div class="sentence-segment">
+            <ul class="srcsegment">
+                <li class="rank-label"><span class="label label-danger ">Source Segment</span></li>
+                <li class="rank-label"><span class="label label-warning ">{{ segment.segment_str }}</span></li>
+            </ul>
         </div>
         <div class="unanotated snap">
-            <b>Unannotated: </b>
-            <div>
-                <ul class="ranklist">
-                    {% for candidate in candidates_str %}
-                    <li>
-                        <span class="label label-success candidate-draggable"> {{ candidate }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <ul class="ranklist">
+                <li class="rank-label"><span class="label label-danger ">Unannotated</span></li>
+                {% for candidate in segment.candidates_split %}
+                <li>
+                    <span class="label label-success candidate-draggable"> {{ candidate }}</span>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
 
         <div class="bins">
@@ -58,6 +61,8 @@
         </div>
     </div>
 
+    {% endfor %}
+
     <script type="text/javascript">
 $(document).ready(function(){
 
@@ -65,7 +70,6 @@ $(document).ready(function(){
             connectWith: '.ranklist',
             items: '.candidate-draggable',
             
-            //cancel: '.candidate-draggable',
             
         }).disableSelection();
 
