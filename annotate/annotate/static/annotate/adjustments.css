@@ -9,6 +9,10 @@ ul.ranklist {
     //width: 100%;
 }
 
+.candidate-draggable {
+    margin: 2px;
+}
+
 ul.ranklist li {
     display: inline-block;
     list-style-type: none;
