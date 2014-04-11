@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from ranks.models import RankProject
+from segranks.models import RankProject
 import codecs
 from itertools import count, groupby
 from collections import namedtuple

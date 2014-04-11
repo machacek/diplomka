@@ -1,16 +1,13 @@
 from django.views.generic import TemplateView, DetailView, ListView
 from django.db.models import Count
-from ranks.models import RankProject, Segment, Sentence
-#from django.shortcuts import render
-
-# Create your views here.
+from segranks.models import RankProject, Segment, Sentence
 
 class ProjectListView(ListView):
     model = RankProject
-    template_name = "ranks/project_list.html"
+    template_name = "project_list.html"
 
 class AnnotateView(TemplateView):
-    template_name = "ranks/annotate.html"
+    template_name = "annotate.html"
     
     def get_sentence(self):
         sentence = Segment.objects\
@@ -35,3 +32,7 @@ class AnnotateView(TemplateView):
         context['segments'] = segments
 
         return context
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+

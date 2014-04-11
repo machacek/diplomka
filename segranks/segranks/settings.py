@@ -37,8 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'annotate',
-    'ranks',
+    'segranks',
     'bootstrap3',
     'registration',
 )
@@ -52,13 +51,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'annotate.urls'
+ROOT_URLCONF = 'segranks.urls'
 
-WSGI_APPLICATION = 'annotate.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+WSGI_APPLICATION = 'segranks.wsgi.application'
 
 DATABASES = {
     'default': {
