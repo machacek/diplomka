@@ -1,0 +1,839 @@
+(ROOT
+  (NP
+    (NP
+      (NP (NNP Jet) (NNS makers) (NN feud))
+      (PP (IN over)
+        (NP
+          (NP (NN seat) (NN width))
+          (PP (IN with)
+            (NP
+              (NP (JJ big) (NNS orders))
+              (PP (IN at)
+                (NP (NN stake))))))))
+    (S
+      (NP (DT A) (NN row))
+      (VP (VBZ has)
+        (VP (VBN flared)
+          (PRT (RP up))
+          (PP (IN between)
+            (NP
+              (NP (VBG leading) (NN plane) (NNS makers))
+              (PP (IN over)
+                (NP
+                  (NP (DT the) (NN width))
+                  (PP (IN of)
+                    (NP
+                      (NP (JJ tourist-class) (NNS seats))
+                      (PP (IN on)
+                        (NP (JJ long-distance) (NNS flights))))))))))))
+    (, ,)
+    (VP (VBG setting)
+      (NP
+        (NP (DT the) (NN tone))
+        (PP (IN for)
+          (NP (DT a) (JJ bitter) (NN confrontation)))))
+    (PP (IN at)
+      (NP
+        (NP (DT this) (NN month) (POS 's))
+        (NNP Dubai) (NNP Airshow)))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT The) (NN dispute))
+    (VP (VBZ focuses)
+      (PP (IN on)
+        (NP
+          (NP (DT the) (NN width))
+          (PP (IN of)
+            (NP (NNS seats)))))
+      (SBAR
+        (SBAR
+          (S
+            (VP (VBD provided)
+              (PP (IN on)
+                (NP (JJ long-haul) (NNS flights)))
+              (PP (IN for)
+                (NP
+                  (NP (NN economy) (NNS passengers))
+                  (: -) (RB not) (RB always)
+                  (NP
+                    (NP (DT the) (NNS ones))
+                    (VP (RBS most) (VBN courted)
+                      (PP (IN by)
+                        (NP (NNS airlines))))))))))
+        (, ,)
+        (CC but)
+        (SBAR
+          (WHNP (WP$ whose) (JJ allocated) (NN space))
+          (S
+            (VP (VBZ holds)
+              (NP (DT the) (NN key))
+              (PP (TO to)
+                (NP
+                  (NP (NN efficiency) (NNS claims))
+                  (PP (IN for)
+                    (NP
+                      (NP (DT the) (JJS latest) (NNS jets))
+                      (VP (VBN offered)
+                        (PP (IN by)
+                          (NP
+                            (NP (NNP Airbus) (NNP SAS))
+                            (CC and)
+                            (NP (NNP Boeing) (NNP Co))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP (NNP Airbus))
+      (NP (DT this) (NN week))
+      (VP (VBD called)
+        (PP (IN for)
+          (NP
+            (NP (DT an) (NN industry) (NN standard))
+            (SBAR
+              (WHNP (WDT that))
+              (S
+                (VP (MD would)
+                  (VP (VB provide)
+                    (PP (IN for)
+                      (NP (DT a) (NN seat)))))))))
+        (NP
+          (NP
+            (NP
+              (QP (IN at) (JJS least) (CD 18))
+              (NNS inches))
+            (PRN (-LRB- -LRB-)
+              (NP
+                (QP (CD 46) (CD cm)))
+              (-RRB- -RRB-)))
+          (ADJP (JJ wide)
+            (PP (IN in)
+              (NP (NN economy) (NNS cabins)))))))
+    (, ,)
+    (CC but)
+    (S
+      (NP (PRP$ its) (NNP U.S.) (NNP arch-rival) (NNP Boeing))
+      (VP (VBZ says)
+        (SBAR
+          (S
+            (NP (PRP it))
+            (VP (MD should)
+              (VP (VB be)
+                (PP (IN for)
+                  (NP (NNS airlines)))
+                (S
+                  (VP (TO to)
+                    (VP (VB decide))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT The) (NN dispute))
+    (VP (VBZ comes)
+      (SBAR (IN as)
+        (S
+          (NP (NN plane) (NNS makers))
+          (VP (VBP vie)
+            (S
+              (VP (TO to)
+                (VP (VB sell)
+                  (NP
+                    (NP (JJ ever-larger) (NNS versions))
+                    (PP (IN of)
+                      (NP (PRP$ their) (JJ twin-engined) (JJ long-distance) (NN aircraft))))
+                  (, ,)
+                  (PP (IN with)
+                    (NP
+                      (NP
+                        (ADJP (RB potentially) (JJ record))
+                        (NNS orders))
+                      (VP (VBN expected)
+                        (PP (IN at)
+                          (NP (DT the) (NNP November) (CD 17-21) (NN event)))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR
+      (WHADVP (WRB How))
+      (S
+        (NP
+          (NP (DT the) (NN back))
+          (PP (IN of)
+            (NP (DT the) (NN plane))))
+        (VP (VBZ is)
+          (VP (VBN laid)
+            (PRT (RP out))))))
+    (PRN (: -)
+      (SBAR
+        (ADVP (RB particularly))
+        (IN whether)
+        (S
+          (NP (NN seating))
+          (VP (VBZ is)
+            (NP
+              (QP (CD 9)
+                (CC or)
+                (CD 10))
+              (NN abreast)))))
+      (: -))
+    (VP (VBZ is)
+      (ADJP (JJ central))
+      (PP (TO to)
+        (NP
+          (NP (DT the) (JJ economic) (NN performance) (NNS claims))
+          (VP (VBG being)
+            (VP (VBN made)
+              (PP (IN for)
+                (NP (JJ new)))))))
+      ('' '')
+      (S
+        (VP (VBG mini-jumbo) ('' '')
+          (NP (NN jet) (NNS designs)))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (NP (NNP Boeing))
+      (VP (VBZ says)
+        (NP (PRP$ its) (VBN revamped))))
+    ('' '')
+    (VP
+      (ADVP (RB 777X))
+      ('' '') (MD will)
+      (VP
+        (VP (VB hold)
+          (NP (CD 406) (NNS people))
+          (PP (VBN based)
+            (PP (IN on)
+              (NP
+                (NP (NN economy) (NNS seats))
+                (ADJP
+                  (NP
+                    (QP (JJR more) (IN than) (CD 17))
+                    (NNS inches))
+                  (JJ wide))))))
+        (CC and)
+        (VP (VB set)
+          (PRT (RP out))
+          (NP
+            (NP (CD 10))
+            (PP (IN in)
+              (NP (DT each) (NN row)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Airbus))
+    (VP (VBZ says)
+      (SBAR
+        (S
+          (NP
+            (NP (DT the) (VBG competing) (NN version))
+            (PP (IN of)
+              (NP (PRP$ its) (NN A350))))
+          (VP (MD will)
+            (VP (VB carry)
+              (NP (CD 350) (NNS people))
+              (PP (IN in)
+                (NP
+                  (NP (JJ 18-inch-wide) (NN economy) (NN seat))
+                  (VP (VBN laid)
+                    (PP (IN out)
+                      (NP (CD 9) (NN abreast)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Plane) (NNS giants))
+    (ADVP (RB often))
+    (VP (VBP trade)
+      (NP
+        (NP (NNS blows))
+        (PP (IN on)
+          (NP (JJ technical) (NNS matters))))
+      (PP (IN through)
+        (S
+          (VP (VBG advertising)
+            (PP (IN in)
+              (NP (DT the) (NN trade) (NN press)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (ADVP (RB Now))
+    (, ,)
+    (NP (NNP Airbus))
+    (VP (VBZ is)
+      (VP (VBG appealing)
+        (ADVP (RB directly))
+        (PP (TO to)
+          (NP
+            (NP (DT the) (NN public))
+            (PP (RB ahead) (IN of)
+              (NP (DT the) (NNP Dubai) (NNP Airshow)))))
+        (, ,)
+        (SBAR
+          (WHADVP (WRB where))
+          (S
+            (NP (DT the) (CD 777X))
+            (VP (VBZ is)
+              (VP (VBN expected)
+                (S
+                  (VP (TO to)
+                    (VP (VB dominate)
+                      (PP (IN with)
+                        (NP
+                          (QP (JJR more) (IN than) (CD 100))
+                          (NNS orders))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (VP
+      (ADVP (RB recently))
+      (VBD previewed)
+      (SBAR
+        (WHNP (WP what))
+        (S
+          (VP (MD may)
+            (VP (VB be)
+              (NP
+                (NP (DT the) (NN start))
+                (PP (IN of)
+                  (NP (DT a) (JJ new) (NN ad) (NN war))))
+              (PP (IN by)
+                (S
+                  (VP (VBG showing)
+                    (NP
+                      (NP (NNS financiers))
+                      (SBAR
+                        (S
+                          (NP
+                            (NP (DT a) (NN slide))
+                            (VP (VBG illustrating)
+                              (ADJP
+                                (NP (CD three) (NNS people))
+                                (JJ squashed))
+                              (ADVP (RB together))
+                              (PP (IN at)
+                                (NP (DT a) (NN restaurant)))))
+                          (, ,)
+                          (S
+                            (VP (VBN titled)))
+                          ('' '')
+                          (VP (MD Would)
+                            (ADVP (PRP You))
+                            (VP (VB Accept)
+                              (NP (DT This)))))))))))))))
+    (. ?) ('' '') ('' '')))
+
+(ROOT
+  (SINV
+    (S
+      (NP (NNP Boeing))
+      (VP (VBZ is)
+        (VP (VBG proposing)
+          (NP
+            (NP (NN long-distance))
+            (VP (VBG flying)
+              (PP (IN in)
+                (NP
+                  (NP (NNS seats))
+                  (ADJP (JJR narrower)
+                    (PP (IN than)
+                      (NP (JJ regional) (NNS turbo-props)))))))))))
+    (, ,) ('' '')
+    (VP (VBD said))
+    (NP (NNP Airbus) (NNS sales) (NN chief) (NNP John) (NNP Leahy))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN As)
+      (NP (JJ diets) (NN change)))
+    (, ,)
+    (S
+      (NP (NNS people))
+      (VP (VBP get)
+        (ADJP (JJR bigger))))
+    (CC but)
+    (S
+      (NP (NN plane) (NN seating))
+      (VP (VBZ has) (RB not)
+        (ADVP (RB radically))
+        (VP (VBN changed))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN Between)
+      (NP (DT the) (JJ early) (NNS 1970s)))
+    (, ,)
+    (SBAR
+      (WHADVP (WRB when))
+      (S
+        (NP (DT the) (NNP Boeing) (CD 747) (NN jumbo))
+        (VP (VBD defined)
+          (NP
+            (NP (JJ modern) (JJ long-haul) (NN travel))
+            (, ,)
+            (CC and)
+            (NP
+              (NP (DT the) (NN turn))
+              (PP (IN of)
+                (NP
+                  (NP (DT the) (NN century))
+                  (, ,)
+                  (NP
+                    (NP (DT the) (NN weight))
+                    (PP (IN of)
+                      (NP (DT the) (JJ average) (NNP American) (CD 40)))))))
+            (: -))
+          (PP (TO to)
+            (NP (JJ 49-year-old) (NN male))))))
+    (VP (VBD increased)
+      (PP (IN by)
+        (NP
+          (NP (CD 10))
+          (PP (IN per)
+            (NP (NN cent)))))
+      (, ,)
+      (PP (VBG according)
+        (PP (TO to)
+          (NP (NNP U.S.) (NNP Health) (NNP Department) (NNP Data)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (DT The) (NN waist))
+      (PP (IN of)
+        (NP (DT the) (JJ average) (JJ 21st-century) (JJ American) (NN male))))
+    (VP (VBZ is)
+      (NP (JJ 39.7) (NNS inches))
+      (, ,)
+      (PP (VBG according)
+        (PP (TO to)
+          (NP (NNP U.S.) (NN health) (NNS statistics)))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Airbus))
+    (VP (VBZ says)
+      (SBAR
+        (S
+          (NP (PRP$ its) (NN rival))
+          (VP (VBZ is)
+            (VP (VBG sticking)
+              (PP (TO to)
+                (NP (DT a) (NN seat) (NN concept)))
+              (PP (IN from)
+                (NP
+                  (NP (DT the) (NNS 1950s))
+                  (, ,)
+                  (SBAR
+                    (WHADVP (WRB when))
+                    (S
+                      (NP
+                        (NP (DT the) (JJ average) (NN girth))
+                        (PP (IN of)
+                          (NP (DT the)
+                            (ADJP (RB newly) (JJ christened))
+                            ('' '') (NN jet) (NN set))))
+                      ('' '')
+                      (VP (VBD was)
+                        (ADJP (JJR narrower))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Airbus))
+    (VP (VBZ says)
+      (SBAR
+        (S
+          (NP (PRP it))
+          (VP (VBZ has)
+            (VP (VBN commissioned)
+              (NP (NN research))
+              (S
+                (VP (VBG suggesting)
+                  (SBAR
+                    (S
+                      (NP
+                        (NP (DT an) (JJ extra) (NN inch))
+                        (PP (IN in)
+                          (NP (NN seat) (NN width))))
+                      (VP (VBZ improves)
+                        (NP (NN sleep) (NN quality))
+                        (PP (IN by)
+                          (NP
+                            (NP (CD 53))
+                            (PP (IN per)
+                              (NP (NN cent)))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (NNP Boeing))
+    (VP
+      (VP (VBZ disputes)
+        (NP
+          (NP (NNP Airbus) (POS 's))
+          (NNS figures))
+        (PP (IN on)
+          (NP (NN seat) (NNS measurements))))
+      (CC and)
+      (VP (VBZ says)
+        (SBAR
+          (S
+            (NP (PRP it))
+            (VP (VBZ is) (RB not)
+              (ADVP (RB up)
+                (PP (TO to)
+                  (NP (NNS manufacturers))))
+              (S
+                (VP (TO to)
+                  (VP (VB step)
+                    (PP (IN into)
+                      (NP
+                        (NP (NNS decisions))
+                        (PP (IN on)
+                          (SBAR
+                            (WHADVP (WRB how))
+                            (S
+                              (NP (NNS airlines))
+                              (VP (VB balance)
+                                (NP (NNS fares)
+                                  (CC and)
+                                  (NNS facilities))))))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP It))
+    (ADVP (RB also))
+    (VP (VBZ says)
+      (SBAR
+        (S
+          (NP (NN research))
+          (VP (VBZ shows)
+            (SBAR
+              (S
+                (NP (NN cabin) (NN experience))
+                (VP (VBZ depends)
+                  (PP (IN on)
+                    (NP
+                      (NP
+                        (QP (JJR more) (IN than)
+                          (NP (DT the) (NN width))))
+                      (PP (IN of)
+                        (NP (DT a) (NN seat))))))))))))
+    (. .) ('' '')))
+
+(ROOT
+  (SINV
+    (S
+      (NP (PRP It))
+      (ADVP (RB really))
+      (VP (VBZ comes)
+        (ADVP (RB down)
+          (PP (TO to)
+            (S
+              (VP
+                (VP (VBG providing)
+                  (NP (NN flexibility))
+                  (PP (TO to)
+                    (NP (NNS airlines))))
+                (CC and)
+                (VP (VBG allowing)
+                  (S
+                    (NP (PRP them))
+                    (VP (TO to)
+                      (VP (VB do)
+                        (NP (DT the) (NNS things))))))))))
+        (SBAR (IN that)
+          (S
+            (NP (PRP they))
+            (VP (VBP believe)
+              (SBAR
+                (S
+                  (NP (PRP they))
+                  (VP (VBP need)
+                    (S
+                      (VP (TO to)
+                        (VP (VB do)
+                          (S
+                            (VP (TO to)
+                              (VP (VB be)
+                                (ADJP (JJ successful))))))))))))))))
+    (, ,) ('' '')
+    (VP (VBD said))
+    (NP (NNP Boeing) (NNS cabins) (NN expert) (NNP Kent) (NNP Craver))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP
+        (NP (PRP They))
+        (ADJP (JJ don))
+        (POS '))
+      (NN t))
+    (VP (VBP want)
+      (S
+        (NP (PRP us))
+        (VP (TO to)
+          (VP (VB dictate)
+            (PP (TO to)
+              (NP
+                (NP (PRP them))
+                (SBAR
+                  (WHNP (WP what))
+                  (S
+                    (VP (VBZ makes)
+                      (S
+                        (NP (PRP them))
+                        (ADJP (JJ profitable))))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (PRP They))
+    (VP (VBP know)
+      (NP (PRP$ their) (NN business))
+      (ADVP
+        (ADVP (RBR better))
+        (PP (IN than)
+          (NP (NN anyone) (RB else)))))
+    (. .)))
+
+(ROOT
+  (S
+    (S
+      (PP (IN For)
+        (NP (NNS flyers)))
+      (NP (PRP it))
+      (VP (VBZ is)
+        (PP (IN about)
+          (NP (JJR more) (NN elbow) (NN room)))))
+    (, ,)
+    (CC but)
+    (S
+      (PP (IN for)
+        (NP (NNS suppliers)))
+      (NP (PRP it))
+      (VP (VBZ is)
+        (ADVP (RB increasingly))
+        (NP
+          (NP (DT an) (NN issue))
+          (SBAR
+            (WHNP (WDT that))
+            (S
+              (VP (MD could)
+                (VP (VB affect)
+                  (NP (NNS earnings)))))))))
+    (. .)))
+
+(ROOT
+  (SINV
+    (PP (IN Behind)
+      (NP (DT the) (NN dispute)))
+    (VP (VBZ is)
+      (NP (DT a) (NN race))
+      (PP (IN for)
+        (NP (NN plane) (NNS orders)))
+      (PP (IN with)
+        (ADVP (IN at) (JJS least))))
+    (NP
+      (NP ($ $) (CD 700-billion))
+      (PP (IN of)
+        (NP
+          (NP
+            (NP (VBN estimated) (NN business))
+            (PP (IN at)
+              (NP (NN list) (NNS prices)))
+            (PP (IN in)
+              (NP (JJ coming) (NNS decades))))
+          (, ,)
+          (ADVP (RB enough)
+            (PP (TO to)
+              (NP (NN tip))))
+          (NP
+            (NP (DT the) (NNS scales))
+            (PP (IN of)
+              (NP
+                (UCP (NNP U.S.)
+                  (CC and)
+                  (JJ European))
+                (NNS exports)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (SBAR (IN As)
+      (S
+        (NP (NNP Reuters))
+        (ADVP (RB first))
+        (VP (VBD reported)
+          (PP (IN in)
+            (NP (NNP July))))))
+    (, ,)
+    (NP (NN seat) (NN layout))
+    (VP (VBZ is)
+      (SBAR
+        (WHNP (RB exactly) (WP what))
+        (S
+          (VP (VBZ drives)
+            (NP
+              (NP (DT the) (NN battle))
+              (PP (IN between)
+                (NP (DT the) (JJS latest) (NNS jets))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP (DT Both) (NNP Airbus)
+      (CC and)
+      (NNP Boeing))
+    (VP (VBP claim)
+      (NP
+        (NP (CD 20))
+        (PP (IN per)
+          (NP (NN cent)))
+        (SBAR
+          (S
+            (NP
+              (NP (JJR better) (NN efficiency))
+              (PP (IN per)
+                (NP
+                  (NP (NN seat))
+                  (PP (IN in)
+                    (NP (PRP$ their) (JJS latest) (JJ twin-engined) (NN long-haul))))))
+            (VP (VBZ designs)
+              (PP (IN than)
+                (NP
+                  (NP (DT the) (NN market) (NN leader))
+                  (PP (IN in)
+                    (NP
+                      (NP (DT that) (NN segment))
+                      (, ,)
+                      (NP (DT the) (JJ 365-seat) (VBG Boeing) (NN 777-300ER)))))))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (NNP Boeing) (POS 's))
+      (NN performance) (NNS claims))
+    (VP (VBP depend)
+      (PP (IN in)
+        (NP (NN part)))
+      (PP (IN on)
+        (S
+          (VP (VBG comparing)
+            (NP (DT the) (JJ 10-abreast) (CD 777X))
+            (PP (IN with)
+              (NP (DT an) (JJ original)
+                (ADJP (JJ 9-abreast) (CD 777))
+                (NN design)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (NP
+      (NP (DT The) (NN gain))
+      (PP (IN in)
+        (NP (NN unit) (NNS costs))))
+    (VP (VBZ is)
+      (VP (VBN blunted)
+        (PP (VBN compared)
+          (PP (IN with)
+            (NP
+              (NP (JJ 10-abreast))
+              (PP
+                (ADVP (RB now))
+                (IN in)
+                (NP (NN use))))))))
+    (. .) ('' '')))
+
+(ROOT
+  (SINV
+    (S
+      (NP (DT The) (NN reason) (NNP Boeing))
+      (VP (VBP are)
+        (VP (VBG doing)
+          (SBAR
+            (S
+              (NP (DT this))
+              (VP (VBZ is)
+                (S
+                  (VP (TO to)
+                    (VP (VB cram)
+                      (NP (JJR more) (NNS seats))
+                      (PRT (RP in))
+                      (S
+                        (VP (TO to)
+                          (VP (VB make)
+                            (S
+                              (NP (PRP$ their) (NN plane))
+                              (ADJP (RBR more) (JJ competitive)
+                                (PP (IN with)
+                                  (NP (PRP$ our) (NNS products)))))))))))))))))
+    (, ,) ('' '')
+    (VP (VBD said))
+    (NP
+      (NP (NNP Kevin) (NNP Keniston))
+      (, ,)
+      (NP
+        (NP (NN head))
+        (PP (IN of)
+          (NP
+            (NP (NN passenger) (NN comfort))
+            (PP (IN at)
+              (NP
+                (NP (NNP Europe) (POS 's))
+                (NNP Airbus)))))))
+    (. .)))
+
+(ROOT
+  (S
+    (PP (IN On)
+      (NP (DT the) (JJ other) (NN hand)))
+    (, ,)
+    (NP (NNS analysts))
+    (VP (VBP say)
+      (SBAR
+        (S
+          (NP
+            (NP (JJ full) (JJ 10-seat-per-row) (NNS cabins))
+            (PP (IN for)
+              (NP (VBG existing) (NNS 777s))))
+          (VP (VBP suggest)
+            (SBAR
+              (S
+                (NP (JJ many) (NNS passengers))
+                (VP (VBP are)
+                  (VP (VBG voting)
+                    (PP (IN for)
+                      (NP
+                        (NP (DT the) (NN denser) (NN layout))
+                        (, ,)
+                        (SBAR
+                          (WHNP (WDT which))
+                          (S
+                            (VP (MD may)
+                              (VP (VB go)
+                                (NP
+                                  (NP (NN hand))
+                                  (PP (IN in)
+                                    (NP (NN hand))))
+                                (PP (IN with)
+                                  (NP (JJR cheaper) (NNS fares)))))))))))))))))
+    (. .) ('' '')))
+

@@ -2,9 +2,9 @@
 
 db.sqlite3
 
-data/align/
-data/parsed/
-data/tokenized/
+#data/align/
+#data/parsed/
+#data/tokenized/
 
 # C extensions
 *.so
