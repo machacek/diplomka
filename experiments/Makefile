@@ -55,6 +55,7 @@ alignment.all: concatenated.to.align
 		--tempdir=/tmp \
 		--bindir=$(GIZABINDIR) \
 		--dirsym=gdf,revgdf,gdfa,revgdfa,left,right,int,union \
+		--drop-bad-lines \
 		| cut '-d	' -f1 \
 		> $@
 
