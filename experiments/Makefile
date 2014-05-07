@@ -38,5 +38,15 @@ normalized-for-ali: tokenized
 			> $@/$$new; \
 	done
 
+concatenated.to.align: normalized-for-ali
+	candidates=$$(find $</candidates/ -type f | sort); \
+	cand_sources=$$(echo "$$candidates" | sed "s|^.*$$|$</source|"); \
+	./concat-for-giza.py \
+		--sources $</corpus/corpus.src $</corpus/europarl.src $</source    $$cand_sources \
+		--targets $</corpus/corpus.tgt $</corpus/europarl.tgt $</reference $$candidates \
+		--splitinfo split.info \
+		$@
+
+
 clean:
-	rm -rf tokenized normalized-for-ali
+	rm -rf tokenized normalized-for-ali concatenated.to.align split.info
