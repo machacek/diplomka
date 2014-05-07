@@ -9,11 +9,10 @@ GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playgro
 
 .PHONY: all clean
 
-all: concatenated.to.align
+all: alignment.all
 
 tokenized: raw
-	mkdir -p $@/candidates
-	mkdir -p $@/corpus
+	mkdir -p $@/candidates $@/corpus; \
 	for file in $</candidates/* $</reference $</corpus/*.tgt; do \
 		new=$$(echo $$file | sed "s|^$</||"); \
 		cat $$file \
@@ -30,8 +29,7 @@ tokenized: raw
 	done
 
 normalized-for-ali: tokenized
-	mkdir -p $@/candidates
-	mkdir -p $@/corpus
+	mkdir -p $@/candidates $@/corpus; \
 	for file in $$(find $< -type f); do \
 		new=$$(echo $$file | sed "s|^$</||"); \
 		cat $$file \
@@ -58,6 +56,13 @@ alignment.all: concatenated.to.align
 		--drop-bad-lines \
 		| cut '-d	' -f1 \
 		> $@
+
+alignments: alignment.all
+	mkdir -p $@/candidates $@/corpus; \
+	./split-from-giza.py $< \
+		--change-prefix $@ \
+		--splitinfo split.info; \
+	rm -rf $@/corpus
 
 clean:
 	rm -rf tokenized normalized-for-ali concatenated.to.align split.info
