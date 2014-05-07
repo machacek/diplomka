@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.3
 from __future__ import print_function
 import argparse
-from itertools import izip, izip_longest, count
+from itertools import zip_longest, count
 import sys
 
 def parse_args():
@@ -39,8 +39,8 @@ def parse_args():
 
 def main():
     args = parse_args()
-    for source_file, target_file in izip_longest(args.sources, args.targets): 
-        for i, (source_line, target_line) in izip(count(1), izip_longest(source_file, target_file)):
+    for source_file, target_file in zip_longest(args.sources, args.targets): 
+        for i, (source_line, target_line) in zip(count(1), zip_longest(source_file, target_file)):
             print(source_line.strip(), target_line.strip(), file=args.out, sep='\t')
         print(i, source_file.name, target_file.name, file=args.splitinfo, sep='\t')
 
