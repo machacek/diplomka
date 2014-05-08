@@ -15,9 +15,7 @@ def parse_args():
     
     parser.add_argument("input",
             help="Input file",
-            required=True,
             type=argparse.FileType('r'),
-            dest="input",
             )
 
     parser.add_argument("--splitinfo",
@@ -44,7 +42,7 @@ def main():
         dest_file_name = '/'.join(path_list)
 
         with open(dest_file_name,'w') as output_file: 
-            for _ in xrange(n_lines):
+            for _ in range(n_lines):
 
                 try:
                     line = next(input_iterator)

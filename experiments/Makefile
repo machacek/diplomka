@@ -9,7 +9,7 @@ GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playgro
 
 .PHONY: all clean
 
-all: alignment.all
+all: alignment.filtered
 
 tokenized: raw
 	mkdir -p $@/candidates $@/corpus; \
@@ -37,6 +37,17 @@ normalized-for-ali: tokenized
 			| $(LOWERCASE) \
 			> $@/$$new; \
 	done
+	
+	#filter out empty lines from europarl corpus	
+	tmp_file=$$(tempfile); \
+	paste $@/corpus/europarl.src $@/corpus/europarl.tgt \
+		| grep -v  "^	" \
+		| grep -v  "	$$" \
+		> $$tmp_file && \
+	cat $$tmp_file | cut -f1 > $@/corpus/europarl.src && \
+	cat $$tmp_file | cut -f2 > $@/corpus/europarl.tgt && \
+	rm $$tmp_file
+
 
 concatenated.to.align: normalized-for-ali
 	candidates=$$(find $</candidates/ -type f | sort); \
@@ -53,11 +64,12 @@ alignment.all: concatenated.to.align
 		--tempdir=/tmp \
 		--bindir=$(GIZABINDIR) \
 		--dirsym=gdf,revgdf,gdfa,revgdfa,left,right,int,union \
-		--drop-bad-lines \
-		| cut '-d	' -f1 \
 		> $@
 
-alignments: alignment.all
+alignment.filtered: alignment.all
+	cat $< | cut '-d	' -f1 > $@
+
+alignments: alignment.filtered
 	mkdir -p $@/candidates $@/corpus; \
 	./split-from-giza.py $< \
 		--change-prefix $@ \
@@ -65,4 +77,4 @@ alignments: alignment.all
 	rm -rf $@/corpus
 
 clean:
-	rm -rf tokenized normalized-for-ali concatenated.to.align split.info
+	rm -rf tokenized normalized-for-ali concatenated.to.align split.info alignment.all alignment.filtered alignments
