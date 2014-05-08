@@ -1,9 +1,10 @@
 SHELL = /bin/bash
 
-MOSES = $(shell first_existing /opt/moses /home/mmachace/mosesdecoder /a/merkur3/TMP/machacek/statmt/trunk/playground/s.mosesgiza.0907b557.20140227-1940/moses)
-TOKENIZER = $(MOSES)/scripts/tokenizer/tokenizer.perl
-LOWERCASE = $(MOSES)/scripts/tokenizer/lowercase.perl
-DEESCAPE = $(MOSES)/scripts/tokenizer/deescape-special-chars.perl
+STANFORD_PARSER_DIR = $(shell first_existing /home/machacek/stanford-parser-full-2014-01-04)
+MOSES_DIR = $(shell first_existing /opt/moses /home/mmachace/mosesdecoder /a/merkur3/TMP/machacek/statmt/trunk/playground/s.mosesgiza.0907b557.20140227-1940/moses)
+TOKENIZER = $(MOSES_DIR)/scripts/tokenizer/tokenizer.perl
+LOWERCASE = $(MOSES_DIR)/scripts/tokenizer/lowercase.perl
+DEESCAPE = $(MOSES_DIR)/scripts/tokenizer/deescape-special-chars.perl
 GIZAWRAPPER = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/scripts/gizawrapper.pl)
 GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playground/s.mosesgiza.0907b557.20140227-1940/bin)
 
@@ -76,5 +77,17 @@ alignments: alignment.filtered
 		--splitinfo split.info; \
 	rm -rf $@/corpus
 
+source.parsed: normalized-for-ali
+	java -mx3000m -cp "$(STANFORD_PARSER_DIR)/*:" edu.stanford.nlp.parser.lexparser.LexicalizedParser \
+		-tokenized \
+	   	-sentences "newline" \
+		-escaper "edu.stanford.nlp.process.PTBEscapingProcessor" \
+		-outputFormat "penn" \
+		edu/stanford/nlp/models/lexparser/englishFactored.ser.gz \
+		$</source \
+		| tree-collapse \
+		> $@
+		
+
 clean:
-	rm -rf tokenized normalized-for-ali concatenated.to.align split.info alignment.all alignment.filtered alignments
+	rm -rf tokenized normalized-for-ali concatenated.to.align split.info alignment.all alignment.filtered alignments source.parsed
