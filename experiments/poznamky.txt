@@ -1,1 +1,2 @@
 - parsovani z tokenized se zda mirne lepsi, nez z prepared for alignment
+- Lezikalizovane parsovani se zda mirne lepsi, nez PCFG
