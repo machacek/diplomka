@@ -1,0 +1,1 @@
+- parsovani z tokenized se zda mirne lepsi, nez z prepared for alignment

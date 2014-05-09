@@ -77,7 +77,7 @@ alignments: alignment.filtered
 		--splitinfo split.info; \
 	rm -rf $@/corpus
 
-source.parsed: normalized-for-ali
+source.parsed: tokenized
 	java -mx3000m -cp "$(STANFORD_PARSER_DIR)/*:" edu.stanford.nlp.parser.lexparser.LexicalizedParser \
 		-tokenized \
 	   	-sentences "newline" \
