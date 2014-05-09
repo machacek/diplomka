@@ -1,0 +1,1 @@
+tree-colapse https://metacpan.org/pod/distribution/Lingua-Treebank/scripts/tree-collapse

@@ -34,7 +34,7 @@ def main():
 
     for info_line in args.split_info: 
 
-        n_lines, src_file, tgt_file = info_line.split('\t')
+        n_lines, src_file, tgt_file = info_line.strip().split('\t')
         n_lines = int(n_lines)
 
         path_list = tgt_file.split('/')
@@ -49,7 +49,7 @@ def main():
                 except StopIteration:
                     raise ValueError("The input file is shorter than expected")
 
-            print(line.rstrip("\n"), file=output_file)
+                print(line.rstrip("\n"), file=output_file)
 
     # Make sure, that the input iterator is empty
     try:

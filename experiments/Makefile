@@ -10,7 +10,7 @@ GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playgro
 
 .PHONY: all clean
 
-all: alignment.filtered
+all: extracted.segments
 
 tokenized: raw
 	mkdir -p $@/candidates $@/corpus; \
@@ -87,7 +87,22 @@ source.parsed: normalized-for-ali
 		$</source \
 		| tree-collapse \
 		> $@
-		
 
+extracted.segments: tokenized alignments source.parsed
+	for file in tokenized/candidates/*; do \
+		alignment=$$(echo $$file | sed "s/^tokenized/alignments/"); \
+		./segmented_tree.py \
+			--parsed source.parsed \
+			--align $$alignment \
+			--target $$file \
+			--reference tokenized/reference \
+			--minlength 3 \
+			--maxlength 6; \
+		done | sort | uniq > $@
+
+		
 clean:
-	rm -rf tokenized normalized-for-ali concatenated.to.align split.info alignment.all alignment.filtered alignments source.parsed
+	rm -rf extracted.segments source.parsed 
+
+realclean: clean
+	rm -rf tokenized normalized-for-ali concatenated.to.align split.info alignment.all alignment.filtered alignments
