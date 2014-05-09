@@ -1,1 +1,0 @@
-for file in align/en-cs/*; do basename=$(basename $file); ../scripts/segmented_tree.py --parsed parsed/newstest2014-csen-src.en --align align/en-cs/$basename --target tokenized/en-cs/$basename --minlength=3 --maxlength=6; done > all-systems
