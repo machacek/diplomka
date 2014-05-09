@@ -95,6 +95,7 @@ extracted.segments: tokenized alignments source.parsed
 			--parsed source.parsed \
 			--align $$alignment \
 			--target $$file \
+			--source tokenized/source \
 			--reference tokenized/reference \
 			--minlength 3 \
 			--maxlength 6; \
