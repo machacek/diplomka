@@ -92,7 +92,7 @@ def main():
             source_segment = [source_tokenized[index] for index in indexes]
             mapped_indexes = alignment.range(indexes)
             mapped_segment = [target_tokenized[index] for index in mapped_indexes] 
-            print(i, " ".join(source_tokenized), reference_str, " ".join(source_segment), " ".join(mapped_segment), sep='\t')
+            print(i, " ".join(source_tokenized), reference_str, " ".join(source_segment), " ".join(mapped_segment), " ".join(map(str,indexes)), sep='\t')
 
 
 
