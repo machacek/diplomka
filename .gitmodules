@@ -1,0 +1,3 @@
+[submodule "segranks"]
+	path = segranks
+	url = git@github.com:machacek/segranks.git
