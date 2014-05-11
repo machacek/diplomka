@@ -2,12 +2,9 @@
 
 db.sqlite3
 
-#data/align/
-#data/parsed/
-#data/tokenized/
+normalized-for-ali
+tokenized
 
-# C extensions
-*.so
 
 # Packages
 *.egg
