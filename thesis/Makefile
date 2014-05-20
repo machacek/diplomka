@@ -1,8 +1,12 @@
-all: main.tex
-	pdflatex $<
+.PHONY: all clean
+
+all: main.pdf
+   
+main.pdf: $(wildcard *.tex)
+	pdflatex main.tex
 	bibtex main
-	pdflatex $<
-	pdflatex $<
+	pdflatex main.tex
+	pdflatex main.tex
 
 clean:
-	rm -f main.aux main.bbl main.blg main.log main.pdf
+	rm -f *.{log,dvi,aux,toc,lof,out} main.pdf

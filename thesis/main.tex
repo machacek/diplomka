@@ -1,0 +1,231 @@
+\documentclass[12pt,a4paper]{report}
+
+%% Verze pro jednostranný tisk:
+% Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
+% (ale pozor, LaTeX si sám přidává 1in)
+\setlength\textwidth{145mm}
+\setlength\textheight{247mm}
+\setlength\oddsidemargin{15mm}
+\setlength\evensidemargin{15mm}
+\setlength\topmargin{0mm}
+\setlength\headsep{0mm}
+\setlength\headheight{0mm}
+
+% \openright zařídí, aby následující text začínal na pravé straně knihy
+\let\openright=\clearpage
+
+%% Použité kódování znaků
+\usepackage[utf8]{inputenc}
+
+%% Ostatní balíčky
+\usepackage{graphicx}
+\usepackage{amsmath}
+%\usepackage{amsfonts}
+\usepackage{url}
+%\usepackage{rotating}
+%\usepackage{multirow}
+%\usepackage{multicol}
+\usepackage{tocbibind}
+
+%% Balíček hyperref, kterým jdou vyrábět klikací odkazy v PDF,
+%% ale hlavně ho používáme k uložení metadat do PDF (včetně obsahu).
+\usepackage{hyperref}
+\hypersetup{pdftitle=Measures of Machine Translation Quality}
+\hypersetup{pdfauthor=Matouš Macháček}
+
+% Tato makra přesvědčují mírně ošklivým trikem LaTeX, aby hlavičky kapitol
+% sázel příčetněji a nevynechával nad nimi spoustu místa. Směle ignorujte.
+%\makeatletter
+%\def\@makechapterhead#1{
+%  {\parindent \z@ \raggedright \normalfont
+%   \Huge\bfseries \thechapter. #1
+%   \par\nobreak
+%   \vskip 20\p@
+%}}
+%\def\@makeschapterhead#1{
+%  {\parindent \z@ \raggedright \normalfont
+%   \Huge\bfseries #1
+%   \par\nobreak
+%   \vskip 20\p@
+%}}
+%\makeatother
+
+% Deklarace stylů fontů pro různé druhy termínů
+\newcommand{\metric}[1]{\textsc{#1}}
+\newcommand{\XXX}[1]{\textcolor{red}{XXX #1}}
+%\newcommand{\XXX}[1]{}
+\newcommand{\best}[1]{\textbf{#1}}
+\def\oosmark#1{\llap{$\wr$\,}#1}  % out-of-sequence mark
+
+
+\begin{document}
+
+% Trochu volnější nastavení dělení slov, než je default.
+\lefthyphenmin=2
+\righthyphenmin=2
+
+%%% Titulní strana práce
+
+\pagestyle{empty}
+\begin{center}
+
+\large
+
+Charles University in Prague
+
+\medskip
+
+Faculty of Mathematics and Physics
+
+\vfill
+
+{\bf\Large MASTER THESIS}
+
+\vfill
+
+\centerline{\mbox{\includegraphics[width=60mm]{img/logo.eps}}}
+
+\vfill
+\vspace{5mm}
+
+{\LARGE Matouš Macháček}
+
+\vspace{15mm}
+
+% Název práce přesně podle zadání
+{\LARGE\bfseries Measures of Machine Translation Quality}
+
+\vfill
+
+% Název katedry nebo ústavu, kde byla práce oficiálně zadána
+% (dle Organizační struktury MFF UK)
+Institute of Formal and Applied Linguistics
+
+\vfill
+
+\begin{tabular}{rl}
+
+Supervisor of the master thesis: & RNDr. Ondřej Bojar, Ph.D. \\
+\noalign{\vspace{2mm}}
+Study programme: & Computer Science \\
+\noalign{\vspace{2mm}}
+Specialization: & Mathematical Linguistics \\
+\end{tabular}
+
+\vfill
+
+% Zde doplňte rok
+Prague 2014
+
+\end{center}
+
+\newpage
+
+%%% Následuje vevázaný list -- kopie podepsaného "Zadání diplomové práce".
+%%% Toto zadání NENÍ součástí elektronické verze práce, nescanovat.
+
+%%% Na tomto místě mohou být napsána případná poděkování (vedoucímu práce,
+%%% konzultantovi, tomu, kdo zapůjčil software, literaturu apod.)
+
+\openright
+
+\noindent
+\XXX{Dedication.}
+
+\newpage
+
+%%% Strana s čestným prohlášením k diplomové práci
+
+\vglue 0pt plus 1fill
+
+\noindent
+I declare that I carried out this master thesis independently, and only with the cited
+sources, literature and other professional sources.
+
+\medskip\noindent
+I understand that my work relates to the rights and obligations under the Act No.
+121/2000 Coll., the Copyright Act, as amended, in particular the fact that the Charles
+University in Prague has the right to conclude a license agreement on the use of this
+work as a school work pursuant to Section 60 paragraph 1 of the Copyright Act.
+
+\vspace{10mm}
+
+\hbox{\hbox to 0.5\hsize{%
+In Prague date XXX 
+\hss}\hbox to 0.5\hsize{%
+signature of the author
+\hss}}
+
+\vspace{20mm}
+\newpage
+
+%%% Povinná informační strana diplomové práce
+
+\vbox to 0.5\vsize{
+\setlength\parindent{0mm}
+\setlength\parskip{5mm}
+
+Název práce:
+Míry kvality strojového překladu
+
+Autor:
+Matouš Macháček
+
+Ústav:
+Ústav formální a aplikované lingvistiky
+
+Vedoucí diplomové práce:
+RNDr. Ondřej Bojar, Ph.D., UFAL
+
+Abstrakt:
+\XXX{Napsat Abstrakt v cestine}
+
+Klíčová slova:
+strojový překlad, vyhodnocování kvality, automatické metriky, anotace
+
+\vss}\nobreak\vbox to 0.49\vsize{
+\setlength\parindent{0mm}
+\setlength\parskip{5mm}
+
+Title:
+Measures of Machine Translation Quality
+
+Author:
+Matouš Macháček
+
+Department:
+Institute of Formal and Applied Linguistics
+
+Supervisor:
+RNDr. Ondřej Bojar, Ph.D., UFAL
+
+Abstract:
+\XXX{Napsat Abstrakt v anglictine}
+
+Keywords:
+machine translation, quality measurement, automatic metrics, annotation
+
+\vss}
+
+\newpage
+
+%%% Strana s automaticky generovaným obsahem diplomové práce. U matematických
+%%% prací je přípustné, aby seznam tabulek a zkratek, existují-li, byl umístěn
+%%% na začátku práce, místo na jejím konci.
+
+\openright
+\pagestyle{plain}
+\setcounter{page}{1}
+\tableofcontents
+
+%%% Jednotlivé kapitoly práce jsou pro přehlednost uloženy v samostatných souborech
+\include{introduction}
+\include{metrics}
+\include{conclusion}
+
+\bibliography{references.bib}
+\listoffigures
+\listoftables
+
+\openright
+\end{document}
