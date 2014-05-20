@@ -1,22 +1,27 @@
-Machine Translation quality can be measured in two different ways: using human
-evaluation or automatic metrics.  Altough human evaluation is considered more
-accurate than automatic evaluation, it suffers some disadvantages.  It is slow
-and expensive and therefore cannot be used in tuning parameters of statistical
-models.
+Methods of machine translation evaluation are a necessary for measuring
+progress in the field, for selecting the best system for a given translation
+task and also for the day-to-day development of machine translation systems. 
 
-The aim of this thesis is to develop a new semi-automatic evaluation measure,
-which would have advantages of both human evaluation and automatic evaluation.
-The idea is to evaluate small sentence segments by human and create a database
-of such annotation which could be used later to automatically evaluate new
-unseen sentences.  This new measure should evaluate MT outputs more similarly
-to how human do and still be cheap and fast after the initial database of
-annotations is created once. It could be therefore used in tuning parameters of
-MT systems.
+The aim of the thesis is to explore the area of machine translation evaluation,
+covering both manual and automatic methods. For manual methods, we seek for a
+technique that is fast (and therefore inexpensive), requires little or no
+training of the annotators and is reliable in the sense that annotators reach a
+sufficient level of agreement in their judgements. For automatic methods, we
+primarily demand a high correlation with human judgements. Automatic methods
+rely on one or more reference translation. Recently, methods on the boundary of
+manual and automatic ones have also emerged: significant manual annotation is
+carried out in a preparatory phase (such as constructing many reference
+translations) and this dataset then serves in an automatic evaluation. 
 
-The important part of the thesis is to design and develop a new annotation
-environment which will be used to collect the annotations. It will be then used
-to annotate wmt14 data. The new measure will be analysed and compared to
-current manual and automatic evaluation measures. 
+Following a survey of recent advances in the field, the thesis should carry out
+an experiment with one manual evaluation method (due to limited resources for
+annotation) and contrast its strengths and weaknesses with other manual
+methods. The design and development of an annotation interface for the method
+is an important part of the thesis. The selected method should be versatile in
+the sense that the obtained annotations can be reused for further evaluation of
+other systems or other variants of the systems output. To verify this, the
+thesis should explore the applicability of the annotations in automatic tuning
+of an MT system. 
 
-dalsi poznamky:
-jak by anotace sly vyuzit pro mereni kvality noveho systemu. 
+For automatic methods, a broad comparison of available techniques is desirable,
+empirically evaluating their correlation with human judgements.
