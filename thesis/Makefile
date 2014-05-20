@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 .PHONY: all clean
 
 all: main.pdf
@@ -9,4 +10,4 @@ main.pdf: $(wildcard *.tex)
 	pdflatex main.tex
 
 clean:
-	rm -f *.{log,dvi,aux,toc,lof,out} main.pdf
+	rm -f *.{log,dvi,aux,toc,lof,out,bbl,blg,lot} main.pdf
