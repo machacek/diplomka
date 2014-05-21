@@ -20,10 +20,15 @@
 %% Ostatní balíčky
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{mathtools}
 %\usepackage{amsfonts}
 \usepackage{url}
-%\usepackage{rotating}
-%\usepackage{multirow}
+\usepackage{afterpage}
+\usepackage{natbib}
+\usepackage{rotating}
+\usepackage{multirow}
 %\usepackage{multicol}
 \usepackage{tocbibind}
 \usepackage{color}
@@ -50,6 +55,9 @@
 %   \vskip 20\p@
 %}}
 %\makeatother
+
+\def\parcite#1{\citep{#1}}
+\def\perscite#1{\cite{#1}}
 
 % Deklarace stylů fontů pro různé druhy termínů
 \newcommand{\metric}[1]{\textsc{#1}}
@@ -227,7 +235,7 @@ machine translation, quality measurement, automatic metrics, annotation
 \include{implementation}
 \include{conclusion}
 
-\bibliographystyle{apalike}
+\bibliographystyle{chicago}
 \bibliography{references}
 \listoffigures
 \listoftables
