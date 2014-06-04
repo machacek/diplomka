@@ -75,6 +75,10 @@ def parse_args():
             metavar='N',
             type=int,
             dest="min_length")
+    
+    parser.add_argument("--system",
+            help="Use this option for different output format with system's ID",
+            default=None)
 
     return parser.parse_args()
 
@@ -92,7 +96,10 @@ def main():
             source_segment = [source_tokenized[index] for index in indexes]
             mapped_indexes = alignment.range(indexes)
             mapped_segment = [target_tokenized[index] for index in mapped_indexes] 
-            print(i, " ".join(source_tokenized), reference_str, " ".join(source_segment), " ".join(mapped_segment), " ".join(map(str,indexes)), sep='\t')
+            if args.system:
+                print(i, " ".join(mapped_segment), " ".join(map(str,indexes)), sep='\t')
+            else:
+                print(i, " ".join(source_tokenized), reference_str, " ".join(source_segment), " ".join(mapped_segment), " ".join(map(str,indexes)), sep='\t')
 
 
 

@@ -99,7 +99,22 @@ extracted.segments: tokenized alignments source.parsed
 			--reference tokenized/reference \
 			--minlength 3 \
 			--maxlength 6; \
-		done | sort | uniq > $@
+	done | sort | uniq > $@
+
+extracted.systems: tokenized alignments source.parsed
+	for file in tokenized/candidates/*; do \
+		system=$$(basename $$file); \
+		alignment=$$(echo $$file | sed "s/^tokenized/alignments/"); \
+		./segmented_tree.py \
+			--parsed source.parsed \
+			--align $$alignment \
+			--target $$file \
+			--source tokenized/source \
+			--reference tokenized/reference \
+			--minlength 3 \
+			--maxlength 6 \
+			--system $$system; \
+	done > $@
 
 		
 clean:
