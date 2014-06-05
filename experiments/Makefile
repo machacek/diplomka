@@ -116,6 +116,12 @@ extracted.systems: tokenized alignments source.parsed
 			--system $$system; \
 	done > $@
 
+system.ranks: extracted.systems annotated.segments
+	./all-systems-ranks.py \
+		--annotated annotated.segments \
+		--systems extracted.systems \
+		> $@
+
 		
 clean:
 	rm -rf extracted.segments source.parsed 
