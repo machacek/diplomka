@@ -1,8 +1,13 @@
-all: main.tex
-	pdflatex $<
+SHELL = /bin/bash
+.PHONY: all clean
+
+all: main.pdf
+   
+main.pdf: $(wildcard *.tex)
+	pdflatex main.tex
 	bibtex main
-	pdflatex $<
-	pdflatex $<
+	pdflatex main.tex
+	pdflatex main.tex
 
 clean:
-	rm -f main.aux main.bbl main.blg main.log main.pdf
+	rm -f *.{log,dvi,aux,toc,lof,out,bbl,blg,lot} main.pdf

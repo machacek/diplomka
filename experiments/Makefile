@@ -10,6 +10,9 @@ GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playgro
 
 .PHONY: all clean
 
+.SECONDARY:
+
+
 all: extracted.segments
 
 tokenized: raw
@@ -99,7 +102,34 @@ extracted.segments: tokenized alignments source.parsed
 			--reference tokenized/reference \
 			--minlength 3 \
 			--maxlength 6; \
-		done | sort | uniq > $@
+	done | sort | uniq > $@
+
+extracted.systems: tokenized alignments source.parsed
+	for file in tokenized/candidates/*; do \
+		system=$$(basename $$file); \
+		alignment=$$(echo $$file | sed "s/^tokenized/alignments/"); \
+		./segmented_tree.py \
+			--parsed source.parsed \
+			--align $$alignment \
+			--target $$file \
+			--source tokenized/source \
+			--reference tokenized/reference \
+			--minlength 3 \
+			--maxlength 6 \
+			--system $$system; \
+	done > $@
+
+system.ranks: extracted.systems annotated.segments
+	./all-systems-ranks.py \
+		--annotated annotated.segments \
+		--systems extracted.systems \
+		> $@
+
+one-out.ranks: extracted.systems annotated.segments
+	./one-out-ranks.py \
+		--annotated annotated.segments \
+		--systems extracted.systems \
+		> $@
 
 		
 clean:
