@@ -10,6 +10,9 @@ GIZABINDIR = $(shell first_existing /a/merkur3/TMP/machacek/statmt/trunk/playgro
 
 .PHONY: all clean
 
+.SECONDARY:
+
+
 all: extracted.segments
 
 tokenized: raw
@@ -118,6 +121,12 @@ extracted.systems: tokenized alignments source.parsed
 
 system.ranks: extracted.systems annotated.segments
 	./all-systems-ranks.py \
+		--annotated annotated.segments \
+		--systems extracted.systems \
+		> $@
+
+one-out.ranks: extracted.systems annotated.segments
+	./one-out-ranks.py \
 		--annotated annotated.segments \
 		--systems extracted.systems \
 		> $@
