@@ -1,10 +1,12 @@
 \chapter{Proposed Semi-Automatic Evaluation Method}
-\XXX{Zopakovat motivaci, predstaveni metody}
 
-The method we propose consists of two part. The first part is a way how humans
+The method we propose consists of two parts. The first part is a way how humans
 judge outputs of judged systems. The second part is how to interpret collected
 judgments to compute overall scores and rank the systems. We discuss these two
-parts in following two sections.
+parts in following two sections. \XXX{V tomto odstavci (a asi i v dalsich odstavcich
+neni dostatecne zdurazneno, proc je to semi-automaticka metoda, mozna opustit
+oznaceni semi-automaticka a pouzit misto toho neco jako Manual Evaluation Method
+with posibility to reuse collected judgementes for new systems)}
 
 In the WMT official human evaluation humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
@@ -27,12 +29,28 @@ automatic alignment.  You can see this process ilustrated in figure
 clanek a stary WMT clanek}.
 
 In \XXX{citovat WMT}, these extracted segments are only highlighted and shown
-together with the rest of the sentence to judges. Judges are asked to rank the
-segments in the context of whole sentences.
+to judges together with the rest of the sentence. Judges are asked to rank the
+segments in the context of whole sentences. \XXX{Zkontrolovat presne instrukce
+z WMT}
 
-Similarly to \XXX{citovat ten clanek} we use different approach here. We show
-the extracted segments without any context (Only with the source segment) and
-ask judges to rank them. 
+We use different approach here which is more similar to that used in
+\XXX{citovat ten clanek}. We show the extracted segments without any context
+and ask judges to rank them. The only aditional information provided to
+annotators is the whole source sentence with the source segment highlighted.
+Judges are told that they can imagine the rest of the sentence in which the
+ranked segment fits best. They are instructed to penalize only those segments
+for which they cannot imagine any appropriate rest of the sentence.
+
+While we are aware that this approach has some disadvantages (wchich we
+summarize bellow) there is one significant advantage: it is much more likely
+that two systems produce the same translation of a short segment then they
+would produce the same translation of a whole sentence. Because we do not show
+the sentence context to annotators we can merge the equal segment candidates
+into one, so the annotators have less candidate segments to rank. This also
+allows us to reuse already collected human judgements later to evaluate a new
+system which was not in the set of annotated systems (we experiment with this
+in section \ref{evaluating-new-systems}) or to tune parameters of a system (we
+experiment with this in section \ref{tuning-systems}).
 
 
 
@@ -52,10 +70,14 @@ byly anotovane. Vypocet skore, vypocet korelace s oficialnimi WMT14 vysledky.
 Porovnani obou metod z hlediska mnozstvi lidske prace.}
 
 \subsection{Evaluating New Systems}
+\label{evaluating-new-systems}
+
 \XXX{Zde zkusim pouzit vytvorenou databazi pro vyhodnoceni noveho systemu
 (ktery vsak nekde musim ziskat)}
 
 \subsection{Tuning Systems}
+\label{tuning-systems}
+
 \XXX{Zde zkusim pouzit vytvorenou databazi pro MT tuning}
 
 \section{Comparison to Other Manual Methods}
