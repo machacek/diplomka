@@ -2,9 +2,9 @@
 \XXX{Zopakovat motivaci, predstaveni metody}
 
 The method we propose consists of two part. The first part is a way how humans
-will judge outputs of judged systems. The second part is how to interpret
-collected judgments to compute overall scores and rank the systems. We discuss
-these two parts in following two sections.
+judge outputs of judged systems. The second part is how to interpret collected
+judgments to compute overall scores and rank the systems. We discuss these two
+parts in following two sections.
 
 In the WMT official human evaluation humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
@@ -14,12 +14,27 @@ remember for judge to compare them. Also when comparing longer sentences there
 are much more aspects in which one sentence can be better or worse than second
 sentence and therefore it is more difficult for judges to choose a winner. 
 
-To avoid these disadvantages we take inspiration from the work of \XXX{citovat
-clanek ktery navrhuje anotovani segmentu}. Instead of judging whole sentences
-we extract shorter segments from candidates and give them to judges to rank
-them. In order to extract coresponding segments from all candidates we first
-extract short segment from the source sentence and then use an automatic alignments
-to project the short segment their counterparts in the candidates.
+To avoid these disadvantages we propose the following method. Instead of
+judging whole sentences we extract shorter segments from candidates and give
+them to judges to rank them. In order to extract meaningful segments with the
+same meaning from all candidates we do the following procedure: First we parse
+the source sentence and then we go recursively down the parsed tree and find
+nodes which covers source segments with given maximum length (which is a
+parameter of this method). At the end we project these extracted source
+segments to their counterpart segments in all candidate sentences using an
+automatic alignment.  You can see this process ilustrated in figure
+\XXX{nakreslit obrazek}. This extraction method is inspired by \XXX{citovat ten
+clanek a stary WMT clanek}.
+
+In \XXX{citovat WMT}, these extracted segments are only highlighted and shown
+together with the rest of the sentence to judges. Judges are asked to rank the
+segments in the context of whole sentences.
+
+Similarly to \XXX{citovat ten clanek} we use different approach here. We show
+the extracted segments without any context (Only with the source segment) and
+ask judges to rank them. 
+
+
 
 
 \section{Data and Segment Preparation}
