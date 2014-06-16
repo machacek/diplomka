@@ -16,17 +16,28 @@ remember for judge to compare them. Also when comparing longer sentences there
 are much more aspects in which one sentence can be better or worse than second
 sentence and therefore it is more difficult for judges to choose a winner. 
 
+\begin{algorithm}[H]
+    \KwData{Tree, MaxSegmentLength}
+    \KwResult{List of extracted segments}
+    \If{Tree covers more than MaxSegmentLength}{
+      yield all leaves \;
+    }
+    \caption{Segment extraction from parsed tree}
+    \label{segment:extraction}
+\end{algorithm}
+
 To avoid these disadvantages we propose the following method. Instead of
 judging whole sentences we extract shorter segments from candidates and give
 them to judges to rank them. In order to extract meaningful segments with the
 same meaning from all candidates we do the following procedure: First we parse
 the source sentence and then we go recursively down the parsed tree and find
 nodes which covers source segments with given maximum length (which is a
-parameter of this method). At the end we project these extracted source
-segments to their counterpart segments in all candidate sentences using an
-automatic alignment.  You can see this process ilustrated in figure
-\XXX{nakreslit obrazek}. This extraction method is inspired by \XXX{citovat ten
-clanek a stary WMT clanek}.
+parameter of this method). This is exactly described in algorithm
+\ref{segment:extraction}. Finally we project these extracted source segments to
+their counterpart segments in all candidate sentences using an automatic
+alignment.  You can find the whole process ilustrated in figure \XXX{nakreslit
+obrazek}.  This extraction method is inspired by \XXX{citovat ten clanek a
+stary WMT clanek}.
 
 In \XXX{citovat WMT}, these extracted segments are only highlighted and shown
 to judges together with the rest of the sentence. Judges are asked to rank the
@@ -35,27 +46,71 @@ z WMT}
 
 We use different approach here which is more similar to that used in
 \XXX{citovat ten clanek}. We show the extracted segments without any context
-and ask judges to rank them. The only aditional information provided to
+and ask judges to rank them. The only additional information provided to
 annotators is the whole source sentence with the source segment highlighted.
 Judges are told that they can imagine the rest of the sentence in which the
 ranked segment fits best. They are instructed to penalize only those segments
 for which they cannot imagine any appropriate rest of the sentence.
 
-While we are aware that this approach has some disadvantages (wchich we
+While we are aware that this approach has some disadvantages (which we
 summarize bellow) there is one significant advantage: it is much more likely
 that two systems produce the same translation of a short segment then they
 would produce the same translation of a whole sentence. Because we do not show
 the sentence context to annotators we can merge the equal segment candidates
 into one, so the annotators have less candidate segments to rank. This also
 allows us to reuse already collected human judgements later to evaluate a new
-system which was not in the set of annotated systems (we experiment with this
-in section \ref{evaluating-new-systems}) or to tune parameters of a system (we
-experiment with this in section \ref{tuning-systems}).
-
-
-
+system which was not in the set of annotated systems (we present this
+experiment in the section \ref{evaluating-new-systems}) or to tune parameters
+of a system (we present this experiment in the section \ref{tuning-systems}).
 
 \section{Data and Segment Preparation}
+
+We have conducted an annotation experiment using the proposed method. We used
+English to Czech part of the WMT14 \XXX{citovat} test set. We choose this data
+set to be able to compare experiments' results with the official WMT14 human
+evaluation. 
+
+The testset consists of 3003 \XXX{overit} sentences. It contains both source
+sentences and reference translations. Roughly a half of the sentences was
+originally in Czech and was translated by human translators into English. The
+second half of the sentences was translated in opposite direction. Besides the
+source and reference translations, we also used candidate translations of 10
+systems which participated in the WMT14 translation task. All systems are listed in 
+the table \ref{translation-task-participants}
+
+
+\begin{table}[h]
+  \small
+  \begin{center}
+    \begin{tabular}{|l|l|l|}
+      \hline
+      \textbf{ID} & \textbf{Type} & \textbf{Team} \\
+      \hline
+      \system{cu-depfix} & statistical & \multirow{4}{*}{Charles University, Prague \XXX{(Tamchyna et al., 2014)}}  \\
+      \system{cu-bojar} & statistical &  \\
+      \system{cu-funky} & statistical &  \\
+      \system{cu-tecto} & statistical &  \\
+      \hline
+      \system{uedin-phrase} & statistical &  \multirow{2}{*}{University of Edinburgh \XXX{(Durrani er al., 2014b)}} \\
+      \system{uedin-uncnstr} &  statistical &  \\
+      \hline
+      \system{commercial-1} & rule-based & \multirow{2}{*}{Commercial machine translation systems} \\
+      \system{commercial-2} & rule-based & \\
+      \hline
+      \system{online-a} & statistical & \multirow{2}{*}{Online statistical machine translation systems} \\
+      \system{online-b} & statistical & \\
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Systems participating WMT14 translation task in direction English-Czech \XXX{Zkontrolovat typy nekterych systemu}}
+  \label{translation-task-participants}
+\end{table}
+
+
+
+
+
+
 \XXX{Jaka data jsem pouzil, preprocessing, jak jsem extrahoval segmenty}
 
 \section{Segments Ranking}
@@ -72,8 +127,10 @@ Porovnani obou metod z hlediska mnozstvi lidske prace.}
 \subsection{Evaluating New Systems}
 \label{evaluating-new-systems}
 
-\XXX{Zde zkusim pouzit vytvorenou databazi pro vyhodnoceni noveho systemu
-(ktery vsak nekde musim ziskat)}
+\XXX{Zde zkusim pouzit vytvorenou databazi pro vyhodnoceni noveho systemu}
+
+\XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
+Translation: Fast Evaluation for MT Research}
 
 \subsection{Tuning Systems}
 \label{tuning-systems}
