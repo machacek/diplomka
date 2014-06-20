@@ -1,3 +1,6 @@
 [submodule "segranks"]
 	path = segranks
 	url = git@github.com:machacek/segranks.git
+[submodule "mosesdecoder"]
+	path = mosesdecoder
+	url = git@github.com:machacek/mosesdecoder.git
