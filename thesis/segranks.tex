@@ -106,7 +106,27 @@ the table \ref{translation-task-participants}
   \label{translation-task-participants}
 \end{table}
 
+Source sentences and all candidate translations were tokenized using the script
+\texttt{tokenizer.perl}. Unicode punctuation characters were normalized using
+the script \texttt{replace-unicode-punctuation.perl}. (Both scripts are included
+in the Moses toolkit).
 
+The source sentences were parsed using the Stanford lexicalized parser
+\XXX{citace}. We used \texttt{englishFactored} model which is distributed with
+the parser. (More models were tried and this model gave subjectively   better
+segments). 
+
+
+We computed an alignments between the source sentecnes and the candidate
+translations using Giza++ \XXX{citace}.  Since the alignment algorithm is
+unsupervised and the amount of all candidate translations is relatively small
+($10 \times 3003$), we introduced more data by concatenating all candidate
+translations with Europarl parallel corpus (646 605 sentences, \XXX{citovat})
+and with \XXX{Jaky je to korpus?} (197 053 sentences, \XXX{citovat}).  The
+concatenated parallel corpus was lowercased before alignment computation. 
+
+We extracted short segments from the parsed source trees and project
+them using the computed alignment. In algorithm \ref{segment:extraction}, 
 
 
 
