@@ -5,6 +5,17 @@ db.sqlite3
 normalized-for-ali
 tokenized
 
+# Latex
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.pdf
+
 
 # Packages
 *.egg
