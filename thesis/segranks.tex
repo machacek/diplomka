@@ -14,7 +14,8 @@ rank these candidates relatively (ties are allowed). One of disadvantages of
 this method is that sentences are quite long and therefore quite hard to
 remember for judge to compare them. Also when comparing longer sentences there
 are much more aspects in which one sentence can be better or worse than second
-sentence and therefore it is more difficult for judges to choose a winner. 
+sentence and therefore it is more difficult for judges to choose the better
+candidate. 
 
 %\begin{algorithm}[H]
 %    \KwData{Tree, MaxSegmentLength}
@@ -65,18 +66,21 @@ of a system (we present this experiment in the section \ref{tuning-systems}).
 
 \section{Data and Segment Preparation}
 
-We have conducted an annotation experiment using the proposed method. We used
-English to Czech part of the WMT14 \XXX{citovat} test set. We choose this data
-set to be able to compare experiments' results with the official WMT14 human
-evaluation. 
+We have conducted an annotation experiment using the proposed method. In this
+section we describe what data we have used and how we prepare them for the
+annotation experiment.
 
-The testset consists of 3003 \XXX{overit} sentences. It contains both source
+We used English to Czech part of the WMT14 \parcite{wmt14-overview-paper} test
+set. We choose this data set to be able to compare experiments' results with
+the official WMT14 human evaluation. 
+
+The testset consists of 3003 sentences (68866 tokens). It contains both source
 sentences and reference translations. Roughly a half of the sentences was
 originally in Czech and was translated by human translators into English. The
 second half of the sentences was translated in opposite direction. Besides the
 source and reference translations, we also used candidate translations of 10
-systems which participated in the WMT14 translation task. All systems are listed in 
-the table \ref{translation-task-participants}
+systems which participated in the WMT14 translation task. All systems are
+listed in the table \ref{translation-task-participants}
 
 
 \begin{table}[h]
@@ -113,9 +117,9 @@ in the Moses toolkit).
 
 The source sentences were parsed using the Stanford lexicalized parser
 \XXX{citace}. We used \pojem{englishFactored} model which is distributed with
-the parser. (More models were tried and this model gave subjectively   better
-segments). 
-
+the parser. (More models were examined and this model gave subjectively the
+best segments). \XXX{Tady popsat detailneji, ktere modely jsem zkusil a ze 
+to nebylo zase tak subjektivni}
 
 We computed an alignments between the source sentecnes and the candidate
 translations using Giza++ \XXX{citace}. Since the alignment algorithm is
@@ -125,24 +129,70 @@ translations with Europarl parallel corpus (646 605 sentences, \XXX{citovat})
 and with \XXX{Jaky je to korpus?} (197 053 sentences, \XXX{citovat}).  The
 concatenated parallel corpus was lowercased before alignment computation. 
 
-We extracted short segments from the parsed source trees and project them using
-the computed alignment. In algorithm \ref{segment:extraction}, the constant
-\pojem{min-segment-length} was set to the value 3 to filter out very short
-segments which are hard to judge without context. This also helped to reduce
-the number of extracted segments to be annotated. The constant
-\pojem{max-segment-length} was set to the value 6 so the extracted segments
-were not too long to judge and in the same time it was more likely that two
-candidate translations of a segment were equal and therefore there would be
-less items to rank (our aim was to make annotations as easy and fast as
-possible).
+We extracted short segments from the parsed source trees using the algorithm
+\ref{segment:extraction}. The constant \pojem{min-segment-length} was set to
+the value 3 to filter out very short segments which are hard to judge without
+context. This also helped to reduce the number of extracted segments to be
+annotated. The constant \pojem{max-segment-length} was set to the value 6 so
+the extracted segments were not too long to judge and in the same time it was
+more likely that two candidate translations of a segment were equal and
+therefore there would be less items to rank (our aim was to make annotations as
+easy and fast as possible). We have experimented with various settings of these
+two constants and the final settings seemed to generate reasonable number of
+meaningful segments.
 
+\XXX{Nekde zduraznit, ze to jsou vlastne konstituenty, ale asi ne tady, nekde drive}
 
-
-\XXX{Jaka data jsem pouzil, preprocessing, jak jsem extrahoval segmenty}
+From 3003 source sentences, we have extracted 8485 segments of length 3 to 6
+tokens. That is \XXX{priblizne} 2.83 segments on a sentence on average. By
+projecting the source segments to the candidate sentences using the computed
+alignments, we got $10 \times 8485 = 84850$ candidate segments. However, after
+the merging of equal segments only 50011 candidate segments left. This is 58.9
+\% of the original candidate segments, or in other words, after the merging we
+got 5.89 (instead of original 10) candidate segments to be ranked for each
+source segment on average. Theese prepared candidate segments were inserted
+into the database to be ranked by annotators.
 
 \section{Segments Ranking}
-\XXX{Annotacni prostredi, instrukce k anotovani, prubeh anotace, statistiky
-analyza ziskane databaze, mezianotatorske shody}
+
+We have developed a new annotation application for this annotation
+project.\footnote{It would be probably possible to costumize and use an existing
+annotation application, for example Appraise\XXX{citovat}. However, since
+the ranking the short segments is quite specific it would require a lot of
+customization. We therefore decided to develop our own light-weight web
+application which would suit our needs perfectly and allow us to optimize
+efficiency of the annotation.} For implementation details of this application,
+please see the chapter \ref{implementation}. You can find a screenshot of this
+application
+
+\XXX{Annotacni prostredi, ukazka prostredi, zduraznit jednoduchost, odkazat se
+na implementaci, instrukce k anotovani, anotatori,  prubeh anotace, statistiky analyza
+ziskane databaze, mezianotatorske shody, cena, platby}
+
+\XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
+
+\quote{
+    
+A number of segments are extracted from the annotated sentence. You are shown a
+few candidate translations for each of these segments. Your task is to
+distinguish \XXX{vhodnejsi} the acceptable\XXX{vhodnejsi} candidate
+translations (the meaning of the segment can be guessed despite a few or more
+errors) from the unacceptable ones (the meaning is definitely not possible to
+guess from the candidate). Also please rank the acceptable candidate
+translations relatively from the best ones to the worst ones.  Please, place
+better candidate translations higher, the worser ones lower. You can place
+candidates of the same quality on the same rank. Please place the unacceptable
+candidates to the position ``Garbage''
+
+Please note that source segments and their candidate translations are chosen
+automatically and does not have to be perfect. Consider them as only
+\XXX{priblizne voditko}. If a candidate segment contains an extra word, which
+does not correspond to the source segment but otherwise could be in the
+translated sentence you do not have to consider such candidate as worser. If
+something is missing in the candidate translation you should consider that as
+an error.
+
+}
 
 \section{Experiments}
 
