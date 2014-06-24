@@ -1,5 +1,7 @@
 \chapter{Proposed Semi-Automatic Evaluation Method}
 
+\XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
+
 The method we propose consists of two parts. The first part is a way how humans
 judge outputs of judged systems. The second part is how to interpret collected
 judgments to compute overall scores and rank the systems. We discuss these two
@@ -106,7 +108,7 @@ listed in the table \ref{translation-task-participants}
     \end{tabular}
   \end{center}
 
-  \caption{The MT systems which were used in the annotation experiment}{The
+  \caption[The MT systems which were used in the annotation experiment]{The
   machine translation systems participating in the WMT14 translation task in
   direction English-Czech which were used in the annotation experiment
   \XXX{Zkontrolovat typy nekterych systemu}}
@@ -207,7 +209,7 @@ Annotators were therefore able to rank segments on a tablet.
     \begin{center}
         \includegraphics[width=\textwidth]{img/segranks-screenshot2.png}
     \end{center}
-    \caption{A screen shot of the annotation application}{A screen shot of the
+    \caption[A screen shot of the annotation application]{A screen shot of the
     annotation application. Annotators rank the candidate segments by dragging
 and dropping them into the ranks.  Annotators see all annotated segments of a
 sentence on a single screen}
@@ -254,17 +256,24 @@ Finally we computed $P(E)$ as
     P(E) = P(A>B)^2 + P(A=B)^2 + P(A<B)^2
 \end{equation*}
 
-\noindent where $P(A>B)$, $P(A=B)$ and $P(A<B)$ were computed empirically.
+\noindent where $P(A>B)$, $P(A=B)$ and $P(A<B)$ were computed empirically. The
+value of $P(E)$ in our experiment is 0.394, which means that the probability of
+the outcomes $A>B$, $A=B$ and $A<B$ is not uniform.
 
 The final values of inter-annotator and intra-annotator $\kappa$ can be found
 in the table \ref{agreements} together with corresponding $\kappa$ values from
 WMT14 translation task.  \parcite{wmt14-overview-paper} computed similarly on
 the same testset for comparisons. You can see that we get both $\kappa$ scores
-better than they are in WMT14. However, they are still quite poor\footnote{
-The exact interpretation of the kappa coefficient is difficult, but according
-to \cite{koch1977}, 0 -- 0.2 is slight, 0.2 -- 0.4 is fair, 0.4 -- 0.6 is moderate,
-0.6 -- 0.8 is substantial and 0.8 -- 1.0 is almost perfect.} and we expected
-them higher.
+better than they are in WMT14. However, they are still quite poor\footnote{ The
+exact interpretation of the kappa coefficient is difficult, but according
+to \cite{landis77}, 0 -- 0.2 is slight, 0.2 -- 0.4 is fair, 0.4 -- 0.6 is
+moderate, 0.6 -- 0.8 is substantial and 0.8 -- 1.0 is almost perfect.} and we
+expected them to be higher. We also computed the agreements $\kappa$ for
+individual annotators and report them in the table \ref{big-table}.  As you can
+see, these scores are varying a lot. Based on these scores we could filter out
+unreliable annotators. However we do not do that to have the experiment
+comparable to the WMT14 experiment.
+
 
 \begin{table}
     \begin{center}
@@ -276,7 +285,7 @@ them higher.
         \end{tabular}
     \end{center}
 
-    \caption{Inter-annotator and intra-annotator $\kappa$ scores}{$\kappa$
+    \caption[Inter-annotator and intra-annotator $\kappa$ scores]{$\kappa$
         scores measuring intra-annotator and inter-annotator agreements. We
         also report corresponding $\kappa$ scores from official WMT translation
         task for comparison.  Please see the table \ref{big-table} for the
@@ -286,7 +295,6 @@ them higher.
 \end{table}
 
 
-\XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
 
 
 \section{Experiments}
