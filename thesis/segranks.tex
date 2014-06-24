@@ -157,12 +157,13 @@ into the database to be ranked by annotators.
 
 We have developed a new annotation application for this annotation
 project.\footnote{It would be probably possible to customize and use an
-    existing annotation application, for example Appraise\XXX{citovat}.
-    However, since the ranking of short segments is quite specific it would
-require a lot of customization. We therefore decided to develop our own
-light-weight web application which would suit our needs perfectly and allow us
-to optimize efficiency of the annotation.} For implementation details of this
-application, please see the chapter \ref{implementation}.
+    existing annotation application, for example Appraise
+    \parcite{mtm12_appraise}.  However, since the ranking of short segments is
+    quite specific it would require a lot of customization. We therefore
+decided to develop our own light-weight web application which would suit our
+needs perfectly and allow us to optimize efficiency of the annotation.} For
+implementation details of this application, please see the chapter
+\ref{implementation}.
 
 You can find an example screen shot of this application in figure
 \ref{segranks-screenshot}. Annotation instructions were displayed on each
@@ -194,28 +195,57 @@ once). For each annotated segment they see the source sentence repeated with
 the annotated segment highlighted. Annotators rank the segment candidates by
 drag-and-droping them to appropriate rank positions. When all candidates of all
 source segments of a sentence are ranked annotators are allowed to submit the
-results to the server.
-
-The web interface has responsive design, so it works correctly on mobile
-devices.  The drag-and-drop works also on touch screens. Annotators were
-therefore able to rank segments on a tablet.
-
-
+results to the server.  The web interface has responsive design, so it works
+correctly on mobile devices.  The drag-and-drop works also on touch screens.
+Annotators were therefore able to rank segments on a tablet.
 
 \begin{figure}
     \begin{center}
         \includegraphics[width=\textwidth]{img/segranks-screenshot2.png}
     \end{center}
     \caption{A screenshot of an annotation application. Annotators rank the
-    candidate segments by draging and dropping them into the ranks.
-Annotators see all annotated segments of a sentence on single screen}
+    candidate segments by dragging and dropping them into the ranks.
+Annotators see all annotated segments of a sentence on a single screen}
     \label{segranks-screenshot}
 \end{figure}
 
+The very annotation experiment was conducted during May/June 2014. It lasted
+exactly one month. During this time 17 annotators ranked segments of 2765
+sentences, which is more than 92 \% of the prepared English-Czech test set.
 
-\XXX{zduraznit jednoduchost,
-anotatori,  prubeh anotace, statistiky analyza
-ziskane databaze, mezianotatorske shody, cena, platby}
+\subsection{Annotator Agreements}
+
+To measure reliability and robustness of the proposed annotation method we have
+computed intra- and inter-annotator agreements.  We measured the agreements
+using the Cohen's kappa coefficient ($\kappa$) \parcite{cohen1960}. Let $P(A)$
+be the proportion of times the annotators agree and $P(E)$ be the proportion of
+time that they would agree by chance. Then the Cohen's $\kappa$ is computed
+using the following formula:
+
+\begin{equation*}
+    \kappa = \frac{P(A)-P(E)}{1-P(E)}
+\end{equation*}
+
+\noindent Simply put, $\kappa$ is the proportion of times the annotators agrees
+from all the times they would not agree by chance. Note that $\kappa$ is a
+normalized version of $P(A)$, it considers how difficult it is to agree.
+Values of $\kappa$ can be therefore compared across the various annotation
+experiments. The maximum value is 1 which means that annotators allways agree.
+The zero value means that annotators agree as often as they would by chance.
+
+In our case $P(A)$ and $P(E)$ are computed in context of pairwise comparisons.
+
+
+
+
+
+
+Approximately 5 \% of the
+annotated sentences were annotated twice by two different annotators so that we
+are able to compute inter-annotator agreement.  Another 5 \% of the sentences
+were annotated twice by the same annotator so that we are able to compute
+intra-annotator agreement.
+
 
 \XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
 
