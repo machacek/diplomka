@@ -1,7 +1,5 @@
 \chapter{Proposed Semi-Automatic Evaluation Method}
 
-\XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
-
 The method we propose consists of two parts. The first part is a way how humans
 judge outputs of judged systems. The second part is how to interpret collected
 judgments to compute overall scores and rank the systems. We discuss these two
@@ -39,16 +37,16 @@ parameter of this method). This is exactly described in algorithm
 \ref{segment:extraction}. Finally we project these extracted source segments to
 their counterpart segments in all candidate sentences using an automatic
 alignment.  You can find the whole process ilustrated in figure \XXX{nakreslit
-obrazek}.  This extraction method is inspired by \XXX{citovat ten clanek a
-stary WMT clanek}.
+obrazek}.  This extraction method is inspired by \perscite{human-in-the-loop}
+and by the WMT07 manual evaluation \parcite{wmt-overview-2007}.
 
-In \XXX{citovat WMT}, these extracted segments are only highlighted and shown
-to judges together with the rest of the sentence. Judges are asked to rank the
-segments in the context of whole sentences. \XXX{Zkontrolovat presne instrukce
-z WMT}
+In the segment evaluation in \parcite{wmt-overview-2007}, these extracted
+segments are only highlighted and shown to judges together with the rest of the
+sentence.  Judges are asked to rank the the highlighted segments in the context
+of whole sentences.
 
 We use different approach here which is more similar to that used in
-\XXX{citovat ten clanek}. We show the extracted segments without any context
+\parcite{human-in-the-loop}. We show the extracted segments without any context
 and ask judges to rank them. The only additional information provided to
 annotators is the whole source sentence with the source segment highlighted.
 Judges are told that they can imagine the rest of the sentence in which the
@@ -65,6 +63,8 @@ allows us to reuse already collected human judgements later to evaluate a new
 system which was not in the set of annotated systems (we present this
 experiment in the section \ref{evaluating-new-systems}) or to tune parameters
 of a system (we present this experiment in the section \ref{tuning-systems}).
+
+\XXX{Sumarizovat nevyhody}
 
 \section{Data and Segment Preparation}
 
@@ -128,7 +128,7 @@ best segments). \XXX{Tady popsat detailneji, ktere modely jsem zkusil a ze
 to nebylo zase tak subjektivni}
 
 We computed an alignments between the source sentecnes and the candidate
-translations using Giza++ \XXX{citace}. Since the alignment algorithm is
+translations using Giza++ \parcite{giza-pp}. Since the alignment algorithm is
 unsupervised and the amount of all candidate translations is relatively small
 ($10 \times 3003$), we introduced more data by concatenating all candidate
 translations with Europarl parallel corpus (646 605 sentences, \XXX{citovat})
