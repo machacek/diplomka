@@ -106,7 +106,12 @@ listed in the table \ref{translation-task-participants}
       \hline
     \end{tabular}
   \end{center}
-  \caption{Systems participating WMT14 translation task in direction English-Czech \XXX{Zkontrolovat typy nekterych systemu}}
+
+  \caption{The MT systems which were used in the annotation experiment}{The
+  machine translation systems participating in the WMT14 translation task in
+  direction English-Czech which were used in the annotation experiment
+  \XXX{Zkontrolovat typy nekterych systemu}}
+
   \label{translation-task-participants}
 \end{table}
 
@@ -203,9 +208,10 @@ Annotators were therefore able to rank segments on a tablet.
     \begin{center}
         \includegraphics[width=\textwidth]{img/segranks-screenshot2.png}
     \end{center}
-    \caption{A screenshot of an annotation application. Annotators rank the
-    candidate segments by dragging and dropping them into the ranks.
-Annotators see all annotated segments of a sentence on a single screen}
+    \caption{A screen shot of the annotation application}{A screen shot of the
+    annotation application. Annotators rank the candidate segments by dragging
+and dropping them into the ranks.  Annotators see all annotated segments of a
+sentence on a single screen}
     \label{segranks-screenshot}
 \end{figure}
 
@@ -216,7 +222,8 @@ sentences, which is more than 92 \% of the prepared English-Czech test set.
 \subsection{Annotator Agreements}
 
 To measure reliability and robustness of the proposed annotation method we have
-computed intra- and inter-annotator agreements.  We measured the agreements
+computed intra- and inter-annotator agreements. \XXX{Neni potreba vysvetlit lepe
+co to vlastne je a proc je to potreba?}  We measured the agreements
 using the Cohen's kappa coefficient ($\kappa$) \parcite{cohen1960}. Let $P(A)$
 be the proportion of times the annotators agree and $P(E)$ be the proportion of
 time that they would agree by chance. Then the Cohen's $\kappa$ is computed
@@ -234,17 +241,45 @@ experiments. The maximum value is 1 which means that annotators allways agree.
 The zero value means that annotators agree as often as they would by chance.
 
 In our case $P(A)$ and $P(E)$ are computed in context of pairwise comparisons.
+Approximately 5 \% of the annotated sentences were annotated twice by two
+different annotators (for the inter-annotator agreement).  Another 5 \% of the
+sentences were annotated twice by the same annotator (for the intra-annotator
+agreement). From all the segments of these double annotated sentences, we
+extracted pairwise comparisons of candidate segments. Then we computed $P(A)$
+as the proportion of pairwise comparisons in which two annotators agree (or one
+annotator in different time in the case of intra-annotator agreement). 
 
+Finally we computed $P(E)$ as 
 
+\begin{equation*}
+    P(E) = P(A>B)^2 + P(A=B)^2 + P(A<B)^2
+\end{equation*}
 
+\noindent where $P(A>B)$, $P(A=B)$ and $P(A<B)$ were computed empirically.
 
+The final values of inter-annotator and intra-annotator $\kappa$ can be found
+in the table \ref{agreements} together with corresponding $\kappa$ values from
+\cite{wmt14-overview-paper} computed similarly on the same testset for
+comparisons.
 
+\begin{table}
+    \begin{center}
+        \begin{tabular}{r|cc}
+                                     & our method & \cite{wmt14-overview-paper} \\
+            \hline
+            intra-annotator $\kappa$ &  0.593     & 0.448    \\
+            inter-annotator $\kappa$ &  0.397     & 0.360     \\
+        \end{tabular}
+    \end{center}
 
-Approximately 5 \% of the
-annotated sentences were annotated twice by two different annotators so that we
-are able to compute inter-annotator agreement.  Another 5 \% of the sentences
-were annotated twice by the same annotator so that we are able to compute
-intra-annotator agreement.
+    \caption{Inter-annotator and intra-annotator $\kappa$ scores}{$\kappa$
+        scores measuring intra-annotator and inter-annotator agreements. We
+        also report corresponding $\kappa$ scores from official WMT translation
+        task for comparison.  Please see the table \ref{big-table} for the
+    annotator agreements computed for individual annotators}
+
+    \label{agreements}
+\end{table}
 
 
 \XXX{Je vubec slovo segment vhodne??? Span?? Constituent??}
