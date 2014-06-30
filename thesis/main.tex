@@ -24,7 +24,8 @@
 \usepackage{latexsym}
 \usepackage{mathtools}
 %\usepackage{amsfonts}
-%\usepackage{algorithm2e}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
 \usepackage{url}
 \usepackage{afterpage}
 \usepackage{natbib}
@@ -69,6 +70,7 @@
 %\newcommand{\XXX}[1]{}
 \newcommand{\best}[1]{\textbf{#1}}
 \def\oosmark#1{\llap{$\wr$\,}#1}  % out-of-sequence mark
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
 
 
 \begin{document}

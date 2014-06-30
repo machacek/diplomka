@@ -1,12 +1,22 @@
-\chapter{Proposed Semi-Automatic Evaluation Method}
+\chapter{Proposed Manual Evaluation Method}
 
 The method we propose consists of two parts. The first part is a way how humans
 judge outputs of judged systems. The second part is how to interpret collected
-judgments to compute overall scores and rank the systems. We discuss these two
-parts in following two sections. \XXX{V tomto odstavci (a asi i v dalsich odstavcich
-neni dostatecne zdurazneno, proc je to semi-automaticka metoda, mozna opustit
-oznaceni semi-automaticka a pouzit misto toho neco jako Manual Evaluation Method
-with posibility to reuse collected judgementes for new systems)}
+judgments to compute overall scores and rank the systems. We discuss the first
+part in in the following sections. The second part is described in the
+subsection \ref{evaluating-annotated-systems}.  \XXX{Tady to asi nejak hodne
+predelat} \XXX{V tomto odstavci (a asi i v dalsich odstavcich neni dostatecne
+    zdurazneno, proc je to semi-automaticka metoda, mozna opustit oznaceni
+semi-automaticka a pouzit misto toho neco jako Manual Evaluation Method with
+posibility to reuse collected judgementes for new systems)}
+
+
+
+\section{Annotation of Short Segments}
+
+\XXX{Mozna Ranking Short Segments}
+
+\XXX{Mozna Short Segments Ranking}
 
 In the WMT official human evaluation humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
@@ -17,15 +27,25 @@ are much more aspects in which one sentence can be better or worse than second
 sentence and therefore it is more difficult for judges to choose the better
 candidate. 
 
-%\begin{algorithm}[H]
-%    \KwData{Tree, MaxSegmentLength}
-%    \KwResult{List of extracted segments}
-%    \If{Tree covers more than MaxSegmentLength}{
-%      yield all leaves \;
-%    }
-%    \caption{Segment extraction from parsed tree}
-%    \label{segment:extraction}
-%\end{algorithm}
+\begin{algorithm}
+    \begin{algorithmic}[1]
+        %\Require{$x$ and $y$ are packed DNA strings of equal length $n$}
+        %\Statex
+        \Function{ExtractSegments}{$tree, minLength, maxLength$}
+            \Let{$leaves$}{$tree.leaves()$}
+            \If{$length(leaves) \lte maxLength$}
+                \If{$lenth(leaves) \gte minLength$}
+                    \State Yield $leaves$
+                \EndIf
+            \Else
+                \For{}
+                \EndFor
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+    \caption{XXXX}
+    \label{segment:extraction}
+\end{algorithm}
 
 To avoid these disadvantages we propose the following method. Instead of
 judging whole sentences we extract shorter segments from candidates and give
@@ -66,7 +86,7 @@ of a system (we present this experiment in the section \ref{tuning-systems}).
 
 \XXX{Sumarizovat nevyhody}
 
-\section{Data and Segment Preparation}
+\subsection{Data and Segment Preparation}
 
 We have conducted an annotation experiment using the proposed method. In this
 section we describe what data we have used and how we prepare them for the
@@ -159,7 +179,7 @@ got 5.89 (instead of original 10) candidate segments to be ranked for each
 source segment on average. Theese prepared candidate segments were inserted
 into the database to be ranked by annotators.
 
-\section{Segments Ranking}
+\subsection{Segments Ranking}
 
 We have developed a new annotation application for this annotation
 project.\footnote{It would be probably possible to customize and use an
@@ -257,7 +277,7 @@ intra-annotator and inter-annotator agreements. }
     \label{big-table}
 \end{table}
 
-\subsection{Annotator Agreements}
+\subsubsection{Annotator Agreements}
 
 To measure reliability and robustness of the proposed annotation method we have
 computed intra- and inter-annotator agreements. \XXX{Neni potreba vysvetlit lepe
@@ -337,6 +357,7 @@ comparable to the WMT14 experiment.
 \section{Experiments}
 
 \subsection{Evaluating Annotated Systems}
+\label{evaluating-annotated-systems}
 \XXX{Zde uvedu vzorecek (mozna vice variant) pro vypocet skore systemu, ktere
 byly anotovane. Vypocet skore, vypocet korelace s oficialnimi WMT14 vysledky.
 Porovnani obou metod z hlediska mnozstvi lidske prace.}
