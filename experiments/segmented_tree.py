@@ -79,6 +79,11 @@ def parse_args():
     parser.add_argument("--system",
             help="Use this option for different output format with system's ID",
             default=None)
+    
+    parser.add_argument("--source-segments",
+            dest="source_segments",
+            help="Use this option for different output format with system's ID",
+            default=None)
 
     return parser.parse_args()
 
