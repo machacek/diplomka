@@ -119,22 +119,17 @@ extracted.systems: tokenized alignments source.parsed
 			--system $$system; \
 	done > $@
 
+annotated.systems: annotated.segments extracted.systems
+	./add-systems-to-database.py $^ $@
+
+system.ranks: annotated.systems
+	./all-systems-ranks.py $< > $@
+
+one-out.ranks: annotated.systems
+	./one-out-ranks.py $< > $@
+
 source.segments: extracted.systems
 	cat $< | cut -f1,2,5 | sort -n -k1 | uniq > $@
-
-
-system.ranks: extracted.systems annotated.segments
-	./all-systems-ranks.py \
-		--annotated annotated.segments \
-		--systems extracted.systems \
-		> $@
-
-one-out.ranks: extracted.systems annotated.segments
-	./one-out-ranks.py \
-		--annotated annotated.segments \
-		--systems extracted.systems \
-		> $@
-
 
 tokenized_with_align: tokenized alignments
 	mkdir -p $@; \
