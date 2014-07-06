@@ -69,8 +69,11 @@ and by the WMT07 manual evaluation \parcite{wmt-overview-2007}.
     \end{center}
 
     \caption[Candidate segments extraction process ilustrated]{You can see the
-    candidate segments extraction process ilustrated in this figure. For a given
-    MT system, two segments were extracted from this sentence
+      candidate segments extraction process illustrated in this figure. For a
+      given MT system, two segments were extracted from this sentence. The
+      \pojem{maxLength} constant was set to the value 5 here to illustrate that
+      not all words has to be covered by extracted segments.
+
 }
 
     \label{tree-align}
@@ -80,7 +83,6 @@ In the segment evaluation in \parcite{wmt-overview-2007}, these extracted
 segments are only highlighted and shown to judges together with the rest of the
 sentence.  Judges are asked to rank the the highlighted segments in the context
 of whole sentences.
-
 
 We use different approach here which is more similar to that used in
 \parcite{human-in-the-loop}. We show the extracted segments without any context
@@ -101,7 +103,29 @@ system which was not in the set of annotated systems (we present this
 experiment in the section \ref{evaluating-new-systems}) or to tune parameters
 of a system (we present this experiment in the section \ref{tuning-systems}).
 
-\XXX{Sumarizovat nevyhody}
+The following list sumarizes disadvantages of this method which we are aware
+of. However, we beleive that the advantages are still worth these
+disadvantages and that we should still try it.
+
+\begin{itemize}
+
+  \item Annotators do not see the whole context of annotated short segments.
+    For instance, the rest of the sentence of a given short candidate segment
+    could require to have a noun in the segment in a particular grammatical
+    case. Because Annotators do not see this requirement, they cannot judge
+    the candidate segment properly.
+
+  \item This is very similar to the previous one. A system could translate
+    shorter segments quite well but it can fail to combine them properly when
+    creating the whole sentence translation. For instance \XXX{shoda podmetu s
+    prisudkem}
+
+    \XXX{System muze prelozit dobre segmenty, ale pak je nemusi dobre pospojovat globalne}
+  \item \XXX{Nejsou pokryty vsechna zdrojova i cilova slova}
+  \item \XXX{Nektere segmenty jsou pro vyznam vety mnohem dulezitejsi a nemely by proto mit stejnou vahu.
+    Kdyz anotatory u dane vety ohodnoti dva segmenty lepsi u systemu A a jeden segment lepsi u systemu B,
+  nemusi to nutne znamenat, ze by pri hodnoceni celych vet dal, ze system A je lepsi nez B}
+\end{itemize}
 
 \subsection{Data and Segment Preparation}
 
@@ -172,13 +196,13 @@ unsupervised and the amount of all candidate translations is relatively small
 translations with 646,605 sentences taken from Europarl parallel corpus
 \parcite{koehn:europarl} and with 197,053 sentences taken from Czeng Corpus
 \parcite{bojar:czeng}.  The concatenated parallel corpus was lowercased before
-alignment computation. 
+the alignment computation. 
 
 We extracted short segments from the parsed source trees using the algorithm
-\ref{segment:extraction}. The constant \pojem{min-segment-length} was set to
+\ref{segment:extraction}. The constant \pojem{minLength} was set to
 the value 3 to filter out very short segments which are hard to judge without
 context. This also helped to reduce the number of extracted segments to be
-annotated. The constant \pojem{max-segment-length} was set to the value 6 so
+annotated. The constant \pojem{maxLength} was set to the value 6 so
 the extracted segments were not too long to judge and in the same time it was
 more likely that two candidate translations of a segment were equal and
 therefore there would be less items to rank (our aim was to make annotations as
@@ -186,10 +210,8 @@ easy and fast as possible). We have experimented with various settings of these
 two constants and the final settings seemed to generate reasonable number of
 meaningful segments.
 
-\XXX{Nekde zduraznit, ze to jsou vlastne konstituenty, ale asi ne tady, nekde drive}
-
 From 3003 source sentences, we have extracted 8485 segments of length 3 to 6
-tokens. That is \XXX{priblizne} 2.83 segments on a sentence on average. By
+tokens. That is approximately 2.83 segments on a sentence on average. By
 projecting the source segments to the candidate sentences using the computed
 alignments, we got $10 \times 8485 = 84850$ candidate segments. However, after
 the merging of equal segments only 50011 candidate segments left. This is 58.9
