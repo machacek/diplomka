@@ -1,22 +1,21 @@
-\chapter{Proposed Manual Evaluation Method}
+\chapter{SegRanks - Proposed Manual Evaluation Method}
 
-The method we propose consists of two parts. The first part is a way how humans
-judge outputs of judged systems. The second part is how to interpret collected
-judgments to compute overall scores and rank the systems. We discuss the first
-part in in the following sections. The second part is described in the
-subsection \ref{evaluating-annotated-systems}.  \XXX{Tady to asi nejak hodne
-predelat} \XXX{V tomto odstavci (a asi i v dalsich odstavcich neni dostatecne
-    zdurazneno, proc je to semi-automaticka metoda, mozna opustit oznaceni
-semi-automaticka a pouzit misto toho neco jako Manual Evaluation Method with
-posibility to reuse collected judgementes for new systems)}
+In this chapter we propose a novel manual evaluation method in which we create
+a database of collected human annotations which can be reused later to
+automatically evaluate similar, but yet unseen, translations or even to tune systems.
+This method therefore lies on the boundary of automatic and manual evaluation
+methods.
 
-
+The proposed method consists of two parts which we describe and experiment with
+in the following two sections. In the first section we describe the way of
+collecting the database of humans judgements and report the human annotation
+experiment which we conducted using the proposed method. In the second section
+we present few methods which exploit the collected database: besides the
+evaluation of annotated systems we experiment with extrapolating the database
+to evaluate unseen translations and with tuning a machinte translation system
+using the database.
 
 \section{Annotation of Short Segments}
-
-\XXX{Mozna Ranking Short Segments}
-
-\XXX{Mozna Short Segments Ranking}
 
 In the WMT official human evaluation humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
@@ -56,14 +55,23 @@ nodes which covers source segments with given maximum length (which is a
 parameter of this method). This is exactly described in algorithm
 \ref{segment:extraction}. Finally we project these extracted source segments to
 their counterpart segments in all candidate sentences using an automatic
-alignment.  You can find the whole process ilustrated in figure \XXX{nakreslit
-obrazek}.  This extraction method is inspired by \perscite{human-in-the-loop}
+alignment.  You can find the whole process ilustrated in figure \label{tree-align}
+This extraction method is inspired by \perscite{human-in-the-loop}
 and by the WMT07 manual evaluation \parcite{wmt-overview-2007}.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/tree-align.pdf}
+    \end{center}
+    \caption[Candidate segments extraction process ilustrated]{Candidate segments extraction process ilustrated}
+    \label{tree-align}
+\end{figure}
 
 In the segment evaluation in \parcite{wmt-overview-2007}, these extracted
 segments are only highlighted and shown to judges together with the rest of the
 sentence.  Judges are asked to rank the the highlighted segments in the context
 of whole sentences.
+
 
 We use different approach here which is more similar to that used in
 \parcite{human-in-the-loop}. We show the extracted segments without any context
