@@ -538,47 +538,50 @@ Then the \metoda{Ratio of wins (ignoring ties)} is computed using the following 
 \end{equation*}
 
 \begin{table}
-  \subfloat[Short segments judgements]{
-    %\begin{center}
-      \begin{tabular}{|l|c|}
-        \hline
-        \textbf{System} & \begin{tabular}{@{}c@{}} \textbf{Ratio of wins} \\ \textbf{(ignoring ties)}\end{tabular} \\
-        \hline
-         cu-depfix           &  0.5777 \\
-         onlineB             &  0.5642 \\
-         uedin-unconstrained &  0.5626 \\
-         cu-bojar            &  0.5606 \\
-         cu-funky            &  0.5566 \\
-         uedin-wmt14         &  0.5498 \\
-         onlineA             &  0.5007 \\
-         CU-TectoMT          &  0.4485 \\
-         commercial1         &  0.3992 \\
-         commercial2         &  0.3492 \\
-        \hline
-      \end{tabular}
-    %\end{center}
-    \label{all-systems-segranks-results}
-  }
-  \subfloat[Official WMT14 judgements]{
-    %\begin{center}
-      \begin{tabular}{|l|c|}
-        \hline
-        \textbf{System} & \begin{tabular}{@{}c@{}} \textbf{Ratio of wins} \\ \textbf{(ignoring ties)}\end{tabular} \\
-        \hline
-        cu-depfix          &  0.6101 \\
-        cu-bojar           &  0.6011 \\
-        uedin-unconstrained&  0.5967 \\
-        cu-funky           &  0.5823 \\
-        onlineB            &  0.5439 \\
-        uedin-wmt14        &  0.5285 \\
-        onlineA            &  0.5039 \\
-        CU-TectoMT         &  0.4473 \\
-        commercial1        &  0.3617 \\
-        commercial2        &  0.2780 \\
-        \hline
-      \end{tabular}
-    \label{all-systems-wmt-results}
-  }
+  \begin{center}
+    \subfloat[Short segments judgements]{
+      %\begin{center}
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+           cu-depfix           &  0.5777 \\
+           onlineB             &  0.5642 \\
+           uedin-unconstrained &  0.5626 \\
+           cu-bojar            &  0.5606 \\
+           cu-funky            &  0.5566 \\
+           uedin-wmt14         &  0.5498 \\
+           onlineA             &  0.5007 \\
+           CU-TectoMT          &  0.4485 \\
+           commercial1         &  0.3992 \\
+           commercial2         &  0.3492 \\
+          \hline
+        \end{tabular}
+      %\end{center}
+      \label{all-systems-segranks-results}
+    }
+    \subfloat[Official WMT14 judgements]{
+      %\begin{center}
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+          cu-depfix          &  0.6101 \\
+          cu-bojar           &  0.6011 \\
+          uedin-unconstrained&  0.5967 \\
+          cu-funky           &  0.5823 \\
+          onlineB            &  0.5439 \\
+          uedin-wmt14        &  0.5285 \\
+          onlineA            &  0.5039 \\
+          CU-TectoMT         &  0.4473 \\
+          commercial1        &  0.3617 \\
+          commercial2        &  0.2780 \\
+          \hline
+        \end{tabular}
+      \label{all-systems-wmt-results}
+    }
+
+  \end{center}
 
   \caption{Overall rankings of systems according to \metoda{Ratio of wins
   (ignoring ties)} score. You can see the results computed on both short
@@ -617,13 +620,98 @@ spatne?}
 
 The overall rankings of systems obtained by both of the methods is very
 similar. However, there are two changes when comparing to the sentence-level
-judgments results: system online-B is much better and system cu-bojar is worser
+judgments results: system online-B is better and system cu-bojar is worser
 according to the segments-level judgments results. We try to explain this in the Analysis.
 
 \subsubsection{Analysis}
 
+To see the difference between the segment-level judgements and sentence-level
+judgements we have computed Kendall tau rank correlation coefficient, also
+known as Kendall's $\tau$, between segment-level pairwise comparisons and
+sentence-level pairwise comparisons. This coefficient is used to measures how
+often a set of pairwise rankings agrees with another set of pairwise rankings.
+The basic formula for Kendall's $\tau$ is:
 
+\begin{equation}
+  \tau = \frac{|Concordant| - |Discordant|}{|Concordant| + |Discordant|}
+\end{equation}
 
+\noindent where $Concordant$ is the set of pairwise combination where both sets
+of pairwise rankings agrees with each other and $Discordant$ is the set of
+pairwise combination where the sets do not agree in pairwise ranking.
+\XXX{mozna vyhodit predchozi vetu}  We will discuss the Kendall's $\tau$ in
+more details in chapter \ref{metrics}. Here we computed $|Concordant|$ as the
+number of pairwise segment-level judgments which agrees with the corresponding
+sentence-level judgment. Similarly, $|Discordant|$ is the number of those which
+does not agree with the corresponding sentence-level judgment. In this section
+we does not consider any tied pairwise comparisons.
+
+\begin{table}
+  \begin{center}
+    \subfloat[Comparisons in which a given system was better]{
+      \begin{tabular}{|l|c|}
+        \hline
+         System                   &   $\tau$ \\
+        \hline
+         cu-funky            &        0.4279 \\
+         cu-depfix           &        0.4050 \\
+         onlineB             &        0.3984 \\
+         cu-bojar            &        0.3943 \\
+         uedin-unconstr. &        0.3902 \\
+         uedin-wmt14         &        0.3635 \\
+         onlineA             &        0.3122 \\
+         CU-TectoMT          &        0.2697 \\
+         commercial1         &        0.1663 \\
+         commercial2         &        0.1228 \\
+        \hline
+      \end{tabular}
+      \label{judgements-better}
+    }
+
+    \subfloat[Comparisons in which a given system was worse]{
+      \begin{tabular}{|l|c|}
+        \hline
+         System                   &   $\tau$ \\
+       \hline
+         commercial2         &        0.4919 \\
+         commercial1         &        0.4408 \\
+         CU-TectoMT          &        0.3851 \\
+         onlineA             &        0.3280 \\
+         uedin-unconstr. &        0.2595 \\
+         uedin-wmt14         &        0.2573 \\
+         cu-funky            &        0.2301 \\
+         cu-bojar            &        0.2272 \\
+         cu-depfix           &        0.2251 \\
+         onlineB             &        0.2245 \\
+        \hline
+      \end{tabular}
+      \label{judgements-worse}
+    }
+
+    \subfloat[All comparisons]{
+      \begin{tabular}{|l|c|}
+        \hline
+         System                   &   $\tau$ \\
+        \hline
+         commercial2         &        0.3939 \\
+         cu-funky            &        0.3478 \\
+         commercial1         &        0.3455 \\
+         uedin-unconstr. &        0.3409 \\
+         cu-depfix           &        0.3350 \\
+         CU-TectoMT          &        0.3331 \\
+         cu-bojar            &        0.3284 \\
+         onlineB             &        0.3214 \\
+         onlineA             &        0.3200 \\
+         uedin-wmt14         &        0.3167 \\
+        \hline
+      \end{tabular}
+      \label{judgements-all}
+    }
+  \end{center}
+
+  \caption{jlfdsjflsjflsj fldjf lsj dfld fdjflf jlsd jfslf jsl fjsldf jslf jsldf jsldfjsldfjlsd ld fjsld fj}
+  \label{}
+\end{table}
 
 \subsection{Evaluating New Systems}
 \label{evaluating-new-systems}
