@@ -425,13 +425,13 @@ comparable to the WMT14 experiment.
 In this section we describe several experiments with the collected database of
 annotations. 
 
-\subsection{Evaluating Annotated Systems}
+\subsection{Overall Ranking of Annotated Systems}
 \label{evaluating-annotated-systems}
 
 In the first experiment we would like to show that the proposed method can be
 used to produce overall ranking of the annotated systems which will be very
 similar to the official human evaluation in WMT with much less human effort
-\XXX{dolozit, pokud to vubec pujde}.
+\XXX{dolozit, pokud je to vubec pravda a pokud to vubec pujde}.
 
 The obtained database contains a list of annotations for each extracted source
 segment from each source sentence. A list can be empty (not all of the
@@ -446,7 +446,7 @@ $N$ ranks which could be all occupied when there are no ties. The rank $N+1$
 represents the ``garbage'' category from the annotation application. However in
 all of our experiments reported in this thesis we consider this category as one
 more, the worst, rank). A Lower rank of a segment means that the candidate
-segment was ranked better. This is an example \pojem{segment annotation} of a
+segment was ranked better. This is an example \metoda{segment annotation} of a
 source segment ``the huge volume'':
 
 \begin{verbatim}
@@ -463,8 +463,8 @@ which produced the segments. The ranks in the annotations are now indexed by
 the system names.  If more systems translated a source segment as the same
 candidate segment the candidate segment's rank is copied to all the systems.
 This is the time when we use advantage of ranking short segments which are
-often translated identically.  The following is the \pojem{system annotation}
-after expansion of the above \pojem{segment annotation}:
+often translated identically.  The following is the \metoda{system annotation}
+after expansion of the above \metoda{segment annotation}:
 
 \begin{verbatim}
     {
@@ -485,8 +485,8 @@ These rankings are now very similar to those obtained in the official WMT human
 evaluation. These annotations are mostly interpreted as pairwise systems'
 comparisons (for each combination of size 2 of all systems we have a pairwise
 comparison), where the absolute values of the ranks and their absolute
-differences between them are not considered. From above \pojem{system
-annotation}, the following \pojem{pairwise comparisons} are be extracted (only
+differences between them are not considered. From above \metoda{system
+annotation}, the following \metoda{pairwise comparisons} are be extracted (only
 a few extracted pairwise comparisons are listed here for the sake of brevity,
 generally $N \times (N-1) / 2$ pairwise comparisons are extracted, where $N$ is
 number of all systems):
@@ -504,15 +504,126 @@ number of all systems):
 \end{verbatim}
 
 The interpretation of these pairwise comparisons was changed several times
-during the WMT workshops. Here, we use \pojem{Expected wins (excluding ties)}
+during the WMT workshops. Here, we use \metoda{Ratio of wins (ignoring ties)}
 method, which was introduced by \perscite{bojar:grain:of:salt} and used in
-WMT12 workshop \parcite{callisonburch:wmt12}.
+WMT12 workshop \parcite{callisonburch:wmt12}. This method is based on a method
+used in several WMT workshops before WMT12 and it is quite easy to compute and
+interpret results.
 
-\XXX{dodelat}
+For a given set $C$ of segment-level extracted pairwise comparisons
+$(s_1,s_2,c)$, where 
 
 \begin{equation*}
-  E_{win} = 
+c = \begin{cases}
+  win  & \text{if $rank(s_1) < rank(s_2)$} \\
+  loss & \text{if $rank(s_1) > rank(s_2)$} \\
+  tie  & \text{if $rank(s_1) = rank(s_2)$} \\
+    \end{cases}
 \end{equation*}
+
+\noindent we define for each system $s$ the total number of wins, losses and ties:
+
+\begin{equation*}
+\begin{array}{rcl} 
+  win(s)  & := & |\{(s,\bar{s},c) \in C; c = win\}| + |\{(\bar{s},s,c) \in C; c = loss\}| \\
+  loss(s) & := & |\{(s,\bar{s},c) \in C; c = loss\}| + |\{(\bar{s},s,c) \in C; c = win\}| \\
+  ties(s) & := & |\{(s,\bar{s},c) \in C; c = tie\}| + |\{(\bar{s},s,c) \in C; c = tie\}| \\
+\end{array}
+\end{equation*}
+
+Then the \metoda{Ratio of wins (ignoring ties)} is computed using the following formula:
+
+\begin{equation*}
+  E_{win}(s) = \frac{win(s)}{win(s) + loss(s)} 
+\end{equation*}
+
+\begin{table}
+  \subfloat[Short segments judgements]{
+    %\begin{center}
+      \begin{tabular}{|l|c|}
+        \hline
+        \textbf{System} & \begin{tabular}{@{}c@{}} \textbf{Ratio of wins} \\ \textbf{(ignoring ties)}\end{tabular} \\
+        \hline
+         cu-depfix           &  0.5777 \\
+         onlineB             &  0.5642 \\
+         uedin-unconstrained &  0.5626 \\
+         cu-bojar            &  0.5606 \\
+         cu-funky            &  0.5566 \\
+         uedin-wmt14         &  0.5498 \\
+         onlineA             &  0.5007 \\
+         CU-TectoMT          &  0.4485 \\
+         commercial1         &  0.3992 \\
+         commercial2         &  0.3492 \\
+        \hline
+      \end{tabular}
+    %\end{center}
+    \label{all-systems-segranks-results}
+  }
+  \subfloat[Official WMT14 judgements]{
+    %\begin{center}
+      \begin{tabular}{|l|c|}
+        \hline
+        \textbf{System} & \begin{tabular}{@{}c@{}} \textbf{Ratio of wins} \\ \textbf{(ignoring ties)}\end{tabular} \\
+        \hline
+        cu-depfix          &  0.6101 \\
+        cu-bojar           &  0.6011 \\
+        uedin-unconstrained&  0.5967 \\
+        cu-funky           &  0.5823 \\
+        onlineB            &  0.5439 \\
+        uedin-wmt14        &  0.5285 \\
+        onlineA            &  0.5039 \\
+        CU-TectoMT         &  0.4473 \\
+        commercial1        &  0.3617 \\
+        commercial2        &  0.2780 \\
+        \hline
+      \end{tabular}
+    \label{all-systems-wmt-results}
+  }
+
+  \caption{Overall rankings of systems according to \metoda{Ratio of wins
+  (ignoring ties)} score. You can see the results computed on both short
+segments judgements and on official WMT14 human judgements side by side to
+compare the differences.}
+
+  \label{all-systems-results}
+\end{table}
+
+\subsubsection{Results}
+
+The overall ranking of systems, which participated in WMT14 Translation Task in
+English-Czech direction, according to the \metoda{Ratio of wins (ignoring
+ties)} computed on the short segments judgements is reported in the table
+\ref{all-systems-segranks-results}.
+
+To compare our method with the classic method of judging whole sentences, we
+have also computed the \metoda{Ratio of wins (ignoring ties)} on the judgements
+collected during WMT14 manual evaluation. You can see these results in the
+table \ref{all-systems-wmt-results}.
+
+You can notice that the range of scores computed on the short segments
+judgements is much narrower (0.35 --- 0.58) than the range of scores computed
+on the sentence judgements (0.28 --- 0.61). This can be explained by the
+following: If system A beats system B in a sentence-level judgement of a
+particular sentence it does not necessarily mean that in segment-level judging
+system A will be better than system B on all segments of the sentence. System A
+will be probably better on a majority of the segments (but even that does not
+have to be always true). When computing the ratio of wins on the sentence-level
+judgements, system A gets one win and system B gets one loss. However, when
+computing the ratio of wins on the segment-level system A gets for example two
+wins and one loss, system B one win and two losses. It should be clear now that
+computing expected wins on the sentence-level judgements is coarser while our
+method is more fine-grained.  \XXX{Co z toho vlastne plyne? Je to dobre, nebo
+spatne?}
+
+The overall rankings of systems obtained by both of the methods is very
+similar. However, there are two changes when comparing to the sentence-level
+judgments results: system online-B is much better and system cu-bojar is worser
+according to the segments-level judgments results. We try to explain this in the Analysis.
+
+\subsubsection{Analysis}
+
+
+
 
 \subsection{Evaluating New Systems}
 \label{evaluating-new-systems}
