@@ -131,6 +131,9 @@ one-out.ranks: annotated.systems
 source.segments: extracted.systems
 	cat $< | cut -f1,2,5 | sort -n -k1 | uniq > $@
 
+sentence_segment_judgmentes_correlation: wmt-judgements-2014-05-14.csv annotated.systems
+	./correlation-sentence-segment-judgements.py $^ > $@
+
 tokenized_with_align: tokenized alignments
 	mkdir -p $@; \
 	for file in tokenized/candidates/*; do \
