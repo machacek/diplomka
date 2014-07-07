@@ -1,0 +1,175 @@
+#!/bin/bash
+# Prepare a reordering model for moses
+
+set -o pipefail
+function die() { echo "$@" | tee FAILED >&2; exit 1 ; }
+
+eman \
+  defvar ALISTEP type='optstep' help="the step where alignment was constructed, implied by ALICORP+ALISYM+ALILABEL" \
+  defvar BINARIES type=reqstep inherit=ALISTEP:GIZASTEP \
+    help="the step containing compiled tools" \
+  defvar SRCCORP inherit=ALISTEP:CORPUS \
+    help="source corpus name" \
+  defvar TGTCORP same_as=SRCCORP help="target corpus name, can be omitted if equal to SRCCORP" \
+  defvar SRCAUG help="the string describing lang+factors of src corpus" \
+  defvar TGTAUG help="the string describing lang+factors of tgt corpus" \
+  defvar ALICORP same_as=SRCCORP help="alignment corpus name, can be omitted if equal to SRCCORP" \
+  defvar ALISYM default='gdfa' help='which alignment to use for the reordering model' \
+  defvar ALILABEL inherit=ALISTEP \
+    help="the custom label as given when creating the alignment" \
+  defvar REORDERING help="reordering models, eg. orientation-bidirectional-fe" \
+  defvar REORDFACTORS help="factors to use, eg. 0,1-0+0-0" \
+  defvar TRAININGFLAGS default='' help="flags for train-factored-phrase-model.perl" \
+  defvar EMAN_MEM default='6g' help="memory limit at cluster" \
+  defvar EMAN_DISK default='20g' help="required free space at temp" \
+|| exit 1
+
+eval `eman bash-loadvars`
+
+PLAYGROUND=`eman path`
+
+if [ -z "$ALISTEP" ]; then
+  echo "Finding alistep that provides $ALICORP/$ALISYM-$ALILABEL+ali"
+  eval $($PLAYGROUND/corpman $ALICORP/$ALISYM-$ALILABEL+ali --init --bashvars=ALISTEP=stepname)
+  export ALISTEP
+  echo "Found ALISTEP=$ALISTEP"
+  eman add-dep . "$ALISTEP" || die "Failed to depend on alistep $ALISTEP"
+  eman defvar ALISTEP
+fi
+
+[ "$(eman getvar $ALISTEP CORPUS)" == "$SRCCORP" ] \
+  || die "Nonmatching alistep: different corpus"
+[ "$(eman getvar $ALISTEP ALILABEL)" == "$ALILABEL" ] \
+  || die "Nonmatching alistep: different ALILABEL: our is $ALILABEL"
+
+BINARIESDIR=`eman path $BINARIES`
+SCRIPTS_ROOTDIR="$BINARIESDIR/moses/scripts"
+
+# shorten the reordering name to produce the tag for this reord model
+export REORDTAG=`echo "$REORDERING.r$REORDFACTORS" | sed 's/\([a-z][a-z]\)[a-z]*/\1/g'`
+# save the calculated tag in eman vars
+eman defvar REORDTAG
+
+eman add-tag "REORD$REORDTAG"
+#if [ $SRCCORP == $TGTCORP ] ; then
+#  eman add-tag "SRC$SRCCORP+$SRCAUG.TGT+$TGTAUG.ALI$ALILABEL.$REORDTAG"
+#else
+#  eman add-tag "SRC$SRCCORP+$SRCAUG.TGT$TGTCORP+$TGTAUG.ALI$ALILABEL.$REORDTAG"
+#fi
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+cat << KONEC > eman.command
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+function mkcorpus() {
+  $PLAYGROUND/corpman --wait \$1 || die "Failed to prepare \$1"
+  step_file_col=(\$($PLAYGROUND/corpman \$1))
+  if [ "\${step_file_col[2]}" == "-1" ]; then
+    STEPPATH=\$(eman path \${step_file_col[0]})
+    $PLAYGROUND/../scripts/wiseln \$STEPPATH/\${step_file_col[1]} \\
+      \$2.gz \
+    || die "Failed to clone \$2 corpus \$1"
+  else
+    echo "Selecting the column from \$step_file_col"
+    eval \$($PLAYGROUND/corpman --cmd \$1) \\
+    | gzip -c > \$2.gz
+  fi
+}
+
+## Prepare the corpus from more factors
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+
+mkdir corpus
+
+cd corpus
+mkcorpus $SRCCORP/$SRCAUG corpus.src
+mkcorpus $TGTCORP/$TGTAUG corpus.tgt
+cd ..
+
+mkcorpus $ALICORP/$ALISYM-$ALILABEL+ali alignment.custom
+
+alilen=\`zcat alignment.custom.gz | wc -l\`
+srclen=\`zcat corpus/corpus.src.gz | wc -l\`
+tgtlen=\`zcat corpus/corpus.tgt.gz | wc -l\`
+if [[ \$alilen -ne \$srclen ]] \\
+   || [[ \$alilen -ne \$tgtlen ]] \\
+; then
+  echo "Incompatible corpus lengths:"
+  echo "\$alilen  alignment.custom.gz"
+  echo "\$srclen  corpus.src.gz"
+  echo "\$tgtlen  corpus.tgt.gz"
+  die "Incompatible corpus lengths."
+fi
+
+mkdir model
+
+tempdir=\`mktemp -d /mnt/h/tmp/exp.rm.XXXXXX\`
+echo "COPYING SELF TO TEMPDIR: \$tempdir"
+rsync -avz --exclude '*.hardlink' * \$tempdir/ || die "Failed to rsync"
+echo "COPIED, used disk space:"
+
+df \$tempdir
+
+if \\
+  \$SCRIPTS_ROOTDIR/training/train-model.perl \\
+        --force-factored-filenames \\
+	    --first-step 5 --last-step 5 \\
+	    --root-dir \$tempdir \\
+	    --alignment-file=alignment \\
+	    --alignment=custom \\
+	    --corpus=corpus/corpus \\
+	    --f src --e tgt \\
+	    --reordering $REORDERING \\
+	    --reordering-factors $REORDFACTORS \\
+        $TRAININGFLAGS \\
+  && echo "Extracted phrases, now build reordering model" \\
+  && \$SCRIPTS_ROOTDIR/training/train-model.perl \\
+        --force-factored-filenames \\
+	    --first-step 7 --last-step 7 \\
+	    --root-dir \$tempdir \\
+	    --alignment-file=alignment \\
+	    --alignment=custom \\
+	    --corpus=corpus/corpus \\
+	    --f src --e tgt \\
+	    --reordering $REORDERING \\
+	    --reordering-factors $REORDFACTORS \\
+        $TRAININGFLAGS \\
+; then
+  success=1
+  rm -f \$tempdir/model/extract*
+  echo "COPYING TEMPDIR \$tempdir BACK"
+  rsync -uavz \$tempdir/* ./ || die "Rsync back failed"
+  echo "COPIED"
+
+  echo Deleting \$tempdir
+  rm -rf \$tempdir
+else
+  success=0
+  rsync -uavz \$tempdir/log* ./ || die "Rsync of log back failed"
+  echo "ONLY log copied back. Majority of files left here: \$tempdir"
+fi
+
+[ \$success == 1 ] || die "THERE WERE ERRORS!! See above."
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

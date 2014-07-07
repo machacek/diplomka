@@ -1,0 +1,249 @@
+#!/bin/bash
+## Save our own copy of moses
+
+function die() { echo "$@" | tee FAILED >&2; exit 1 ; }
+set -o pipefail
+
+#TESTBLEU=/home/bojar/diplomka/granty/euromatrix/treedecode/trunk/testbleu.asm
+
+PLAYGROUND=`eman path` # eman playground directory
+
+eman \
+  defvar PHASE1MERT help="the directory that contains the mert for phase 1" type=reqstep \
+  defvar PHASE2MERT help="the directory that contains the mert for phase 2" type=reqstep \
+  defvar BINARIES help="the step containing compiled tools" inherit=PHASE1MERT type=reqstep \
+  defvar TESTCORP help="the corpus for evaluation" inherit=PHASE1MERT \
+  defvar PHASE1TESTCORP inherit=PHASE2MERT:TESTCORP \
+  defvar SRCAUG inherit=PHASE1MERT \
+  defvar REFAUG inherit=PHASE2MERT:REFAUG \
+  defvar MIDAUG inherit=PHASE2MERT:SRCAUG \
+  defvar SEARCH help="beam or cube" default=cube \
+  defvar MOSESFLAGS help="any further flags for both steps" default='' \
+  defvar PHASE1MOSESFLAGS help="any further flags for step1 steps" default='' \
+  defvar PHASE2MOSESFLAGS help="any further flags for step2 steps" default='' \
+  defvar GRIDFLAGS help="any further flags" default='' \
+  defvar SERIAL help="yes to disable qsub" default='' \
+  defvar STACK help="stacksize" default='' \
+  defvar TAGPREF help="tag prefix" default='' \
+  defvar POSTPROC help="pipe of commands, e.g. ../tools/remove_pluslemma_prefixes.pl" \
+    default='' \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+#BINARIESDIR=`eman path $BINARIES`
+#SCRIPTS_ROOTDIR="`cat $BINARIESDIR/scripts.rootdir`"
+#MOSESCMD="$BINARIESDIR/bin/moses"
+
+MOSESDIR="$(eman path $BINARIES)"
+SCRIPTS_ROOTDIR="$MOSESDIR/moses/scripts"
+MOSESCMD="$MOSESDIR/bin/moses"
+
+#eman add-tag "$TAGPREF"SRC"$SRCAUG".MID"$MIDAUG".TGT"$REFAUG".$SEARCH$STACK.FIRST.`cat $PHASE1MERT/eman.tag`.SECOND.`cat $PHASE2MERT/eman.tag` .
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+#$PLAYGROUND/augmented_corpora/augment.pl --dump $TESTCORP/$SRCAUG > evaluation.in || die "evaluation.in"
+#$PLAYGROUND/augmented_corpora/augment.pl --dump $TESTCORP/$REFAUG > evaluation.ref.0 || die "evaluation.ref"
+
+$PLAYGROUND/corpman --dump $TESTCORP/$SRCAUG > evaluation.in || die "evaluation.in"
+$PLAYGROUND/corpman --dump $TESTCORP/$REFAUG > evaluation.ref.0 || die "evaluation.ref"
+
+srccorpstep=$($PLAYGROUND/corpman --init $TESTCORP/$SRCAUG | cut -f1)
+[ ! -z "$srccorpstep" ] || die "Missing source corpus"
+tgtcorpstep=$($PLAYGROUND/corpman --init $TESTCORP/$REFAUG | cut -f1)
+[ ! -z "$tgtcorpstep" ] || die "Missing target corpus"
+eman add-deps . $srccorpstep $tgtcorpstep
+
+TARGETLAN_FOR_DETOKENIZER=`echo $REFAUG | sed 's/+.*//'`
+if ! echo "test" | $SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl \
+       -u -l $TARGETLAN_FOR_DETOKENIZER > /dev/null 2>&1 ; then 
+  echo "Defaulting to 'en' as the targetlang for detokenizer."
+  TARGETLAN_FOR_DETOKENIZER=en
+fi
+
+MOSESPARALLEL="\$SCRIPTS_ROOTDIR/generic/moses-parallel.pl"
+
+if [ ! -z "$STACK" ]; then
+  MOSESFLAGS="$MOSESFLAGS -s $STACK"
+fi
+
+[ ! -z "$JOBS" ] || JOBS=15
+
+if [ "$SERIAL" = yes ]; then
+  GRIDARGS=""
+  STEP1MOSESPARALLELIZER="./moses $SEARCHFLAG $MOSESFLAGS $PHASE1MOSESFLAGS"
+  STEP2MOSESPARALLELIZER="./moses $SEARCHFLAG $MOSESFLAGS $PHASE2MOSESFLAGS"
+else
+  MOSESGRIDARGS="--jobs=$JOBS --queue-parameters=' $GRIDFLAGS -p -200 -cwd -S /bin/bash ' "
+  STEP1MOSESPARALLELIZER="$MOSESPARALLEL $MOSESGRIDARGS -decoder-parameters '$SEARCHFLAG $MOSESFLAGS $PHASE1MOSESFLAGS' -decoder ./moses"
+  STEP2MOSESPARALLELIZER="$MOSESPARALLEL $MOSESGRIDARGS -decoder-parameters '$SEARCHFLAG $MOSESFLAGS $PHASE2MOSESFLAGS' -decoder ./moses"
+fi
+
+case "$SEARCH" in
+beam)
+  SEARCHFLAG="-search-algorithm 0"
+  ;;
+cube)
+  SEARCHFLAG="-search-algorithm 1"
+  ;;
+*)
+  die "Bad search algorithm: $SEARCH"
+  ;;
+esac
+
+PHASE1MERT=`eman path $PHASE1MERT`
+PHASE2MERT=`eman path $PHASE2MERT`
+
+cat << KONEC > eman.command
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+
+# init grid environment
+. /net/projects/SGE/user/sge_profile
+
+mydir=\`pwd\`
+
+set -o pipefail
+function die() { echo "\$@" >&2 ; echo FAILED > \$mydir/eman.status ; exit 1 ; }
+
+function mkcorpus() {
+  $PLAYGROUND/corpman --wait \$1 || die "Failed to prepare \$1"
+  step_file_col=(\$($PLAYGROUND/corpman \$1))
+  if [ "\${step_file_col[2]}" == "-1" ]; then
+    $PLAYGROUND/../scripts/wiseln $PLAYGROUND/\${step_file_col[0]}/\${step_file_col[1]} \\
+      \$2.gz \
+    || die "Failed to clone \$2 corpus \$1"
+  else
+    echo "Selecting the column from \$step_file_col"
+    eval \$($PLAYGROUND/corpman --cmd \$1) \\
+    | gzip -c > \$2.gz
+  fi
+}
+mkcorpus $TESTCORP/$SRCAUG evaluation.in
+mkcorpus $TESTCORP/$REFAUG evaluation.ref.0
+
+gunzip evaluation.in.gz
+gunzip evaluation.ref.0.gz
+
+echo Checking tune and eval corp sizes
+[ `wc -l < evaluation.in` -gt 0 ] || die "Empty evaluation.in"
+[ `wc -l < evaluation.in` == `wc -l < evaluation.ref.0` ] || die "Mismatching evaluation.ref.0"
+renice 10 \$\$
+
+# core files limited to 1 byte
+ulimit -c 1
+
+phase1dir=$PHASE1MERT
+phase2dir=$PHASE2MERT
+
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo export SCRIPTS_ROOTDIR=${SCRIPTS_ROOTDIR}
+
+# clone some important executables
+$PLAYGROUND/../scripts/wiseln $MOSESCMD ./moses || die "Failed to clone moses"
+#$PLAYGROUND/../scripts/wiseln $TESTBLEU ./testbleu || die "Failed to clone testbleu"
+
+gunzip $PLAYGROUND/../src/testbleu.gz -c > ./testbleu \
+|| die "Cannot extract testbleu binary!"
+chmod +x ./testbleu
+
+#if [ $PHASE1TESTCORP == $TESTCORP ]; then
+#  echo "No need to translate first step, reuse output from $PHASE1MERT"
+#  cp \$phase1dir/evaluation.opt.out ./evaluation.mid
+#  cp \$phase1dir/evaluation.opt.ali ./evaluation.mid.ali
+#else
+echo "Will translate evaluation.in with $PHASE1MERT"
+
+## Clone the moses.ini and source files
+mkdir phase1model || die "mkdir failed"
+cd phase1model || die "mkdir failed"
+\$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \\
+  \$phase1dir/moses.abs.ini || die "clone failed"
+# Absolutize
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl ./moses.ini \\
+  > moses.abs.ini || die "Absolutize failed"
+# Apply weights
+$PLAYGROUND/tools/apply_weights_from_moses_ini.pl \\
+  \$phase1dir/mert-tuning/moses.ini < moses.abs.ini > moses.opt.ini \\
+  || die "Apply failed"
+cd ..
+# Filter for our input
+\$SCRIPTS_ROOTDIR/training/filter-model-given-input.pl filtered-for-phase1 \\
+  ./phase1model/moses.opt.ini evaluation.in \\
+  || die "Filter for phase 1 failed"
+
+$STEP1MOSESPARALLELIZER \\
+  -input-file ./evaluation.in \\
+  -alignment-output-file ./evaluation.mid.ali \\
+  -config ./filtered-for-phase1/moses.ini \\
+  | sed 's/^ *//' \\
+  | sed 's/ *$//' \\
+  > evaluation.mid \\
+  || die "Translation of phase 1 failed"
+#fi
+
+## Clone the moses.ini and source files
+mkdir phase2model || die "mkdir failed"
+cd phase2model || die "mkdir failed"
+\$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \\
+  \$phase2dir/moses.abs.ini || die "clone failed"
+# Absolutize
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl ./moses.ini \\
+  > moses.abs.ini || die "Absolutize failed"
+# Apply weights
+$PLAYGROUND/tools/apply_weights_from_moses_ini.pl \\
+  \$phase2dir/mert-tuning/moses.ini < moses.abs.ini > moses.opt.ini \\
+  || die "Apply failed"
+cd ..
+# Filter for our input
+\$SCRIPTS_ROOTDIR/training/filter-model-given-input.pl filtered-for-phase2 \\
+  ./phase2model/moses.opt.ini evaluation.mid \\
+  || die "Filter for phase 2 failed"
+
+$STEP2MOSESPARALLELIZER \\
+  -input-file ./evaluation.mid \\
+  -alignment-output-file ./evaluation.2nd.ali \\
+  -config ./filtered-for-phase2/moses.ini \\
+  | sed 's/^ *//' \\
+  | sed 's/ *$//' \\
+  > evaluation.opt.before-postproc \\
+   || die "Translation of phase 2 failed"
+
+if [ -z "$POSTPROC" ]; then
+  cp evaluation.opt.before-postproc evaluation.opt.out
+else
+  cat evaluation.opt.before-postproc \
+  | $POSTPROC \\
+  > evaluation.opt.out
+fi
+
+# assuming the postprocess preserves token count
+paste evaluation.mid.ali evaluation.2nd.ali \\
+| $PLAYGROUND/../scripts/join_ali.pl \\
+> evaluation.opt.ali
+
+
+echo "Final BLEU:"
+#\$SCRIPTS_ROOTDIR/generic/multi-bleu.perl evaluation.ref. < evaluation.opt.out | tee BLEU.opt
+./testbleu evaluation.ref.0 < evaluation.opt.out | tee BLEU.opt \\
+  || die "BLEU of evaluation.opt.out set failed"
+
+echo "Detokenizing evaluation.opt.out"
+\$SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl -u -l $TARGETLAN_FOR_DETOKENIZER \\
+  < evaluation.opt.out > evaluation.opt.txt
+
+echo DONE > \$mydir/eman.status
+
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

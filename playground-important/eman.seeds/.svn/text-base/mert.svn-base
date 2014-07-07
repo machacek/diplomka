@@ -1,0 +1,197 @@
+#!/bin/bash
+# eman seed for running mert on a moses model
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail  # safer pipes
+
+PLAYGROUND=`eman path` # eman playground directory
+
+# Ensure all the required variables are set (or provide the default)
+eman \
+  defvar MODELSTEP type=reqstep help='where is the model (moses.ini) incl. all files' \
+  defvar DEVCORP help='the corpus for tuning; use colon to delimit more corpora (the source side will be taken from the first one only)' \
+  defvar SRCAUG inherit=MODELSTEP help='the source lang+factors' \
+  defvar REFAUG inherit=MODELSTEP:TGTAUG \
+    help='the target (reference) lang+factors' \
+  defvar SEARCH default=cube help='the search type (beam or cube)' \
+  defvar MOSESFLAGS default='' help='further flags for moses' \
+  defvar MERTFLAGS default='' help='further flags for mert.pl' \
+  defvar GRIDFLAGS default='' help='further flags for qsub' \
+  defvar STACK default='' help='stacksize for beam search' \
+  defvar TAGPREF default='' help='eman tag prefix' \
+  defvar MERTPRG default='mert' help='mert/zmert/pro (not quite tested)' \
+  defvar ZMERTMETRIC default='' help='for zmert: SemPOS, SemPOS_BLEU, BLEU, TER, TER-BLEU' \
+  defvar ZMERTSEMPOSSOURCE default='' help='for zmert: factors:1,2 (factors:1,2,3 for SemPOS_BLEU) or tmt' \
+  defvar ZMERTSEMPOSBLEUWEIGHTS default='' help='for zmert --semposbleu-weights, e.g. 1:1' \
+  defvar ZMERTFLAGS default='' help='zmert flags' \
+  defvar TREEXSTEP default='' help='for zmert SemPOS tmt (used to be TMT_ROOT; untested)' \
+  defvar JOBS default='15' help='decoder jobs to run, set 0 for disabling SGE altogether' \
+  defvar MOSESSTEP inherit='MODELSTEP' help='where are moses scripts and binaries' \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+MOSESDIR="$(eman path $MOSESSTEP)"
+SCRIPTS_ROOTDIR="$MOSESDIR/moses/scripts"
+MOSESCMD="$MOSESDIR/bin/moses"
+
+echo $MODELSTEP > info.modelexp
+
+MODELSTEP=$(eman path $MODELSTEP)
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+firstdevcorp=$(echo $DEVCORP | cut -d: -f1)
+
+# create local copies of the corpora
+$PLAYGROUND/corpman --dump $firstdevcorp/$SRCAUG > tuning.in \
+  || die "Failed to create tuning.in from $firstdevcorp/$SRCAUG"
+refidx=0
+for devcorp in $(echo $DEVCORP | tr ':' ' '); do
+  $PLAYGROUND/corpman --dump $devcorp/$REFAUG > tuning.ref.$refidx \
+    || die "Failed to create tuning.ref.$refidx from $devcorp/$REFAUG"
+  [ `wc -l < tuning.in` == `wc -l < tuning.ref.$refidx` ] \
+    || die "Mismatching number of lines in tuning.ref.$refidx taken from $devcorp/$REFAUG"
+  refidx=$(($refidx+1))
+done
+
+echo Checking tuning corp size
+[ `wc -l < tuning.in` -gt 0 ] || die "Empty tuning.in"
+
+MERTMOSES="\$SCRIPTS_ROOTDIR/training/mert-moses.pl"
+ZMERTMOSES="\$SCRIPTS_ROOTDIR/training/zmert-moses.pl"
+
+
+if [[ "$MOSESFLAGS" != *\-dl*  ]]; then
+  MOSESFLAGS="-dl 6 $MOSESFLAGS"
+fi
+
+if [ ! -z "$STACK" ]; then
+  MOSESFLAGS="$MOSESFLAGS -s $STACK"
+fi
+
+if [ $JOBS -eq 0 ]; then
+  GRIDARGS=""
+  MOSESPARALLELIZER="./moses $SEARCHFLAG $MOSESFLAGS"
+else
+  # Set default cluster priority unless already specified by the user.
+  if [[ "$GRIDFLAGS" =~ -p' '+-?[0-9]+ ]] ; then
+    PGRIDFLAGS="$GRIDFLAGS -cwd -S /bin/bash"
+  else
+    PGRIDFLAGS="$GRIDFLAGS -p -100 -cwd -S /bin/bash"
+  fi
+  MERTGRIDARGS="--jobs=$JOBS --queue-flags=' $PGRIDFLAGS ' "
+  MOSESGRIDARGS="--jobs=$JOBS --queue-parameters=' $PGRIDFLAGS ' "
+fi
+
+case "$SEARCH" in
+beam)
+  SEARCHFLAG="-search-algorithm 0"
+  ;;
+cube)
+  SEARCHFLAG="-search-algorithm 1"
+  ;;
+*)
+  die "Bad search algorithm: $SEARCH"
+  ;;
+esac
+
+case "$MERTPRG" in
+zmert)
+  cat << KONEC > command.mert
+$ZMERTMOSES \
+  --working-dir=\`pwd\`/mert-tuning \\
+  \`pwd\`/tuning.in \\
+  \`pwd\`/tuning.ref. \\
+  \`pwd\`/moses \\
+  \`pwd\`/moses.abs.ini \\
+  --mertdir=\$SCRIPTS_ROOTDIR/../../moses/zmert/ \\
+  --metric="$ZMERTMETRIC" $ZMERTSEMPOSSOURCEFLAG \\
+    $ZMERTFLAGS \\
+  $MERTGRIDARGS \\
+  \$MERTFLAGS \\
+  --decoder-flags="$MOSESFLAGS $SEARCHFLAG" \\
+  || die "Mert failed"
+KONEC
+;;
+mert)
+  cat << KONEC > command.mert
+$MERTMOSES \
+  --working-dir=\`pwd\`/mert-tuning \\
+  \`pwd\`/tuning.in \\
+  \`pwd\`/tuning.ref. \\
+  \`pwd\`/moses \\
+  \`pwd\`/moses.abs.ini \\
+  $MERTGRIDARGS \\
+  \$MERTFLAGS \\
+  --decoder-flags="$MOSESFLAGS $SEARCHFLAG" \\
+  || die "Mert failed"
+KONEC
+;;
+*)
+  die "Bad search algorithm: $SEARCH"
+  ;;
+esac
+
+cat << KONEC > eman.command
+#!/bin/bash
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+# If local copy of input files already exists (we are running 'eman continue') remove it first.
+rm -rf mert-tuning moses* lmodel* ttable*
+
+# init grid environment
+. /net/projects/SGE/user/sge_profile
+
+# Blocked for the moment, we don't use sempos
+#if [ -d "$TMT_ROOT" ]; then
+#  # ensuring tectomt is actually inited!
+#  pushd $TMT_ROOT ||  die "Can't chdir to TMT_ROOT $TMT_ROOT"
+#  . ./config/init_devel_environ.sh
+#  [ "\$TMT_OK" == 1 ] || die "Failed to init TectoMT"
+#  popd
+#fi
+
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo export SCRIPTS_ROOTDIR=${SCRIPTS_ROOTDIR}
+
+export MERTFLAGS="$MERTFLAGS"
+echo export MERTFLAGS="$MERTFLAGS"
+
+# clone some importnant executables
+$PLAYGROUND/../scripts/wiseln $MOSESCMD ./moses || die "Failed to clone moses"
+
+## Clone the moses.ini and source files
+\$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \
+  $MODELSTEP/model/moses.ini \
+  || die "Failed to clone $MODELSTEP/model/moses.ini"
+
+## We're using irstlm, change the lmodel-file type:
+# ../set_lm_type.pl ./moses.ini || die "Failed to set lmtype" || exit 1
+
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl \`pwd\`/moses.ini > moses.abs.ini || die "Absolutize failed"
+
+# This is the actual mert to run
+`cat command.mert`
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

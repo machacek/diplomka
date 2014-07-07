@@ -1,0 +1,414 @@
+#!/bin/bash
+# eman seed for running mert to combine various mt systems
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail  # safer pipes
+
+PLAYGROUND=$(eman path)
+STEPNAME=$(basename $(pwd))
+
+eman \
+  defvar COMBMERTSTEP type=optstep default="" \
+    help="the combmert where we optimized the weights" \
+  defvar TARGMODELSTEP type=reqstep inherit=COMBMERTSTEP \
+    help="the s.model containing the moses.ini to apply on the target side" \
+  defvar HYPAUGS \
+    help="colon-delimited list of system output corpora, e.g. csNmT1_s.translate.46d1f1b7.20120222-1847+stc" \
+  defvar CORP \
+    help="the corpus name, all systems produced a 'language' of it" \
+  defvar DEVCORP same_as=CORP \
+    help="the corpus to tune on, possibly multiple refs" \
+  defvar SRCAUG inherit=COMBMERTSTEP \
+    help="language+factors that the systems did translate from" \
+  defvar REFAUG inherit=COMBMERTSTEP \
+    help="language+factors to tune on" \
+  defvar BILANGFLAGS default="" inherit=COMBMERTSTEP \
+    help="things like --featset=arclevel,primarcs for bilang2rover" \
+  defvar MAKEBFLAGS default="" inherit=COMBMERTSTEP \
+    help="things like --force-similar-alignment for make_bilang_for_syscomb" \
+  defvar HYPLMORDER default=3 inherit=COMBMERTSTEP \
+    help="the order of the LM based on the hypothesesm, default 3, zero to disable" \
+  defvar SEARCH default=cube inherit=COMBMERTSTEP help='the search type (beam or cube)' \
+  defvar JOBS default=15 inherit=COMBMERTSTEP help='how many jobs to spawn (0 to disable SGE)' \
+  defvar GRIDFLAGS default='' inherit=COMBMERTSTEP help='further flags for qsub' \
+  defvar MERTFLAGS default='' inherit=COMBMERTSTEP help='further flags for mert.pl' \
+  defvar MOSESFLAGS default='' inherit=COMBMERTSTEP  help='further flags for moses' \
+  defvar MOSESSTEP type=reqstep inherit=COMBMERTSTEP \
+    help="the step containing compiled tools" \
+  defvar SRILMSTEP type=reqstep inherit=COMBMERTSTEP help='where is srilm compiled' \
+|| exit 1
+
+eval `eman bash-loadvars`
+
+# convert the dependencies to absolute paths
+SRILMDIR=`eman path $SRILMSTEP`
+MOSESSTEPDIR=$(eman path $MOSESSTEP)
+SCRIPTS_ROOTDIR="$MOSESSTEPDIR/moses/scripts"
+MOSESCMD="$MOSESSTEPDIR/bin/moses"
+
+[ $JOBS == 0 ] && SERIAL=yes
+
+# create local copies of the corpora
+echo "" > corpus_preparation_commands
+
+function register_future_filename() {
+  corpdesc="$1"
+  outfilename="$2"
+
+  # set bash variables stepname, filename, column, linecount
+  eval $($PLAYGROUND/corpman $corpdesc --init --bashvars=stepname --bashvars=filename --bashvars=column --bashvars=linecount)
+  [ ! -z "$stepname" ] || die "Corpus not found: $corpdesc"
+
+  # check the number of lines
+  [ -z "$linecount" ] || [ -z "$LINECOUNT" ] \
+      || [ $linecount -eq $LINECOUNT ] \
+    || die "Unexpected number of lines of $corpdesc: got $linecount, expected $LINECOUNT"
+  LINECOUNT="$linecount"
+
+  pathname=$(eman path $stepname)/$filename
+  if [ $column == "-1" ]; then
+    cmd="$PLAYGROUND/../scripts/wiseln $pathname $outfilename"
+  else
+    cmd="zcat $pathname | cut -f $column | gzip -c > $outfilename"
+  fi
+  echo "$cmd \\" >> corpus_preparation_commands
+  echo "|| die 'Failed to obtain $corpdesc'" >> corpus_preparation_commands
+
+  eman add-deps . $stepname
+}
+
+hid=1
+HYPIDS=""
+rm -f systems
+for h in `echo $HYPAUGS | sed 's/:/ /g'`; do
+  echo Including hypothesis $sid: $h
+  register_future_filename $CORP/$h hyp.$hid.out.gz
+  register_future_filename $CORP/$(echo $h | cut -d+ -f1)+ali hyp.$hid.ali.gz
+  HYPIDS="$HYPIDS $hid"
+  hid=$(($hid+1))
+done
+numsystems=$(($hid-1))
+echo $numsystems > numsystems
+
+
+if [ -z $COMBMERTSTEP ]; then
+  TUNING_OR_EVALUATION=tuning
+  refidx=0
+  for devcorp in $(echo $DEVCORP | tr ':' ' '); do
+    register_future_filename $devcorp/$REFAUG tuning.ref.$refidx.gz
+    refidx=$(($refidx+1))
+  done
+else
+  TUNING_OR_EVALUATION=evaluation
+  COMBMERTSTEPDIR=$(eman path $COMBMERTSTEP)
+  [ -d "$COMBMERTSTEPDIR" ] || die "Not a valid step: $COMBMERTSTEP"
+fi
+
+register_future_filename $CORP/$SRCAUG $TUNING_OR_EVALUATION.in.gz
+
+# promise translated corpus
+OUTLANG=`echo $REFAUG | cut -d'+' -f1`_$STEPNAME
+[ -z "$COMBMERTSTEP" ] && OUTLANG="$OUTLANG"_TUNECHEAT
+DETOKFACT=untok
+TOKFACT="$(echo $REFAUG | cut -d'+' -f2-)"
+#ALIFACT="ali"
+
+# add these to eman
+DETOKAUG="$OUTLANG+$DETOKFACT" \
+TOKAUG="$OUTLANG+$TOKFACT" \
+  eman defvar DETOKAUG defvar TOKAUG
+#OUTALIAUG="$OUTLANG+$ALIFACT" eman defvar OUTALIAUG
+
+# linecount is added after tranlating
+$PLAYGROUND/corpman register -- $TUNING_OR_EVALUATION.opt.out.gz \
+  -1 $CORP $OUTLANG $TOKFACT -1 0 \
+|| die "Can't register corpus"
+$PLAYGROUND/corpman register -- $TUNING_OR_EVALUATION.opt.txt.gz \
+  -1 $CORP $OUTLANG $DETOKFACT -1 0 \
+|| die "Can't register corpus"
+#$PLAYGROUND/corpman register -- alignment.gz \
+#  -1 $CORP $OUTLANG $ALIFACT -1 0 \
+#|| die "Can't register corpus"
+
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+
+#TARGETLAN_FOR_DETOKENIZER=`echo $REFAUG | sed 's/^\(..\).*/\1/'`
+#if ! echo "test" | $SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl \
+#       -u -l $TARGETLAN_FOR_DETOKENIZER > /dev/null 2>&1 ; then
+#  echo "Defaulting to 'en' as the targetlang for detokenizer."
+#  TARGETLAN_FOR_DETOKENIZER=en
+#fi
+
+MOSESPARALLEL="\$SCRIPTS_ROOTDIR/generic/moses-parallel.pl"
+MERTMOSES="\$SCRIPTS_ROOTDIR/training/mert-moses.pl"
+
+if [ ! -z "$STACK" ]; then
+  MOSESFLAGS="$MOSESFLAGS -s $STACK"
+fi
+
+
+if [ "$SERIAL" = yes ]; then
+  GRIDARGS=""
+  MOSESPARALLELIZER="./moses $SEARCHFLAG $MOSESFLAGS"
+else
+  # Set default cluster priority unless already specified by the user.
+  if [[ "$GRIDFLAGS" =~ -p' '+-?[0-9]+ ]] ; then
+    PGRIDFLAGS="$GRIDFLAGS -cwd -S /bin/bash"
+  else
+    PGRIDFLAGS="$GRIDFLAGS -p -100 -cwd -S /bin/bash"
+  fi
+  MERTGRIDARGS="--jobs=$JOBS --queue-flags=' $PGRIDFLAGS ' "
+  MOSESGRIDARGS="--jobs=$JOBS --queue-parameters=' $PGRIDFLAGS ' "
+  MOSESPARALLELIZER="$MOSESPARALLEL $MOSESGRIDARGS -decoder-parameters '$SEARCHFLAG $MOSESFLAGS' -decoder ./moses"
+fi
+
+case "$SEARCH" in
+beam)
+  SEARCHFLAG="-search-algorithm 0"
+  ;;
+cube)
+  SEARCHFLAG="-search-algorithm 1"
+  ;;
+*)
+  die "Bad search algorithm: $SEARCH"
+  ;;
+esac
+
+cat << KONEC > eman.command
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+# init grid environment; sometimes needed for ./augment.pl
+. /net/projects/SGE/user/sge_profile
+# setup PERL5LIB, LOCAL2DIR and RH8 variables (e.g. LD_LIBRARY_PATH)
+. /net/work/projects/perl_repo/admin/bin/setup_platform
+
+SRILMDIR1="\$(cat $SRILMDIR/srilm.path)/bin/"
+SRILMDIR2="\$(cat $SRILMDIR/srilm.path)/bin/i686/"
+
+export PATH=\$SRILMDIR1:\$SRILMDIR2:\$PATH
+  # for ngram-count
+
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo export SCRIPTS_ROOTDIR=${SCRIPTS_ROOTDIR}
+
+export MERTFLAGS="$MERTFLAGS"
+echo export MERTFLAGS="$MERTFLAGS"
+
+# clone some importnant executables
+$PLAYGROUND/../scripts/wiseln $MOSESCMD ./moses || die "Moses missing"
+
+TARGETLAN_FOR_DETOKENIZER=`echo $REFAUG | sed 's/^\(..\).*/\1/'`
+if ! echo "test" | \$SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl \\
+       -u -l \$TARGETLAN_FOR_DETOKENIZER > /dev/null 2>&1 ; then
+  echo "Defaulting to 'en' as the targetlang for detokenizer."
+  TARGETLAN_FOR_DETOKENIZER=en
+fi
+
+## Clone the moses.ini and source files
+\$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \
+  --symlink \
+  ../$TARGMODELSTEP/model/moses.ini \
+  || die "Failed to clone ../$TARGMODELSTEP/model/moses.ini"
+
+# Construct empty-phrasetable
+echo -n "void ||| void ||| 0.0" \
+| $MOSESSTEPDIR/moses/dist/bin/processPhraseTable -ttable 0 0 - -nscores 1 \
+    -out empty-phrasetable
+
+
+# Get local copies of the corpora
+`cat corpus_preparation_commands`
+
+# Process them
+rm -f hypcorpus.text
+for hid in $HYPIDS; do
+  ziplines --item-delim='\\t' hyp.\$hid.out.gz hyp.\$hid.ali.gz \\
+  | gzip -c \\
+  > hyp.\$hid.outali.gz \\
+  || die "Failed to get output or ali from hypothesis $hid"
+  zcat hyp.\$hid.out.gz \\
+  >> hypcorpus.text \\
+  || die "Failed to append hypcorpus.text"
+  hid=\$((\$hid+1))
+done
+gzip hypcorpus.text || die "Failed to gzip hypcorpus.text"
+
+if [ $HYPLMORDER != 0 ]; then
+  # Construct hyplm
+  if zcat hypcorpus.text.gz | ngram-count -order $HYPLMORDER \\
+      -text - \\
+      -lm hypcorpus.lm \\
+      $LMFLAGS \\
+      -interpolate -kndiscount; then
+    echo "hypcorpus.lm succeeded with knsmooth"
+  else
+    zcat hypcorpus.text.gz | ngram-count -order $HYPLMORDER \\
+      -text - \\
+      -lm hypcorpus.lm \\
+      $LMFLAGS \\
+      -interpolate \\
+    || die "Failed to prepare hypcorpus.lm"
+  fi
+  gzip hypcorpus.lm || die "Failed to gzip hypcorpus.lm"
+fi
+
+# Construct the lattice from the hypotheses and the corpus
+echo "Creating bilang (flags: $MAKEBFLAGS)"
+# create the input lattice as FSA
+../../scripts/make_bilang_for_syscomb.pl $TUNING_OR_EVALUATION.in.gz \\
+    hyp.*.outali.gz \\
+    $MAKEBFLAGS \\
+| gzip -c \\
+> $TUNING_OR_EVALUATION.bilang.gz \\
+|| die "Failed to make bilang"
+
+zcat $TUNING_OR_EVALUATION.bilang.gz \\
+| ../../scripts/bilang2rover.pl $numsystems \\
+    --tokenize-at-underscore \\
+    $BILANGFLAGS \\
+| gzip -c \\
+> $TUNING_OR_EVALUATION.fsa.gz
+
+
+# guess link parameter count
+linkparams=\$(zcat $TUNING_OR_EVALUATION.fsa.gz | head -n1 | cut -d" " -f4 | tr , '\n' | wc -l)
+
+mv moses.ini moses.orig.ini || die "Failed to move moses.ini"
+../tools/fix_moses_ini_for_syscomb.pl empty-phrasetable \\
+  hypcorpus.lm.gz $HYPLMORDER \\
+  --link-param-count=\$linkparams \\
+  --max-phrase-length=2000 \\
+  < moses.orig.ini > moses.ini \\
+|| die "Failed to modify moses.ini"
+
+
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl ./moses.ini > moses.abs.ini || die "Absolutize failed"
+
+
+zcat $TUNING_OR_EVALUATION.fsa.gz \
+| \$SCRIPTS_ROOTDIR/generic/fsa2plf.pl \
+> $TUNING_OR_EVALUATION.fsa.in
+
+[ \`wc -l < $TUNING_OR_EVALUATION.fsa.in\` == \`zcat < $TUNING_OR_EVALUATION.in.gz | wc -l\` ] \
+  || die "Mismatching $TUNING_OR_EVALUATION.in.gz and $TUNING_OR_EVALUATION.fsa.in"
+
+if [ ! -z "$COMBMERTSTEP" ]; then
+  echo "Using weights from $COMBMERTSTEP"
+
+  ../tools/apply_weights_from_moses_ini.pl $COMBMERTSTEPDIR/mert-tuning/moses.ini \\
+  < ./moses.abs.ini > moses.abs.opt.ini \\
+  || die "Failed to apply weights from $COMBMERTSTEP"
+
+  $MOSESPARALLELIZER \\
+    -input-file ./$TUNING_OR_EVALUATION.fsa.in \\
+    -config ./moses.abs.opt.ini \\
+    -inputtype 2 \\
+    | sed 's/^ *//' \\
+    | sed 's/ *$//' \\
+    | gzip -c \\
+    > $TUNING_OR_EVALUATION.opt.out.gz \\
+     || die "Translation of eval failed"
+
+  echo "Detokenizing $TUNING_OR_EVALUATION.opt.out"
+  zcat $TUNING_OR_EVALUATION.opt.out.gz \\
+  | \$SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl \\
+      -u -l \$TARGETLAN_FOR_DETOKENIZER \\
+  | gzip -c \\
+  > $TUNING_OR_EVALUATION.opt.txt.gz \\
+  || die "Failed to detokenize"
+
+  # register output corpus lines
+  linecount=\`zcat $TUNING_OR_EVALUATION.opt.txt.gz | wc -l\`
+  ## fill in linecount of the final corpus
+  $PLAYGROUND/corpman register -- $TUNING_OR_EVALUATION.opt.out.gz \
+    -1 $CORP $OUTLANG $TOKFACT \$linecount 0 \
+  || die "Can't register linecount of the translated corpus"
+  $PLAYGROUND/corpman register -- $TUNING_OR_EVALUATION.opt.txt.gz \
+    -1 $CORP $OUTLANG $DETOKFACT \$linecount 0 \
+  || die "Can't register linecount of the translated corpus"
+  #$PLAYGROUND/corpman register -- alignment.gz \
+  #  -1 $CORP $OUTLANG $ALIFACT \$linecount 0 \
+  #|| die "Can't register linecount of the output alignment"
+
+else
+  echo "Training our weights"
+
+  gunzip $TUNING_OR_EVALUATION.ref.*.gz || die "Failed to gunzip refs."
+
+  #--obo-scorenbest=\`pwd\`/scorenbest
+  $MERTMOSES \
+    --no-filter-phrase-table \\
+    --inputtype=2 \\
+    --working-dir=\`pwd\`/mert-tuning \\
+    \`pwd\`/$TUNING_OR_EVALUATION.fsa.in \\
+    \`pwd\`/$TUNING_OR_EVALUATION.ref. \\
+    \`pwd\`/moses \\
+    \`pwd\`/moses.abs.ini \\
+    $MERTGRIDARGS \\
+    \$MERTFLAGS \\
+    --decoder-flags="-dl 0 -verbose 0 $MOSESFLAGS $SEARCHFLAG" \\
+    || die "Mert failed"
+fi
+#--obo-scorenbest=\`pwd\`/scorenbest
+
+# \$SCRIPTS_ROOTDIR/training/filter-model-given-input.pl filtered-for-eval-opt \\
+#   ./mert-tuning/moses.ini evaluation.in \\
+#   || die "Filter for eval failed"
+#
+#
+#
+# \$SCRIPTS_ROOTDIR/training/filter-model-given-input.pl filtered-for-eval-std \\
+#   ./mert-tuning/run1.moses.ini evaluation.in || die "Filter for std failed"
+#
+# $MOSESPARALLELIZER \\
+#   ./moses -input-file ./evaluation.in \\
+#   -alignment-output-file ./evaluation.ali \\
+#   -config ./filtered-for-eval-std/moses.ini \\
+#   | sed 's/^ *//' \\
+#   | sed 's/ *$//' \\
+#   > evaluation.std.out \\
+#    || die "Translation of std.eval failed"
+#
+# echo "Default BLEU:"
+# #\$SCRIPTS_ROOTDIR/generic/multi-bleu.perl evaluation.ref. < evaluation.std.out | tee BLEU.std
+# ./testbleu evaluation.ref.0 < evaluation.std.out | tee BLEU.std \\
+#   || die "BLEU of evaluation.std.out set failed"
+#
+# echo "Detokenizing evaluation.std.out"
+# \$SCRIPTS_ROOTDIR/tokenizer/detokenizer.perl -u -l $TARGETLAN_FOR_DETOKENIZER \\
+# < evaluation.std.out > evaluation.std.txt
+#
+# echo "You could use the following to prepare detailed output for manual inpection"
+# echo ./moses -input-file ./evaluation.in -config \
+#   ./filtered-for-eval-opt/moses.ini \\
+#   -verbose 3 \\
+#   2>&1
+# #  | skipbetween '^Translation Option Collection' '^total hypotheses generated' \\
+# #  | head -c 300k \\
+# #  > evaluation.opt.verbose
+
+echo DONE > \$mydir/eman.status
+
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC
+
+if [ "$RUN" == "yes" ]; then
+  sh eman.command
+fi

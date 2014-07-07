@@ -1,0 +1,134 @@
+#!/bin/bash
+# eman step to support corpman
+# Three modes of operation:
+#   RUN_COMMAND=...  apply the given pipe to the given input corpus
+#                    you *may* leave STEPNAME etc empty if the command produces
+#                    everything <- this is not yet supported, because we
+#                    wouldn't know the output line count
+#   COMBINE_PARTS=... use factor_combinator.pl to combine multiple factors to a
+#                     single corpus
+#   TAKE_FROM_COMMAND=... run the command (no input) and collect its output
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail  # safer pipes
+
+PLAYGROUND=`eman path` # eman playground directory
+
+# Ensure all the required variables are set (or provide the default)
+eman defvar RUN_COMMAND default='' \
+     defvar COMBINE_PARTS default='' \
+     defvar TAKE_FROM_COMMAND default='' \
+     defvar STEPNAME default='' help='input step name' \
+     defvar FILENAME default='' help='input file name' \
+     defvar COLUMN default='-1' help='input column in the file, or -1' \
+     defvar FACTOR default='-1' help='input factor in the column, or -1' \
+     defvar OUTCORP help='output corpus name' \
+     defvar OUTLANG help='output language name' \
+     defvar OUTFACTS help='output factors sequence' \
+     defvar OUTLINECOUNT help='forward check: expected number of lines' \
+     defvar DEPS default='' help='steps we rely on' \
+     defvar JOBS default='15' help='how many jobs to submit, 0 to disable SGE' \
+     defvar DERIVED default='0' help='is the corpus derived from an existing one' \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+# add our prerequisites
+eman add-deps . $DEPS
+
+# FIXME dirty check for qsub
+[ -n "`which qsub`" ] || export JOBS=0
+
+# other vars, not influencing exact output
+SPLIT_TO_SIZE=${SPLIT_TO_SIZE:-30000}
+  # even for big corpora, use at most 30k lines per job
+
+# double check our input is a corpus
+[ -z "$STEPNAME" ] || [ -e ../$STEPNAME/corpman.info ] \
+|| die "\$STEPNAME/corpman.info not found"
+
+# Create corpman info, the last field "1" indicates that this corpus is derived
+# automatically
+$PLAYGROUND/corpman register -- corpus.txt.gz -1 $OUTCORP $OUTLANG $OUTFACTS $OUTLINECOUNT $DERIVED $FACTOR \
+|| die "Can't register corpus"
+
+options=0
+[ -z "$RUN_COMMAND" ] || options=$((options+1))
+[ -z "$COMBINE_PARTS" ] || options=$((options+1))
+[ -z "$TAKE_FROM_COMMAND" ] || options=$((options+1))
+
+[ "$options" -eq 1 ] || die "Bad usage: Needed exactly one of RUN_COMMAND, COMBINE_PARTS and TAKE_FROM_COMMAND, got $options"
+
+if [ ! -z "$RUN_COMMAND" ]; then
+  [ ! -z "$STEPNAME" ] \
+    || die "Please define \$STEPNAME, indicating where the source corpus is."
+  [ -d "../$STEPNAME" ] \
+    || die "The directory with input (../\$STEPNAME) not found"
+  inf="../$STEPNAME/$FILENAME"
+  # we're not checking -e because the dep may not be done yet
+  if [ "$JOBS" == 0 ]; then
+    cmd="zcat $inf \\"$'\n'
+    [ "$COLUMN" == "-1" ] || cmd="$cmd | cut -f $COLUMN \\"$'\n'
+    [ "$FACTOR" == "-1" ] || cmd="$cmd | reduce_factors.pl $FACTOR \\"$'\n'
+    cmd="$cmd | $RUN_COMMAND \\"$'\n'
+  else
+    cmd="qruncmd --jobs=$JOBS --split-to-size=$SPLIT_TO_SIZE --join --jobname corpman.$OUTCORP.$OUTLANG \" \\"$'\n'
+    [ "$COLUMN" == "-1" ] || cmd="$cmd cut -f $COLUMN | \\"$'\n'
+    [ "$FACTOR" == "-1" ] || cmd="$cmd reduce_factors.pl $FACTOR | \\"$'\n'
+    cmd="$cmd $RUN_COMMAND \\"$'\n'
+    cmd="$cmd \" $inf"
+    [ "$OUTLINECOUNT" == "-1" ] || cmd="$cmd --promise-linecount=$OUTLINECOUNT"
+  fi
+elif [ ! -z "$COMBINE_PARTS" ]; then
+  cmd="../factor_combinator.pl $COMBINE_PARTS"
+else # implied $TAKE_FROM_COMMAND
+  cmd="$TAKE_FROM_COMMAND"
+fi
+
+#echo "For debugging:"
+#echo "$cmd"
+
+# Don't continue if we are not preparing the step yet
+[ -z "$INIT_ONLY" ] || exit 0
+
+
+cat > eman.command << KONEC
+#!/bin/bash
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+set -o pipefail
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+
+$cmd | gzip -c > corpus.txt.gz \\
+|| die "Failed to prepare the corpus"
+
+echo "Checking output number of lines of corpus.txt.gz"
+nl=\$(zcat corpus.txt.gz | wc -l)
+
+if [ $OUTLINECOUNT -eq -1 ]; then
+  echo "Re-registering the corpus with \$nl lines."
+  $PLAYGROUND/corpman register -- corpus.txt.gz -1 $OUTCORP $OUTLANG $OUTFACTS \$nl $DERIVED \\
+    || die "Can't register corpus"
+else
+  # just a check
+  [ "\$nl" -eq $OUTLINECOUNT ] \\
+  || die "Mismatched number of lines, expected $OUTLINECOUNT, got \$nl"
+fi
+
+rm -f \$mydir/../corpman.index || echo "Failed to force reindexing"
+
+echo Done.
+eman succeed \$mydir
+
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

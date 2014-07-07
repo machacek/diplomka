@@ -1,0 +1,89 @@
+#!/bin/bash
+# eman step to select filtered lines from the original indexed corpus
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail # safer pipes
+
+PLAYGROUND=`eman path` # eman playground directory
+
+# Ensure all the required variables are set (or provide the default)
+eman \
+   defvar LUCSCORESTEP type=reqstep help='the lucscore step where the lines were selected' \
+   defvar CORPAUG help='lang+factors of input, also used for the output' \
+   defvar OUTCORP same_as='LUCSCORESTEP' help='the name of the output corpus' \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+SRCCORP=$(eman get-var $(eman get-var $LUCSCORESTEP INDEXDIR) SRCCORP)
+OUTLANG=$(echo $CORPAUG | cut -d+ -f1)
+OUTFACTORS=$(echo $CORPAUG | cut -d+ -f2-)
+LINENUMS=$(eman path $LUCSCORESTEP)/output.lineids.gz
+
+# Checking if the source factors are available
+$PLAYGROUND/corpman $SRCCORP/$CORPAUG --init \
+  || die "Failed to find source corpus or factors: $SRCCORP/$CORPAUG"
+
+# Preregister corpora
+$PLAYGROUND/corpman register -- output.txt.gz \
+  -1    $OUTCORP        $OUTLANG        $OUTFACTORS     -1      0 \
+|| die "Can't register corpus"
+
+# Don`t continue if we are not preparing the step yet
+[ -z "$INIT_ONLY" ] || exit 0
+
+# UFAL custom or default temp dir
+TEMPDIR=/mnt/h/tmp
+[ -d $TEMPDIR ] || TEMPDIR=/tmp
+
+cat > eman.command << KONEC
+#!/bin/bash
+echo "============================"
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\` 
+echo "============================"
+
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+
+function mkcorpus() {
+  $PLAYGROUND/corpman --wait \$1 || die "Failed to prepare \$1"
+  step_file_col=(\$($PLAYGROUND/corpman \$1))
+  if [ "\${step_file_col[2]}" == "-1" ]; then
+    $PLAYGROUND/../scripts/wiseln $PLAYGROUND/\${step_file_col[0]}/\${step_file_col[1]} \\
+      corpus.\$2.gz \
+    || die "Failed to clone \$2 corpus \$1"
+  else
+    echo "Selecting the column from \$step_file_col"
+    eval \$($PLAYGROUND/corpman --cmd \$1) \\
+    | gzip -c > corpus.\$2.gz
+  fi
+}
+
+mkcorpus $SRCCORP/$CORPAUG input
+
+[ -e "$LINENUMS" ] || die "Can't read $LINENUMS"
+
+zcat corpus.input.gz \\
+| $PLAYGROUND/../scripts/greplines $LINENUMS \\
+| gzip -c > output.txt.gz \\
+|| die "Failed to select the lines"
+
+$PLAYGROUND/corpman register -- output.txt.gz \\
+  -1    $OUTCORP        $OUTLANG        $OUTFACTORS     \$(zcat output.txt.gz | wc -l)  0 \\
+|| die "Can't register linecount of the filtered corpus"
+
+echo Done.
+eman succeed \$mydir
+
+echo "============================"
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "============================"
+
+KONEC
+

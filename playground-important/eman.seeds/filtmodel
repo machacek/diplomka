@@ -1,0 +1,111 @@
+#!/bin/bash
+# filters (and binarizes) the given model to contain just phrases for the given
+# input
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail  # safer pipes
+
+PLAYGROUND=$(eman path)
+
+eman \
+  defvar FULLMODEL type=reqstep \
+    help="the modelstep or the mertstep to take moses.ini from" \
+  defvar MOSESSTEP type=reqstep inherit=FULLMODEL \
+    help="the step containing compiled tools; inherited from FULLMODEL" \
+  defvar TESTCORP help='the corpus to translate' \
+  defvar SRCAUG inherit=FULLMODEL \
+    help="language+factors to translate" \
+  defvar ITER default='' \
+    help="which MERT iteration weights to use; default is the final set" \
+|| exit 1
+
+eval `eman bash-loadvars`
+
+STEPNAME=$(basename $(pwd))
+MOSESSTEPDIR=$(eman path $MOSESSTEP)
+FULLMODELDIR=$(eman path $FULLMODEL)
+SCRIPTS_ROOTDIR="$MOSESSTEPDIR/moses/scripts/"
+
+if [ ! -z "$ITER" ]; then
+  iterprefix=run$(($ITER+1)).
+  itertag=ITER$ITER
+fi
+
+# ask for corpus to translate, add it to deps
+srccorpstep=$($PLAYGROUND/corpman --init $TESTCORP/$SRCAUG | cut -f1)
+[ ! -z "$srccorpstep" ] || die "Missing source corpus"
+
+eman add-deps . $srccorpstep $tgtcorpstep
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+cat << KONEC > eman.command
+#!/bin/bash
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+# init grid environment
+. /net/projects/SGE/user/sge_profile
+
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+
+function mkcorpus() {
+  $PLAYGROUND/corpman --wait \$1 || die "Failed to prepare \$1"
+  step_file_col=(\$($PLAYGROUND/corpman \$1))
+  if [ "\${step_file_col[2]}" == "-1" ]; then
+    STEPPATH=\$(eman path \${step_file_col[0]})
+    $PLAYGROUND/../scripts/wiseln \$STEPPATH/\${step_file_col[1]} \\
+      corpus.\$2.gz \
+    || die "Failed to clone \$2 corpus \$1"
+  else
+    echo "Selecting the column from \$step_file_col"
+    eval \$($PLAYGROUND/corpman --cmd \$1) \\
+    | gzip -c > corpus.\$2.gz
+  fi
+}
+
+mkcorpus $TESTCORP/$SRCAUG src
+gunzip -c corpus.src.gz > corpus.src
+
+## Clone the moses.ini and source files
+if [ -e $FULLMODELDIR/mert-tuning ]; then
+  echo "Assuming $FULLMODEL is a mert"
+  \$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \\
+    --symlink \\
+    $FULLMODELDIR/mert-tuning/"$iterprefix"moses.ini || die "Failed to clone"
+else
+  echo "Assuming $FULLMODEL is a regular model, using $FULLMODELDIR/moses.ini"
+  \$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \\
+    --symlink \\
+    $FULLMODELDIR/model/moses.ini || die "Failed to clone"
+fi
+
+
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl \`pwd\`/moses.ini > moses.abs.ini || die "Failed to absolutize"
+
+\$SCRIPTS_ROOTDIR/training/filter-model-given-input.pl filtered \\
+  \`pwd\`/moses.abs.ini corpus.src.gz \\
+  || die "Failed to filter"
+
+#echo "Filter the LM to match the target-side of the tm? That is possible only for non-factored models."
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

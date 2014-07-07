@@ -1,0 +1,175 @@
+#!/bin/bash
+# eman seed for running mert on a moses model
+
+function die() { echo "$@" >&2; exit 1; }
+set -o pipefail  # safer pipes
+
+PLAYGROUND=`eman path` # eman playground directory
+
+# Ensure all the required variables are set (or provide the default)
+eman \
+  defvar MODELSTEP type=reqstep help='where is the model (moses.ini) incl. all files' \
+  defvar SOURCE help='tokenized source corpus file' \
+  defvar REFERENCE help='tokenized reference corpus file' \
+  defvar SEGRANKSDATABASE help='database with ranked segments and systems' \
+  defvar SOURCESEGMENTS help='source segment definitions' \
+  defvar SCORER default='SEGRANKS' help='scorer type (BLEU,CDER,SEGRANKS,...)' \
+  defvar MATCH default='contains' help='align, contains, penalize_unknown' \
+  defvar SEARCH default=cube help='the search type (beam or cube)' \
+  defvar MOSESFLAGS default='' help='further flags for moses' \
+  defvar MERTFLAGS default='' help='further flags for mert.pl' \
+  defvar GRIDFLAGS default='' help='further flags for qsub' \
+  defvar STACK default='' help='stacksize for beam search' \
+  defvar TAGPREF default='' help='eman tag prefix' \
+  defvar JOBS default='15' help='decoder jobs to run, set 0 for disabling SGE altogether' \
+  defvar MOSESSTEP inherit='MODELSTEP' help='where are moses scripts and binaries' \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+MOSESDIR="$(eman path $MOSESSTEP)"
+SCRIPTS_ROOTDIR="$MOSESDIR/moses/scripts"
+MOSESCMD="$MOSESDIR/bin/moses"
+
+echo $MODELSTEP > info.modelexp
+
+MODELSTEP=$(eman path $MODELSTEP)
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+firstdevcorp=$(echo $DEVCORP | cut -d: -f1)
+
+# create local copies of the corpora
+cp $SOURCE tuning.in || die "Cannot copy source corpus file"
+cp $REFERENCE tuning.ref.0 || die "Cannot copy reference corpus file"
+
+echo Checking tuning corp size
+[ `wc -l < tuning.in` -gt 0 ] || die "Empty tuning.in"
+
+echo Checking reference corp size
+[ `wc -l < tuning.in` == `wc -l < tuning.ref.0` ] \
+    || die "Mismatching number of lines in tuning.ref.$refidx taken from $devcorp/$REFAUG"
+
+# Copy the database and sourse definition files
+cp $SEGRANKSDATABASE segranks.database || "Cannot copy segranks database file"
+cp $SOURCESEGMENTS source.segments || "Cannot copy source segments definition files"
+
+SEGRANKS_DATABASE_FULL=$(realpath segranks.database)
+SOURCE_SEGMENTS_FULL=$(realpath source.segments)
+
+PRINT_ALIGNMENT_FLAG=""
+#if echo $SCORER | grep "SEGRANKS" > /dev/null; then
+#    PRINT_ALIGNMENT_FLAG="-print-alignment-info-in-n-best"
+#fi
+
+
+MERTMOSES="\$SCRIPTS_ROOTDIR/training/mert-moses.pl"
+
+
+if [[ "$MOSESFLAGS" != *\-dl*  ]]; then
+  MOSESFLAGS="-dl 6 $MOSESFLAGS"
+fi
+
+if [ ! -z "$STACK" ]; then
+  MOSESFLAGS="$MOSESFLAGS -s $STACK"
+fi
+
+if [ $JOBS -eq 0 ]; then
+  GRIDARGS=""
+  MOSESPARALLELIZER="./moses $SEARCHFLAG $MOSESFLAGS"
+else
+  # Set default cluster priority unless already specified by the user.
+  if [[ "$GRIDFLAGS" =~ -p' '+-?[0-9]+ ]] ; then
+    PGRIDFLAGS="$GRIDFLAGS -cwd -S /bin/bash"
+  else
+    PGRIDFLAGS="$GRIDFLAGS -p -100 -cwd -S /bin/bash"
+  fi
+  MERTGRIDARGS="--jobs=$JOBS --queue-flags=' $PGRIDFLAGS ' "
+  MOSESGRIDARGS="--jobs=$JOBS --queue-parameters=' $PGRIDFLAGS ' "
+fi
+
+case "$SEARCH" in
+beam)
+  SEARCHFLAG="-search-algorithm 0"
+  ;;
+cube)
+  SEARCHFLAG="-search-algorithm 1"
+  ;;
+*)
+  die "Bad search algorithm: $SEARCH"
+  ;;
+esac
+
+cat << KONEC > eman.command
+#!/bin/bash
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+# If local copy of input files already exists (we are running 'eman continue') remove it first.
+rm -rf mert-tuning moses* lmodel* ttable*
+
+# init grid environment
+. /net/projects/SGE/user/sge_profile
+
+# Blocked for the moment, we don't use sempos
+#if [ -d "$TMT_ROOT" ]; then
+#  # ensuring tectomt is actually inited!
+#  pushd $TMT_ROOT ||  die "Can't chdir to TMT_ROOT $TMT_ROOT"
+#  . ./config/init_devel_environ.sh
+#  [ "\$TMT_OK" == 1 ] || die "Failed to init TectoMT"
+#  popd
+#fi
+
+export SCRIPTS_ROOTDIR=$SCRIPTS_ROOTDIR
+echo export SCRIPTS_ROOTDIR=${SCRIPTS_ROOTDIR}
+
+export MERTFLAGS="$MERTFLAGS"
+echo export MERTFLAGS="$MERTFLAGS"
+
+# clone some importnant executables
+$PLAYGROUND/../scripts/wiseln $MOSESCMD ./moses || die "Failed to clone moses"
+
+## Clone the moses.ini and source files
+\$SCRIPTS_ROOTDIR/training/clone_moses_model.pl \
+  $MODELSTEP/model/moses.ini \
+  || die "Failed to clone $MODELSTEP/model/moses.ini"
+
+## We're using irstlm, change the lmodel-file type:
+# ../set_lm_type.pl ./moses.ini || die "Failed to set lmtype" || exit 1
+
+\$SCRIPTS_ROOTDIR/training/absolutize_moses_model.pl \`pwd\`/moses.ini > moses.abs.ini || die "Absolutize failed"
+
+
+# This is the actual mert to run
+$MERTMOSES \
+  --working-dir=\`pwd\`/mert-tuning \\
+  \`pwd\`/tuning.in \\
+  \`pwd\`/tuning.ref. \\
+  \`pwd\`/moses \\
+  \`pwd\`/moses.abs.ini \\
+  $MERTGRIDARGS \\
+  \$MERTFLAGS \\
+  --mertargs="--sctype=$SCORER --scconfig database:$SEGRANKS_DATABASE_FULL,source_segments:$SOURCE_SEGMENTS_FULL,match:$MATCH" \\
+  --decoder-flags="$MOSESFLAGS $SEARCHFLAG $PRINT_ALIGNMENT_FLAG" \\
+  || die "Mert failed"
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

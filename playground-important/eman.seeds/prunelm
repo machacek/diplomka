@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# prune a language model with given threshold
+
+function die() { echo "$@" | tee FAILED >&2; exit 1 ; }
+set -o pipefail
+
+eman \
+  defvar FULLLM type=reqstep \
+    help="source lm to prun" \
+  defvar SRILMSTEP type=reqstep inherit=FULLLM \
+    help="the step containing compiled tools" \
+  defvar LMPRUNE \
+    help="Pruning limit; smaller means smaller output file, good around 14" \
+  defvar ORDER inherit=FULLLM \
+    help="n-gram order" \
+  defvar CORP inherit=FULLLM \
+    help="Source corpus" \
+  defvar EMAN_MEM default='6g' \
+    help="Memory limit at cluster" \
+|| exit 1
+
+eval `eman bash-loadvars`
+
+PLAYGROUND=`eman path`
+FULLLMPATH=`eman path $FULLLM`
+
+PRUNESTRING="0."
+for i in `seq $(($LMPRUNE - 1))` ; do
+  PRUNESTRING="$PRUNESTRING"0
+done
+PRUNESTRING="$PRUNESTRING"1
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+# convert the dependencies to absolute paths
+SRILMDIR=`eman path $SRILMSTEP`
+
+cat << KONEC > eman.command
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+# init grid environment
+. /net/projects/SGE/user/sge_profile
+
+SRILMDIR1="\$(cat $SRILMDIR/srilm.path)/bin/"
+SRILMDIR2="\$(cat $SRILMDIR/srilm.path)/bin/i686/"
+
+export PATH=\$SRILMDIR1:\$SRILMDIR2:\$PATH
+
+echo "Using this ngram:"
+which ngram || die "No ngram"
+
+if [ -e $FULLLMPATH/corpus.lm.gz ]; then
+  inlmstream="zcat $FULLLMPATH/corpus.lm.gz"
+elif [ -e $FULLLMPATH/corpus.lm ]; then
+  inlmstream="cat $FULLLMPATH/corpus.lm"
+else
+  die "Can't read input file: $FULLLMPATH/corpus.lm"
+fi
+
+echo "Pruning the language model $FULLLMPATH"
+eval \$inlmstream \\
+| ngram -lm - \\
+  -prune $PRUNESTRING \\
+  -order $ORDER \\
+  -write-lm ./corpus.lm \\
+  || die "Failed to prune LM"
+
+gzip corpus.lm || die "Gzip failed"
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC

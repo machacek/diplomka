@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -o pipefail
+function die() { echo "$@" | tee FAILED >&2; exit 1 ; }
+
+PLAYGROUND=$(eman path)
+
+# Ensure all the required variables are set (or provide the default)
+eman \
+  defvar TRANSSTEP type=optstep default='' \
+    help="translation step, implies corpora and factor if given" \
+  defvar MOSESSTEP type=reqstep inherit=TRANSSTEP \
+    help="the step containing compiled tools" \
+  defvar TESTCORP inherit=TRANSSTEP help="the translated corpus" \
+  defvar TRANSAUG inherit=TRANSSTEP:TOKAUG help="translation language+factors" \
+  defvar REFAUG inherit=TRANSSTEP \
+    help="reference language+factors" \
+|| exit 1
+
+# Set local bash variables
+eval `eman bash-loadvars`
+
+# Stop here if we are just initing ourselves
+[ -z "$INIT_ONLY" ] || exit 0
+
+cat << KONEC > eman.command
+# This is the command to be run here
+echo "=============================="
+echo "== Started:   "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+mydir=\$(pwd)
+set -o pipefail
+function die() { echo "\$@" >&2 ; eman fail \$mydir ; exit 1 ; }
+renice 10 \$\$
+ulimit -c 1 # core files limited to 1 byte
+
+MERTSTEPDIR=\`eman path $MERTSTEP \`
+MOSESSTEPDIR=\`eman path $MOSESSTEP \`
+
+gunzip $PLAYGROUND/../src/testbleu.gz -c > ./testbleu \
+|| die "Cannot extract testbleu binary!"
+chmod +x ./testbleu
+
+function mkcorpus() {
+  $PLAYGROUND/corpman --wait \$1 || die "Failed to prepare \$1"
+  step_file_col=(\$($PLAYGROUND/corpman \$1))
+  if [ "\${step_file_col[2]}" == "-1" ]; then
+    $PLAYGROUND/../scripts/wiseln $PLAYGROUND/\${step_file_col[0]}/\${step_file_col[1]} \\
+      corpus.\$2.gz \
+    || die "Failed to clone \$2 corpus \$1"
+  else
+    echo "Selecting the column from \$step_file_col"
+    eval \$($PLAYGROUND/corpman --cmd \$1) \\
+    | gzip -c > corpus.\$2.gz
+  fi
+}
+
+mkcorpus $TESTCORP/$TRANSAUG translation
+gunzip corpus.translation.gz
+
+mkcorpus $TESTCORP/$REFAUG reference
+gunzip corpus.reference.gz
+
+# The testblue and Moses evaluators do not perform their own tokenization.
+# We thus evaluate tokenized output against tokenized reference. (We do not want to lose score points for punctuation tokens.)
+# Ondřej's testbleu ought to be much faster than the Moses evaluator below.
+( ./testbleu corpus.reference < corpus.translation | tee BLEU ) \\
+|| die "Testbleu evaluator failed"
+
+# Standard command footer
+echo Done.
+eman succeed \$mydir
+echo "=============================="
+echo "== Ended:     "\`date '+%Y%m%d-%H%M'\`
+echo "== Hostname:  "\`hostname\`
+echo "== Directory: "\`pwd\`
+echo "=============================="
+KONEC
