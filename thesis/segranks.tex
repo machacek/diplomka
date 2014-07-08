@@ -632,9 +632,9 @@ sentence-level pairwise comparisons. This coefficient is used to measures how
 often a set of pairwise rankings agrees with another set of pairwise rankings.
 The basic formula for Kendall's $\tau$ is:
 
-\begin{equation}
+\begin{equation*}
   \tau = \frac{|Concordant| - |Discordant|}{|Concordant| + |Discordant|}
-\end{equation}
+\end{equation*}
 
 \noindent where $Concordant$ is the set of pairwise combination where both sets
 of pairwise rankings agrees with each other and $Discordant$ is the set of
@@ -648,70 +648,151 @@ we does not consider any tied pairwise comparisons.
 
 \begin{table}
   \begin{center}
-    \subfloat[Comparisons in which a given system was better]{
-      \begin{tabular}{|l|c|}
+    \subfloat[Better systems]{
+      %\begin{center}
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System}                   &   $\tau$ \\
         \hline
-         System                   &   $\tau$ \\
-        \hline
-         cu-funky            &        0.4279 \\
-         cu-depfix           &        0.4050 \\
-         onlineB             &        0.3984 \\
-         cu-bojar            &        0.3943 \\
-         uedin-unconstr. &        0.3902 \\
-         uedin-wmt14         &        0.3635 \\
-         onlineA             &        0.3122 \\
-         CU-TectoMT          &        0.2697 \\
-         commercial1         &        0.1663 \\
-         commercial2         &        0.1228 \\
-        \hline
-      \end{tabular}
-      \label{judgements-better}
+         cu-funky            &        0.428 \\
+         cu-depfix           &        0.405 \\
+         onlineB             &        0.398 \\
+         cu-bojar            &        0.394 \\
+         uedin-uncon. &        0.390 \\
+         uedin-wmt14         &        0.363 \\
+         onlineA             &        0.312 \\
+         CU-TectoMT          &        0.270 \\
+         commercial1         &        0.166 \\
+         commercial2         &        0.123 \\
+          \hline
+        \end{tabular}
+      %\end{center}
+      \label{sentence-segments-judgments-correlations-better}
     }
-
-    \subfloat[Comparisons in which a given system was worse]{
-      \begin{tabular}{|l|c|}
-        \hline
-         System                   &   $\tau$ \\
+    \subfloat[Worse systems]{
+      %\begin{center}
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System}                   &   $\tau$ \\
        \hline
-         commercial2         &        0.4919 \\
-         commercial1         &        0.4408 \\
-         CU-TectoMT          &        0.3851 \\
-         onlineA             &        0.3280 \\
-         uedin-unconstr. &        0.2595 \\
-         uedin-wmt14         &        0.2573 \\
-         cu-funky            &        0.2301 \\
-         cu-bojar            &        0.2272 \\
-         cu-depfix           &        0.2251 \\
-         onlineB             &        0.2245 \\
+         commercial2         &        0.492 \\
+         commercial1         &        0.441 \\
+         CU-TectoMT          &        0.385 \\
+         onlineA             &        0.328 \\
+         uedin-uncon. &        0.260 \\
+         uedin-wmt14         &        0.257 \\
+         cu-funky            &        0.230 \\
+         cu-bojar            &        0.227 \\
+         cu-depfix           &        0.225 \\
+         onlineB             &        0.225 \\
+          \hline
+        \end{tabular}
+      \label{sentence-segments-judgments-correlations-worse}
+    }
+    
+    \subfloat[All systems]{
+      %\begin{center}
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System}                   &   $\tau$ \\
         \hline
-      \end{tabular}
-      \label{judgements-worse}
+         commercial2         &        0.394 \\
+         cu-funky            &        0.348 \\
+         commercial1         &        0.345 \\
+         uedin-uncon. &        0.341 \\
+         cu-depfix           &        0.335 \\
+         CU-TectoMT          &        0.333 \\
+         cu-bojar            &        0.328 \\
+         onlineB             &        0.321 \\
+         onlineA             &        0.320 \\
+         uedin-wmt14         &        0.317 \\
+          \hline
+        \end{tabular}
+      \label{sentence-segments-judgments-correlations-all}
     }
 
-    \subfloat[All comparisons]{
-      \begin{tabular}{|l|c|}
-        \hline
-         System                   &   $\tau$ \\
-        \hline
-         commercial2         &        0.3939 \\
-         cu-funky            &        0.3478 \\
-         commercial1         &        0.3455 \\
-         uedin-unconstr. &        0.3409 \\
-         cu-depfix           &        0.3350 \\
-         CU-TectoMT          &        0.3331 \\
-         cu-bojar            &        0.3284 \\
-         onlineB             &        0.3214 \\
-         onlineA             &        0.3200 \\
-         uedin-wmt14         &        0.3167 \\
-        \hline
-      \end{tabular}
-      \label{judgements-all}
-    }
   \end{center}
 
-  \caption{jlfdsjflsjflsj fldjf lsj dfld fdjflf jlsd jfslf jsl fjsldf jslf jsldf jsldfjsldfjlsd ld fjsld fj}
-  \label{}
+  \caption{Kendall's $\tau$ correlations between the segment-level and
+    sentence-level judgments. For a given system we computed the correlation on
+    all pairwise comparisons including the given system. The table
+    \ref{sentence-segments-judgments-correlations-better} contains correlations
+    computed on sentence-level judgments where the given system was better, the
+    table \ref{sentence-segments-judgments-correlations-worse} is computed on
+    sentence-level comparisons where the given system was worse and finally the
+  table \ref{sentence-segments-judgments-correlations-all} was computed on all
+pairwise comparisons including the system. The systems are sorted by the
+correlation in reverse order.} 
+
+  \label{sentence-segments-judgments-correlations}
 \end{table}
+
+The computed correlation are tabulated in the table
+\ref{sentence-segments-judgments-correlations}. The order of systems in the
+table \ref{sentence-segments-judgments-correlations-better} is quite similar to
+the order of systems in the overall rankings (table \ref{all-systems-results});
+better systems have higher correlation than worse systems. This is somehow
+expected: systems whose segments were ranked more often better are more likely
+to be ranked better on sentence-level. You can also read the table in the
+following way: If a sentence of system cu-funky was ranked better on
+sentence-level it is very likely (71\%) that the segments of the sentence were
+ranked better also. On the other hand, if system commercial2 was ranked better
+on sentence-level only a little more than half of the segments were ranked
+better also. The table \ref{sentence-segments-judgments-correlations-worse} is
+similar but in reversed order.
+
+The influence of a system's quality should be canceled out in the table
+\ref{sentence-segments-judgments-correlations-all}. You can see, that systems
+cu-bojar and onlineB have the Kendall's $\tau$ lower (although not the lowest).
+This together with the fact that both systems lies in a cluster of systems of
+very similar quality is consistent with their change in the overall ranking of
+systems. This, however, does not explain that.
+
+For the explanation of the differences between the overall rankings computed on
+sentence-level and segment-level judgments we have to look into the data. We
+want to find candidate translations for wich the sentence judgments disagree as
+much as possible with the segment judgments. To quantify this property we have
+defined \metoda{disagreement quotient}:
+
+\begin{equation*}
+  q_d(s,n) = \frac{
+    win_{seg}(s,n) / (win_{seg}(s,n) + loss_{seg}(s,n))
+  }{
+    win_{sent}(s,n)/(win_{sent}(s,n) + loss_{sent}(s,n))
+  }
+\end{equation*}
+
+\noindent where $s$ is a system, $n$ is a sentence number, $win_{seg}(s,n)$ is
+the number of segment-level comparisons where the $n$-th candidate sentence
+translated by system $s$ won and $loss_{sent}(s,n)$ is the number of
+comparisons in which the candidate sentence losses. Finally, $win_{sent}(s,n)$
+and $loss_{sent}(s,n)$ are defined similarly for the sentence-level
+comparisons.
+
+Using this measure we found candidate sentence translations with the highest
+\metoda{disagreement quotient} and tried to analyze the cause of the
+disagreement between the sentence-level and segment-level judgments. In the
+following we present a few of these sentences with comments. The extracted
+segments which were ranked are bolded.
+
+\begin{quote}
+  Letecké linky začaly nabíjení pro \textbf{první a druhý odbavených zavazadel} v roce 2008. (Sentence 715, online-B)
+\end{quote}
+
+The translation of the segment is relatively good, the case of the noun phrase
+is wrong but the meaning could be understood. The reason why the whole sentence
+was ranked poorly is probbably the word ``nabíjení'', which is obviously a
+wrong lexical choice of the MT system. Unfortunately this word is not covered
+by the only ranked segment.
+
+
+
+%\ref{sentence-segments-judgments-correlations-worse} is somehow expected. The orde
+
+
+
+\XXX{Vybrat nejake dve vety, kde budou nejvetsi rozdily mezi sentence-level a
+segment level judgements}
 
 \subsection{Evaluating New Systems}
 \label{evaluating-new-systems}
