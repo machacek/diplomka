@@ -1,21 +1,19 @@
-\chapter{SegRanks - Proposed Manual Evaluation Method}
+\chapter{SegRanks - An Evaluation of Short Segments}
 
-In this chapter we propose a novel manual evaluation method in which we create
-a database of collected human annotations which can be reused later to
-automatically evaluate similar, but yet unseen, translations or even to tune systems.
-This method therefore lies on the boundary of automatic and manual evaluation
-methods.
+In the following two chapters we propose a novel manual evaluation method in
+which we create a database of collected human annotations which could be reused
+later to automatically evaluate similar, but yet unseen, translations or even
+to tune systems.  This method therefore lies on the boundary of automatic and
+manual evaluation methods.
 
 The proposed method consists of two parts which we describe and experiment with
-in the following two sections. In the first section we describe the way of
+in the following two chapters. In this chapter we describe the way of
 collecting the database of humans judgements and report the human annotation
-experiment which we conducted using the proposed method. In the second section
-we present few methods which exploit the collected database: besides the
-evaluation of annotated systems we experiment with extrapolating the database
-to evaluate unseen translations and with tuning a machine translation system
-using the database.
-
-\section{Annotation of Short Segments}
+experiment which we conducted using the proposed method. In the following
+chapter we present few methods which exploit the collected database: besides
+the evaluation of annotated systems we experiment with extrapolating the
+database to evaluate unseen translations and with tuning a machine translation
+system using the database.
 
 In the WMT official human evaluation humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
@@ -147,7 +145,7 @@ disadvantages and that we should still try it.
 
 \end{itemize}
 
-\subsection{Data and Segment Preparation}
+\section{Data and Segment Preparation}
 
 We have conducted an annotation experiment using the proposed method. In this
 section we describe what data we have used and how we prepare them for the
@@ -240,7 +238,7 @@ got 5.89 (instead of original 10) candidate segments to be ranked for each
 source segment on average. These prepared candidate segments were inserted
 into the database to be ranked by annotators.
 
-\subsection{Segments Ranking}
+\section{Segments Ranking}
 
 We have developed a new annotation application for this annotation
 project.\footnote{It would be probably possible to customize and use an
@@ -338,7 +336,7 @@ intra-annotator and inter-annotator agreements. }
     \label{big-table}
 \end{table}
 
-\subsubsection{Annotator Agreements}
+\subsection{Annotator Agreements}
 
 To measure reliability and robustness of the proposed annotation method we have
 computed intra- and inter-annotator agreements. The reasonable degree of these
@@ -418,393 +416,3 @@ comparable to the WMT14 experiment.
 \end{table}
 
 
-
-
-\section{Experiments}
-
-In this section we describe several experiments with the collected database of
-annotations. 
-
-\subsection{Overall Ranking of Annotated Systems}
-\label{evaluating-annotated-systems}
-
-In the first experiment we would like to show that the proposed method can be
-used to produce overall ranking of the annotated systems which will be very
-similar to the official human evaluation in WMT with much less human effort
-\XXX{dolozit, pokud je to vubec pravda a pokud to vubec pujde}.
-
-The obtained database contains a list of annotations for each extracted source
-segment from each source sentence. A list can be empty (not all of the
-sentences were annotated), it can contain more than one annotation (some
-segments were annotated twice by an annotator, some segments were annotated by
-multiple annotators), but most of the time it contains only one annotation.
-
-An annotation is a mapping from the set of candidate segments to the set of
-ranks ${1 \ldots N+1}$, where $N$ is the count of unique candidate segments.
-(To discriminate the relative quality of all segments, annotators had available
-$N$ ranks which could be all occupied when there are no ties. The rank $N+1$
-represents the ``garbage'' category from the annotation application. However in
-all of our experiments reported in this thesis we consider this category as one
-more, the worst, rank). A Lower rank of a segment means that the candidate
-segment was ranked better. This is an example \metoda{segment annotation} of a
-source segment ``the huge volume'':
-
-\begin{verbatim}
-    {
-      'velkému objemu' : 1,
-      'obrovské hlasitosti' : 5,
-      'obrovský objem' : 2,
-      'obrovské množství' : 2,
-    }
-\end{verbatim}
-
-We expanded these segment annotations with the information about the systems
-which produced the segments. The ranks in the annotations are now indexed by
-the system names.  If more systems translated a source segment as the same
-candidate segment the candidate segment's rank is copied to all the systems.
-This is the time when we use advantage of ranking short segments which are
-often translated identically.  The following is the \metoda{system annotation}
-after expansion of the above \metoda{segment annotation}:
-
-\begin{verbatim}
-    {
-      'uedin-unconstrained.3424' : 2,
-      'commercial1.3556' : 5,
-      'commercial2.3222' : 2,
-      'CU-TectoMT.2950' : 1,
-      'onlineB.0' : 2,
-      'onlineA.0': 2,
-      'cu-funky.3515' : 2,
-      'cu-bojar.3483' : 2,
-      'uedin-wmt14.3021': 2,
-      'cu-depfix.3452': 2
-    }
-\end{verbatim}
-
-These rankings are now very similar to those obtained in the official WMT human
-evaluation. These annotations are mostly interpreted as pairwise systems'
-comparisons (for each combination of size 2 of all systems we have a pairwise
-comparison), where the absolute values of the ranks and their absolute
-differences between them are not considered. From above \metoda{system
-annotation}, the following \metoda{pairwise comparisons} are be extracted (only
-a few extracted pairwise comparisons are listed here for the sake of brevity,
-generally $N \times (N-1) / 2$ pairwise comparisons are extracted, where $N$ is
-number of all systems):
-
-\begin{verbatim}
-    [
-      'uedin-unconstrained.3424' < 'commercial1.3556',
-      'uedin-unconstrained.3424' = 'commercial2.3222',
-      'uedin-unconstrained.3424' > 'CU-TectoMT.2950',
-      ...
-      'commercial1.3556' > 'commercial2.3222',
-      'commercial1.3556' > 'CU-TectoMT.2950',
-      ...
-    ]
-\end{verbatim}
-
-The interpretation of these pairwise comparisons was changed several times
-during the WMT workshops. Here, we use \metoda{Ratio of wins (ignoring ties)}
-method, which was introduced by \perscite{bojar:grain:of:salt} and used in
-WMT12 workshop \parcite{callisonburch:wmt12}. This method is based on a method
-used in several WMT workshops before WMT12 and it is quite easy to compute and
-interpret results.
-
-For a given set $C$ of segment-level extracted pairwise comparisons
-$(s_1,s_2,c)$, where 
-
-\begin{equation*}
-c = \begin{cases}
-  win  & \text{if $rank(s_1) < rank(s_2)$} \\
-  loss & \text{if $rank(s_1) > rank(s_2)$} \\
-  tie  & \text{if $rank(s_1) = rank(s_2)$} \\
-    \end{cases}
-\end{equation*}
-
-\noindent we define for each system $s$ the total number of wins, losses and ties:
-
-\begin{equation*}
-\begin{array}{rcl} 
-  win(s)  & := & |\{(s,\bar{s},c) \in C; c = win\}| + |\{(\bar{s},s,c) \in C; c = loss\}| \\
-  loss(s) & := & |\{(s,\bar{s},c) \in C; c = loss\}| + |\{(\bar{s},s,c) \in C; c = win\}| \\
-  ties(s) & := & |\{(s,\bar{s},c) \in C; c = tie\}| + |\{(\bar{s},s,c) \in C; c = tie\}| \\
-\end{array}
-\end{equation*}
-
-Then the \metoda{Ratio of wins (ignoring ties)} is computed using the following formula:
-
-\begin{equation*}
-  E_{win}(s) = \frac{win(s)}{win(s) + loss(s)} 
-\end{equation*}
-
-\begin{table}
-  \begin{center}
-    \subfloat[Short segments judgements]{
-      %\begin{center}
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System} & \textbf{Score} \\
-          \hline
-           cu-depfix           &  0.5777 \\
-           onlineB             &  0.5642 \\
-           uedin-unconstrained &  0.5626 \\
-           cu-bojar            &  0.5606 \\
-           cu-funky            &  0.5566 \\
-           uedin-wmt14         &  0.5498 \\
-           onlineA             &  0.5007 \\
-           CU-TectoMT          &  0.4485 \\
-           commercial1         &  0.3992 \\
-           commercial2         &  0.3492 \\
-          \hline
-        \end{tabular}
-      %\end{center}
-      \label{all-systems-segranks-results}
-    }
-    \subfloat[Official WMT14 judgements]{
-      %\begin{center}
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System} & \textbf{Score} \\
-          \hline
-          cu-depfix          &  0.6101 \\
-          cu-bojar           &  0.6011 \\
-          uedin-unconstrained&  0.5967 \\
-          cu-funky           &  0.5823 \\
-          onlineB            &  0.5439 \\
-          uedin-wmt14        &  0.5285 \\
-          onlineA            &  0.5039 \\
-          CU-TectoMT         &  0.4473 \\
-          commercial1        &  0.3617 \\
-          commercial2        &  0.2780 \\
-          \hline
-        \end{tabular}
-      \label{all-systems-wmt-results}
-    }
-
-  \end{center}
-
-  \caption{Overall rankings of systems according to \metoda{Ratio of wins
-  (ignoring ties)} score. You can see the results computed on both short
-segments judgements and on official WMT14 human judgements side by side to
-compare the differences.}
-
-  \label{all-systems-results}
-\end{table}
-
-\subsubsection{Results}
-
-The overall ranking of systems, which participated in WMT14 Translation Task in
-English-Czech direction, according to the \metoda{Ratio of wins (ignoring
-ties)} computed on the short segments judgements is reported in the table
-\ref{all-systems-segranks-results}.
-
-To compare our method with the classic method of judging whole sentences, we
-have also computed the \metoda{Ratio of wins (ignoring ties)} on the judgements
-collected during WMT14 manual evaluation. You can see these results in the
-table \ref{all-systems-wmt-results}.
-
-You can notice that the range of scores computed on the short segments
-judgements is much narrower (0.35 --- 0.58) than the range of scores computed
-on the sentence judgements (0.28 --- 0.61). This can be explained by the
-following: If system A beats system B in a sentence-level judgement of a
-particular sentence it does not necessarily mean that in segment-level judging
-system A will be better than system B on all segments of the sentence. System A
-will be probably better on a majority of the segments (but even that does not
-have to be always true). When computing the ratio of wins on the sentence-level
-judgements, system A gets one win and system B gets one loss. However, when
-computing the ratio of wins on the segment-level system A gets for example two
-wins and one loss, system B one win and two losses. It should be clear now that
-computing expected wins on the sentence-level judgements is coarser while our
-method is more fine-grained.  \XXX{Co z toho vlastne plyne? Je to dobre, nebo
-spatne?}
-
-The overall rankings of systems obtained by both of the methods is very
-similar. However, there are two changes when comparing to the sentence-level
-judgments results: system online-B is better and system cu-bojar is worser
-according to the segments-level judgments results. We try to explain this in the Analysis.
-
-\subsubsection{Analysis}
-
-To see the difference between the segment-level judgements and sentence-level
-judgements we have computed Kendall tau rank correlation coefficient, also
-known as Kendall's $\tau$, between segment-level pairwise comparisons and
-sentence-level pairwise comparisons. This coefficient is used to measures how
-often a set of pairwise rankings agrees with another set of pairwise rankings.
-The basic formula for Kendall's $\tau$ is:
-
-\begin{equation*}
-  \tau = \frac{|Concordant| - |Discordant|}{|Concordant| + |Discordant|}
-\end{equation*}
-
-\noindent where $Concordant$ is the set of pairwise combination where both sets
-of pairwise rankings agrees with each other and $Discordant$ is the set of
-pairwise combination where the sets do not agree in pairwise ranking.
-\XXX{mozna vyhodit predchozi vetu}  We will discuss the Kendall's $\tau$ in
-more details in chapter \ref{metrics}. Here we computed $|Concordant|$ as the
-number of pairwise segment-level judgments which agrees with the corresponding
-sentence-level judgment. Similarly, $|Discordant|$ is the number of those which
-does not agree with the corresponding sentence-level judgment. In this section
-we does not consider any tied pairwise comparisons.
-
-\begin{table}
-  \begin{center}
-    \subfloat[Better systems]{
-      %\begin{center}
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System}                   &   $\tau$ \\
-        \hline
-         cu-funky            &        0.428 \\
-         cu-depfix           &        0.405 \\
-         onlineB             &        0.398 \\
-         cu-bojar            &        0.394 \\
-         uedin-uncon. &        0.390 \\
-         uedin-wmt14         &        0.363 \\
-         onlineA             &        0.312 \\
-         CU-TectoMT          &        0.270 \\
-         commercial1         &        0.166 \\
-         commercial2         &        0.123 \\
-          \hline
-        \end{tabular}
-      %\end{center}
-      \label{sentence-segments-judgments-correlations-better}
-    }
-    \subfloat[Worse systems]{
-      %\begin{center}
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System}                   &   $\tau$ \\
-       \hline
-         commercial2         &        0.492 \\
-         commercial1         &        0.441 \\
-         CU-TectoMT          &        0.385 \\
-         onlineA             &        0.328 \\
-         uedin-uncon. &        0.260 \\
-         uedin-wmt14         &        0.257 \\
-         cu-funky            &        0.230 \\
-         cu-bojar            &        0.227 \\
-         cu-depfix           &        0.225 \\
-         onlineB             &        0.225 \\
-          \hline
-        \end{tabular}
-      \label{sentence-segments-judgments-correlations-worse}
-    }
-    
-    \subfloat[All systems]{
-      %\begin{center}
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System}                   &   $\tau$ \\
-        \hline
-         commercial2         &        0.394 \\
-         cu-funky            &        0.348 \\
-         commercial1         &        0.345 \\
-         uedin-uncon. &        0.341 \\
-         cu-depfix           &        0.335 \\
-         CU-TectoMT          &        0.333 \\
-         cu-bojar            &        0.328 \\
-         onlineB             &        0.321 \\
-         onlineA             &        0.320 \\
-         uedin-wmt14         &        0.317 \\
-          \hline
-        \end{tabular}
-      \label{sentence-segments-judgments-correlations-all}
-    }
-
-  \end{center}
-
-  \caption{Kendall's $\tau$ correlations between the segment-level and
-    sentence-level judgments. For a given system we computed the correlation on
-    all pairwise comparisons including the given system. The table
-    \ref{sentence-segments-judgments-correlations-better} contains correlations
-    computed on sentence-level judgments where the given system was better, the
-    table \ref{sentence-segments-judgments-correlations-worse} is computed on
-    sentence-level comparisons where the given system was worse and finally the
-  table \ref{sentence-segments-judgments-correlations-all} was computed on all
-pairwise comparisons including the system. The systems are sorted by the
-correlation in reverse order.} 
-
-  \label{sentence-segments-judgments-correlations}
-\end{table}
-
-The computed correlation are tabulated in the table
-\ref{sentence-segments-judgments-correlations}. The order of systems in the
-table \ref{sentence-segments-judgments-correlations-better} is quite similar to
-the order of systems in the overall rankings (table \ref{all-systems-results});
-better systems have higher correlation than worse systems. This is somehow
-expected: systems whose segments were ranked more often better are more likely
-to be ranked better on sentence-level. You can also read the table in the
-following way: If a sentence of system cu-funky was ranked better on
-sentence-level it is very likely (71\%) that the segments of the sentence were
-ranked better also. On the other hand, if system commercial2 was ranked better
-on sentence-level only a little more than half of the segments were ranked
-better also. The table \ref{sentence-segments-judgments-correlations-worse} is
-similar but in reversed order.
-
-The influence of a system's quality should be canceled out in the table
-\ref{sentence-segments-judgments-correlations-all}. You can see, that systems
-cu-bojar and onlineB have the Kendall's $\tau$ lower (although not the lowest).
-This together with the fact that both systems lies in a cluster of systems of
-very similar quality is consistent with their change in the overall ranking of
-systems. This, however, does not explain that.
-
-For the explanation of the differences between the overall rankings computed on
-sentence-level and segment-level judgments we have to look into the data. We
-want to find candidate translations for wich the sentence judgments disagree as
-much as possible with the segment judgments. To quantify this property we have
-defined \metoda{disagreement quotient}:
-
-\begin{equation*}
-  q_d(s,n) = \frac{
-    win_{seg}(s,n) / (win_{seg}(s,n) + loss_{seg}(s,n))
-  }{
-    win_{sent}(s,n)/(win_{sent}(s,n) + loss_{sent}(s,n))
-  }
-\end{equation*}
-
-\noindent where $s$ is a system, $n$ is a sentence number, $win_{seg}(s,n)$ is
-the number of segment-level comparisons where the $n$-th candidate sentence
-translated by system $s$ won and $loss_{sent}(s,n)$ is the number of
-comparisons in which the candidate sentence losses. Finally, $win_{sent}(s,n)$
-and $loss_{sent}(s,n)$ are defined similarly for the sentence-level
-comparisons.
-
-Using this measure we found candidate sentence translations with the highest
-\metoda{disagreement quotient} and tried to analyze the cause of the
-disagreement between the sentence-level and segment-level judgments. In the
-following we present a few of these sentences with comments. The extracted
-segments which were ranked are bolded.
-
-\begin{quote}
-  Letecké linky začaly nabíjení pro \textbf{první a druhý odbavených zavazadel} v roce 2008. (Sentence 715, online-B)
-\end{quote}
-
-The translation of the segment is relatively good, the case of the noun phrase
-is wrong but the meaning could be understood. The reason why the whole sentence
-was ranked poorly is probbably the word ``nabíjení'', which is obviously a
-wrong lexical choice of the MT system. Unfortunately this word is not covered
-by the only ranked segment.
-
-
-
-%\ref{sentence-segments-judgments-correlations-worse} is somehow expected. The orde
-
-
-
-\XXX{Vybrat nejake dve vety, kde budou nejvetsi rozdily mezi sentence-level a
-segment level judgements}
-
-\subsection{Evaluating New Systems}
-\label{evaluating-new-systems}
-
-\XXX{Zde zkusim pouzit vytvorenou databazi pro vyhodnoceni noveho systemu}
-
-\XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
-Translation: Fast Evaluation for MT Research}
-
-\subsection{Tuning Systems}
-\label{tuning-systems}
-
-\XXX{Zde zkusim pouzit vytvorenou databazi pro MT tuning}
-
-\section{Comparison to Other Manual Methods}

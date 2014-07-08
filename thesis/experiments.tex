@@ -109,7 +109,8 @@ c = \begin{cases}
 \end{array}
 \end{equation*}
 
-Then the \metoda{Ratio of wins (ignoring ties)} is computed using the following formula:
+Then the \metoda{Ratio of wins (ignoring ties)} for a given system $s$ is
+computed using the following formula:
 
 \begin{equation*}
   E_{win}(s) = \frac{win(s)}{win(s) + loss(s)} 
@@ -353,16 +354,61 @@ disagreement between the sentence-level and segment-level judgments. In the
 following we present a few of these sentences with comments. The extracted
 segments which were ranked are bolded.
 
-\begin{quote}
-  Letecké linky začaly nabíjení pro \textbf{první a druhý odbavených zavazadel} v roce 2008. (Sentence 715, online-B)
-\end{quote}
+\begin{center}
+  \begin{tabular}{rp{12cm}}
 
-The translation of the segment is relatively good, the case of the noun phrase
-is wrong but the meaning could be understood. The reason why the whole sentence
-was ranked poorly is probbably the word ``nabíjení'', which is obviously a
-wrong lexical choice of the MT system. Unfortunately this word is not covered
-by the only ranked segment.
+    \textbf{Source:} & Airlines began charging for \textbf{the first and second
+  checked bags} in 2008. \\
 
+    \textbf{Candidate:} & Letecké linky začaly nabíjení pro \textbf{první a
+  druhý odbavených zavazadel} v roce 2008. (Sentence 715, online-B) \\
+
+  \end{tabular}
+\end{center}
+
+\noindent The translation of the segment is relatively good, the case of the
+noun phrase is wrong but the meaning could be understood. The reason why the
+whole sentence was ranked poorly is probably the word ``nabíjení'' (``Charging
+a battery'' in English), which is obviously a wrong lexical choice of the MT
+system. Unfortunately this word is not covered by the only ranked segment. A
+similar problem is also in the following sentence:
+
+\begin{center}
+  \begin{tabular}{rp{12cm}}
+
+    \textbf{Source:} & I want to fulfil \textbf{my role of dad and husband}. \\
+
+    \textbf{Candidate:} & Chci, aby splnil \textbf{svou roli táty a manžela}.
+    (Sentence 559, cu-bojar) \\
+
+  \end{tabular}
+\end{center}
+
+\noindent The translation of the segment is perfect but the subject of the
+candidate translation is wrongly expressed as a third person. The whole
+sentence is therefore correctly ranked as a poor translation. And again this is
+not covered by the extracted segments.
+
+\begin{center}
+  \begin{tabular}{rp{12cm}}
+
+    \textbf{Source:} & \textbf{Samsung, Huawei and HTC} all manufacture phones
+    that operate on \textbf{Google's Android operating system}, which competes
+    fiercely \textbf{with Apple and Microsoft mobile products}. \\
+
+    \textbf{Candidate:} & \textbf{Samsung, Huawei a HTC} všechny výrobní
+    telefony, které pracují \textbf{android operační systém Google}, který
+    konkuruje \textbf{zuřivě a Applu Microsoftu mobilním produktům}.  (Sentence
+    484, CU-TectoMT) \\
+
+  \end{tabular}
+\end{center}
+
+The problem here is again in the predicate. The verb ``manufacture'' is wrongly
+translated as the adjective ``výrobní'' (``manufactured'' in English).  In all
+the previous examples, a predicate was wrongly translated but unfortunately it
+was not covered in the extracted segments and therefore reflected in
+segment-level judgments.
 
 
 %\ref{sentence-segments-judgments-correlations-worse} is somehow expected. The orde
