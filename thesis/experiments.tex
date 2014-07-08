@@ -248,6 +248,7 @@ we does not consider any tied pairwise comparisons.
       %\end{center}
       \label{sentence-segments-judgments-correlations-better}
     }
+    \,
     \subfloat[Worse systems]{
       %\begin{center}
         \begin{tabular}{|l|c|}
@@ -268,7 +269,7 @@ we does not consider any tied pairwise comparisons.
         \end{tabular}
       \label{sentence-segments-judgments-correlations-worse}
     }
-    
+    \,
     \subfloat[All systems]{
       %\begin{center}
         \begin{tabular}{|l|c|}
@@ -348,7 +349,9 @@ comparisons in which the candidate sentence losses. Finally, $win_{sent}(s,n)$
 and $loss_{sent}(s,n)$ are defined similarly for the sentence-level
 comparisons.
 
-Using this measure we found candidate sentence translations with the highest
+Using this measure we have found candidate sentence translations which were
+ranked high by segment-level judgments but ranked low by the sentence-level
+judgments.  We have listed candidate sentences with the highest
 \metoda{disagreement quotient} and tried to analyze the cause of the
 disagreement between the sentence-level and segment-level judgments. In the
 following we present a few of these sentences with comments. The extracted
@@ -405,23 +408,257 @@ not covered by the extracted segments.
 \end{center}
 
 The problem here is again in the predicate. The verb ``manufacture'' is wrongly
-translated as the adjective ``výrobní'' (``manufactured'' in English).  In all
-the previous examples, a predicate was wrongly translated but unfortunately it
-was not covered in the extracted segments and therefore reflected in
-segment-level judgments.
+translated as the adjective ``výrobní'' (``manufactured'' in English).
 
+In all the previous examples, a predicate was wrongly translated but
+unfortunately it was not covered in the extracted segments and therefore
+reflected in segment-level judgments. This seems to be the main disadvantage of
+this method, extracted segments sometimes do not cover predicates which are
+very important for annotator when judging quality of machine translation.
 
-%\ref{sentence-segments-judgments-correlations-worse} is somehow expected. The orde
-
-
-
-\XXX{Vybrat nejake dve vety, kde budou nejvetsi rozdily mezi sentence-level a
-segment level judgements}
+We have also listed candidate translations with the lowest \metoda{diasgreement
+quotient} (a candidate was highly ranked by sentence-level judgments but lowly
+ranked by system-level judgments). However, these candidates were not so
+interesting and we cannot see any general patern there. We feel that the
+sentences which are ranked much better in segment-level judgments than in
+sentence-level judgments are much more serious problem.
 
 \section{Evaluating New Systems}
 \label{evaluating-new-systems}
 
-\XXX{Zde zkusim pouzit vytvorenou databazi pro vyhodnoceni noveho systemu}
+Indipendent machine translation systems often translate a short source segment
+identically. This was on of our main motivation for ranking translations of
+short segments. As you saw in the previous chapter, evaluating the annotated
+systems using the short segments annotations works even it has some
+shortcomings.  It would be very usefu if we could use the database of
+annotations to evaluate also yet unseen systems. The more annotated systems we
+have in the database the more likely is that an unseen MT system produce a
+translation of short segment which is already in the database. We will call
+this situation a \metoda{hit}, if the translated segment is not already
+annotated, we will call it a \metoda{miss}.
+
+The most obvious way to evaluate an unseen translation is to compute the
+\metoda{Ratio of wins (ignoring ties)} only on the hits. Because we didn't havy
+any spare systems which were not annotated, we do the following trick: in each
+step we choose one system and removed its segments from the database of
+annotations, then we try to match the system's segments with the segments in
+the database and compute the \metoda{Ratio of wins (ignoring ties)} only on
+that segments. We call this trick \metoda{leave-one-out}.
+
+\begin{table}
+  %\begin{center}
+  \centering
+    \subfloat[uedin-uncnstr., hits: 0.67]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           uedin-uncnstr. &   0.633 \\
+           cu-depfix           &   0.580 \\
+           uedin-wmt14         &   0.576 \\
+           onlineB                &   0.571 \\
+           cu-bojar            &   0.564 \\
+           cu-funky            &   0.560 \\
+           onlineA                &   0.499 \\
+           CU-TectoMT          &   0.425 \\
+           commercial1         &   0.377 \\
+           commercial2         &   0.329 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[commercial1, hits: 0.28]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           commercial1         &   0.581 \\
+           uedin-uncnstr. &   0.557 \\
+           onlineB                &   0.552 \\
+           uedin-wmt14         &   0.540 \\
+           cu-depfix           &   0.535 \\
+           cu-funky            &   0.525 \\
+           cu-bojar            &   0.523 \\
+           onlineA                &   0.472 \\
+           CU-TectoMT          &   0.422 \\
+           commercial2         &   0.346 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[commercial2, hits: 0.28]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           commercial2         &   0.570 \\
+           onlineB                &   0.552 \\
+           uedin-uncnstr. &   0.548 \\
+           cu-depfix           &   0.535 \\
+           cu-bojar            &   0.529 \\
+           cu-funky            &   0.524 \\
+           uedin-wmt14         &   0.523 \\
+           onlineA                &   0.457 \\
+           CU-TectoMT          &   0.423 \\
+           commercial1         &   0.386 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    
+    \subfloat[CU-TectoMT, hits: 0.45]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           CU-TectoMT          &   0.649 \\
+           cu-depfix           &   0.600 \\
+           cu-bojar            &   0.584 \\
+           cu-funky            &   0.575 \\
+           onlineB                &   0.528 \\
+           uedin-uncnstr. &   0.522 \\
+           uedin-wmt14         &   0.502 \\
+           onlineA                &   0.450 \\
+           commercial1         &   0.373 \\
+           commercial2         &   0.339 \\
+
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[onlineB, hits: 0.52]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           onlineB                &   0.689 \\
+           uedin-uncnstr. &   0.584 \\
+           cu-depfix           &   0.578 \\
+           cu-funky            &   0.567 \\
+           cu-bojar            &   0.567 \\
+           uedin-wmt14         &   0.564 \\
+           onlineA                &   0.511 \\
+           CU-TectoMT          &   0.406 \\
+           commercial1         &   0.360 \\
+           commercial2         &   0.320 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[onlineA, hits: 0.47]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           onlineA                &   0.649 \\
+           onlineB                &   0.584 \\
+           uedin-uncnstr. &   0.577 \\
+           uedin-wmt14         &   0.568 \\
+           cu-depfix           &   0.566 \\
+           cu-bojar            &   0.555 \\
+           cu-funky            &   0.546 \\
+           CU-TectoMT          &   0.411 \\
+           commercial1         &   0.365 \\
+           commercial2         &   0.318 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    
+    \subfloat[cu-funky, hits: 0.74]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           cu-funky            &   0.630 \\
+           cu-depfix           &   0.600 \\
+           cu-bojar            &   0.582 \\
+           uedin-uncnstr. &   0.559 \\
+           onlineB                &   0.557 \\
+           uedin-wmt14         &   0.542 \\
+           onlineA                &   0.491 \\
+           CU-TectoMT          &   0.446 \\
+           commercial1         &   0.378 \\
+           commercial2         &   0.331 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[cu-bojar, hits: 0.88]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           cu-bojar            &   0.588 \\
+           cu-depfix           &   0.582 \\
+           cu-funky            &   0.564 \\
+           onlineB                &   0.562 \\
+           uedin-uncnstr. &   0.559 \\
+           uedin-wmt14         &   0.545 \\
+           onlineA                &   0.498 \\
+           CU-TectoMT          &   0.449 \\
+           commercial1         &   0.392 \\
+           commercial2         &   0.346 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+    \,
+    \subfloat[cu-depfix, hits: 0.93]{
+        \begin{tabular}{|l|c|}
+          \hline
+           system                   &   score \\
+          \hline
+           cu-depfix           &   0.587 \\
+           cu-bojar            &   0.570 \\
+           cu-funky            &   0.566 \\
+           onlineB                &   0.562 \\
+           uedin-uncnstr. &   0.561 \\
+           uedin-wmt14         &   0.548 \\
+           onlineA                &   0.498 \\
+           CU-TectoMT          &   0.449 \\
+           commercial1         &   0.394 \\
+           commercial2         &   0.345 \\
+          \hline
+         \end{tabular}
+      \label{}
+    }
+
+  \caption{The results of evaluating unseen systems using the
+  \metoda{leave-one-out} trick. Each subtable is marked by the leaved system.
+You can also see the hit rates. The table for system uedin-wmt14 is ommited
+for the sake of brevity.}
+
+  \label{one-out-results}
+\end{table}
+
+You can see the results of this experiment in the table \ref{one-out-results}.
+We also report \metoda{hit} rate, which is the ratio of hits to all (miss +
+hits).
+
+The average hit rate is 58.8 \% which is above our expectation. However, as you
+can see, the hit rate varies a lot across the leaved out systems. This is
+caused by the fact, that some systems are very similar, they use the same tools
+and/or training data. For example all the systems cu-bojar, cu-depfix, cu-funky
+are based on the Moses SMT toolkit and their hit rates are very high (0.74 ---
+0.93).
+
+As you can see the obtained orderings of the systems are not very good. The
+winnning system in each of the tables is that which was leaved out. Which is
+obviously wrong. Besides that, systems similar to the leaved out system in each
+system gets also much better rank. For example, when the leaved system is one
+of the systems cu-bojar, cu-depfix and cu-funky, the other two of this group
+are right bellow the leaved out system. This could be explanied by the
+following statement: MT systems are more likely to agree on a good translation
+of a segment than on a bad translation. To support this statement we have
+performed an analysis of some sentences from the test set.
+
+
 
 \XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
 Translation: Fast Evaluation for MT Research}
