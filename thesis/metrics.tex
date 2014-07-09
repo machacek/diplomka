@@ -70,18 +70,21 @@ can also find inter- and intra-annotator agreement estimates there.
     \begin{tabular}{rl}
       \textbf{Metric} & \textbf{Participant} \\
       \hline
+      \metric{AMBER} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
       \metric{APAC} & Hokkai-Gakuen University \parcite{wmt14-metric-apac} \\
       \metric{BEER} & ILLC -- University of Amsterdam \parcite{wmt14-metric-beer} \\
-      \metric{RED-*} & Dublin City University \parcite{wmt14-metric-red} \\
+      \metric{BLEU-NRC} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
       \metric{DiscoTK-*} & Qatar Computing Research Institute \parcite{wmt14-metric-discotk} \\
       \metric{ELEXR} & University of Tehran \parcite{wmt14-metric-elexr} \\
-      \metric{LAYERED} & Indian Institute of Technology, Bombay \parcite{wmt14-metric-layered} \\
+      \metric{LAYERED} & IIT, Bombay \parcite{wmt14-metric-layered} \\
       \metric{Meteor} & Carnegie Mellon University \parcite{wmt14-metric-meteor} \\
-      \metric{AMBER, BLEU-NRC} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
       \metric{Parmesan} & Charles University in Prague \parcite{wmt14-metric-parmesan} \\
+      \metric{RED-*} & Dublin City University \parcite{wmt14-metric-red} \\
       \metric{tBLEU} & Charles University in Prague \parcite{wmt14-metric-tbleu} \\
-      \metric{UPC-IPA, UPC-STOUT} & Technical University of Catalunya \parcite{wmt14-metric-upc} \\
-      \metric{VERTa-W, VERTa-EQ} & University of Barcelona \parcite{wmt14-metric-verta} \\
+      \metric{UPC-IPA} & Technical University of Catalunya \parcite{wmt14-metric-upc} \\
+      \metric{UPC-STOUT} & Technical University of Catalunya \parcite{wmt14-metric-upc} \\
+      \metric{VERTa-EQ} & University of Barcelona \parcite{wmt14-metric-verta} \\
+      \metric{VERTa-W} & University of Barcelona \parcite{wmt14-metric-verta} \\
     \end{tabular}
   \end{center}
   \caption{Participants of WMT14 Metrics Shared Task}
@@ -218,7 +221,17 @@ any of the metrics since overall, the systems are of a comparable quality and
 the metrics are likely to behave linearly in this small
 range of scores.
 
-\XXX{pridat obrazek, ten co jsem dal do slidu}
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/pearson-motivation.pdf}
+    \end{center}
+
+    \caption[Motivation for Pearson: Metric vs. human score scatterplot]{
+      Motivation for Pearson: Metric vs. human score scatterplot
+}
+
+    \label{tree-align}
+\end{figure}
 
 Moreover, the general agreement to adopt Pearson instead of Spearman's correlation
 coefficient was

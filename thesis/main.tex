@@ -33,7 +33,7 @@
 \usepackage{multirow}
 %\usepackage{multicol}
 \usepackage{tocbibind}
-\usepackage{color}
+\usepackage[usenames,dvipsnames]{color}
 \usepackage{subfig}
 
 %% Balíček hyperref, kterým jdou vyrábět klikací odkazy v PDF,
@@ -68,11 +68,13 @@
 \newcommand{\pojem}[1]{\texttt{#1}}
 \newcommand{\metoda}[1]{\textbf{#1}}
 \newcommand{\script}[1]{\texttt{#1}}
-\newcommand{\XXX}[1]{\textcolor{red}{XXX #1}}
+\newcommand{\XXX}[1]{\textcolor{Red}{XXX #1}}
 %\newcommand{\XXX}[1]{}
 \newcommand{\best}[1]{\textbf{#1}}
 \def\oosmark#1{\llap{$\wr$\,}#1}  % out-of-sequence mark
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
+\newcommand{\hit}[1]{\textcolor{OliveGreen}{\textbf{#1}}}
+\newcommand{\miss}[1]{\textcolor{Red}{\textbf{#1}}}
 
 
 \begin{document}
