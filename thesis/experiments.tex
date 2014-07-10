@@ -361,7 +361,7 @@ following we present a few of these sentences with comments. The extracted
 segments which were ranked are bolded.
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} & Airlines began charging for \textbf{the first and second
   checked bags} in 2008. \\
@@ -382,7 +382,7 @@ system. Unfortunately this word is not covered by the only ranked segment. A
 similar problem is also in the following sentence:
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} & I want to fulfil \textbf{my role of dad and husband}. \\
 
@@ -399,7 +399,7 @@ sentence is therefore correctly ranked as a poor translation. And again this is
 not covered by the extracted segments.
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} & \textbf{Samsung, Huawei and HTC} all manufacture phones
     that operate on \textbf{Google's Android operating system}, which competes
@@ -634,10 +634,11 @@ call this trick \metoda{leave-one-out}.
       \label{}
     }
 
-  \caption{The results of evaluating unseen systems using the
-  \metoda{leave-one-out} trick. Each subtable is marked by the leaved system.
-You can also see the hit rates. The table for system uedin-wmt14 is ommited
-for the sake of brevity.}
+    \caption[Results of evaluating unseen systems by exact matching]{The
+      results of evaluating unseen systems using the exact matching and the
+      \metoda{leave-one-out} trick. Each subtable is marked by the leaved
+      system.  You can also see the hit rates. The table for system uedin-wmt14
+      is ommited for the sake of brevity.}
 
   \label{one-out-results}
 \end{table}
@@ -678,7 +679,7 @@ segments by \hit{green} and the missed segments by \miss{red}:
 
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} &
 
@@ -707,7 +708,7 @@ segments by \hit{green} and the missed segments by \miss{red}:
 and are understandable. We cannot say the same about the missed segments.
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} &
 
@@ -738,7 +739,7 @@ also in the last example:
 
 
 \begin{center}
-  \begin{tabular}{rp{12cm}}
+  \begin{tabular}{rp{11cm}}
 
     \textbf{Source:} &
 
@@ -781,20 +782,12 @@ substitution of characters required to transform a given string to another:
   lev(a,b) = \#insertions + \#delition + \#substitution
 \end{equation*}
 
-Similarly to the previous experiment we extracted the pairwise compaisons 
-
-\XXX{No tady vubec uvest, ze neco podobneho delaji v clanku An Evaluation Tool for Machine
-Translation: Fast Evaluation for MT Research}
-\XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
-Translation: Fast Evaluation for MT Research}
-
-
 
 \begin{table}
   %\begin{center}
     \centering
 
-\subfloat[uedin-uncnstr., ad: 2.0]{
+\subfloat[uedin-uncnstr., AED: 2.0]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -813,7 +806,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[commercial1, ad: 5.4]{
+\subfloat[commercial1, AED: 5.4]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -832,7 +825,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[commercial2, ad: 5.7]{
+\subfloat[commercial2, AED: 5.7]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -851,7 +844,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 
-\subfloat[CU-TectoMT, ad: 3.9]{
+\subfloat[CU-TectoMT, AED: 3.9]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -870,7 +863,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[onlineB, ad: 3.1]{
+\subfloat[onlineB, AED: 3.1]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -889,7 +882,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[onlineA, ad: 3.4]{
+\subfloat[onlineA, AED: 3.4]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -908,7 +901,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 
-\subfloat[cu-funky, ad: 1.7]{
+\subfloat[cu-funky, AED: 1.7]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -927,7 +920,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[cu-bojar, ad: 0.4]{
+\subfloat[cu-bojar, AED: 0.4]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -946,7 +939,7 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 \,
-\subfloat[cu-depfix, ad: 0.2]{
+\subfloat[cu-depfix, AED: 0.2]{
 \begin{tabular}{|l|c|}
 \hline
  system                   &   score \\
@@ -965,10 +958,81 @@ Translation: Fast Evaluation for MT Research}
 \end{tabular}
 }
 
+\caption[Results of evaluating unseen systems by edit distance matching]{The results of
+  evaluating unseen systems using the edit distance matching and
+  \metoda{leave-one-out} trick. Each subtable is marked by the leaved system.
+  The abbreviation AED stands for average edit distance which is computed
+across all segments . The table for system uedin-wmt14 is ommited for the sake
+of brevity.}
 
-  \caption{Edit distance scores}
   \label{edit-distance-results}
 \end{table}
+
+Similarly to the previous experiment we extracted the pairwise comparisons and
+computed the \metoda{Ratio of wins (ignoring ties)}. You can see the results
+tabulated in the table \ref{edit-distance-results}. For each leaved out system,
+we also report the average edit distance (AED) of the unseen segments to the closest
+segments in the database.
+
+The average edit distances vary a lot. Systems cu-bojar,
+cu-depfix and cu-funky have very low AED (0.2 --- 1.7), because they are very
+similar to each other. Systems CU-TectoMT, onlineA and onlineB are in the
+middle of the AED range (3.1 --- 3.9) and since they are quite solitary in the
+set of ranked systems we can consider their AEDs as representative values.
+Systems commercial1 and commercial2 have the highest AEDs. This could be
+explained by the fact that both of the systems are rule based and produce
+dissimilar translations to those generated by the statistical based systems. It
+is, however, interesting that their translations are not even similar to each
+other.
+
+The overall rankings of the systems are much more reasonable compared to the
+exact matching, although they are still not perfect. The scores of systems
+which were leaved out are not always the best in the obtained rankings but they
+are still heavily overestimated. This shows not only that systems are more
+likely to agree on the better translations than on the worse ones, but also
+that they produce translations which are closer to good translations than to
+other translations of similar quality. Our notion of that idea is that a good
+translation is a point  in a high-dimensional space and candidate translations
+are points around the good translation. Now let's have a few points around the
+good translation representing the translations in the database. When we get a
+new point it is quite likely in this high-dimensional space that the closest
+point is the good translation. You can see an illustration of this situation in
+two dimensions in the figure \ref{translation-space-illustration}. If we do not
+have enough candidates in the database it is quite likely that for a given
+unseen candidate the closest candidate is the good translation and not any
+other candidate translation of similar quality.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=8cm]{img/translation-space.pdf}
+    \end{center}
+
+    \caption[An illustration of a space of translations]{An example of a good
+    translation with only a few candidate translations around it. If a number
+  of dimensions is higher than the number of candidates it is intuitively quite
+probable that the closest point to a new unseen candidate is the good
+translation.}
+    \label{translation-space-illustration}
+\end{figure}
+
+To support the above statements we have performed an analysis on a sample of
+the data. In the table \ref{segments-closest}, we listed a few candidate
+segments together with the corresponding closest segments from the database and
+their distances. We also report whether the closest segment was ranked better
+than the ``unseen'' one.
+
+\begin{table}
+  \begin{center}
+
+  \end{center}
+
+\end{table}
+
+\XXX{No tady vubec uvest, ze neco podobneho delaji v clanku An Evaluation Tool for Machine
+Translation: Fast Evaluation for MT Research}
+\XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
+Translation: Fast Evaluation for MT Research}
+
 
 
 \section{Tuning Systems}
