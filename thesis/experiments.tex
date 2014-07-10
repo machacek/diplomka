@@ -46,16 +46,16 @@ after expansion of the above \metoda{segment annotation}:
 
 \begin{verbatim}
     {
-      'uedin-unconstrained.3424' : 2,
-      'commercial1.3556' : 5,
-      'commercial2.3222' : 2,
-      'CU-TectoMT.2950' : 1,
-      'onlineB.0' : 2,
-      'onlineA.0': 2,
-      'cu-funky.3515' : 2,
-      'cu-bojar.3483' : 2,
-      'uedin-wmt14.3021': 2,
-      'cu-depfix.3452': 2
+      'uedin-unconstrained' : 2,
+      'commercial1' : 5,
+      'commercial2' : 2,
+      'CU-TectoMT' : 1,
+      'onlineB' : 2,
+      'onlineA': 2,
+      'cu-funky' : 2,
+      'cu-bojar' : 2,
+      'uedin-wmt14': 2,
+      'cu-depfix': 2
     }
 \end{verbatim}
 
@@ -71,12 +71,12 @@ number of all systems):
 
 \begin{verbatim}
     [
-      'uedin-unconstrained.3424' < 'commercial1.3556',
-      'uedin-unconstrained.3424' = 'commercial2.3222',
-      'uedin-unconstrained.3424' > 'CU-TectoMT.2950',
+      'uedin-unconstrained' < 'commercial1',
+      'uedin-unconstrained' = 'commercial2',
+      'uedin-unconstrained' > 'CU-TectoMT',
       ...
-      'commercial1.3556' > 'commercial2.3222',
-      'commercial1.3556' > 'CU-TectoMT.2950',
+      'commercial1' > 'commercial2',
+      'commercial1' > 'CU-TectoMT',
       ...
     ]
 \end{verbatim}
@@ -433,16 +433,22 @@ sentence-level judgments are much more serious problem.
 \section{Evaluating New Systems}
 \label{evaluating-new-systems}
 
-Machine translation systems often translate a short source segment
-identically. This was on of our main motivation for ranking translations of
-short segments. As you saw in the previous chapter, evaluating the annotated
-systems using the short segments annotations works even it has some
-shortcomings.  It would be very usefu if we could use the database of
-annotations to evaluate also yet unseen systems. The more annotated systems we
-have in the database the more likely is that an unseen MT system produce a
-translation of short segment which is already in the database. We will call
-this situation a \metoda{hit}, if the translated segment is not already
-annotated, we will call it a \metoda{miss}.
+Machine translation systems often translate a short source segment identically.
+This was one of our main motivation for ranking translations of short segments.
+As you saw in the previous chapter, evaluating the annotated systems using the
+short segments annotations works even it has some shortcomings.  It would be
+very usefu if we could use the database of annotations to evaluate also yet
+unseen systems. The more annotated systems we have in the database the more
+likely it is that an unseen MT system produce a translation of a short segment
+which is already in the database. We will call this situation a \metoda{hit},
+if the translated segment is not already annotated, we will call it a
+\metoda{miss}.
+
+Because we didn't have any spare systems which were not annotated, we did the
+following trick: in each step we choose one system and removed its segments
+from the database of annotations. Then we consider this system as unseen and
+tried to match the system's segments with the segments left in the database. We
+call this trick \metoda{leave-one-out}.
 
 \begin{table}
   %\begin{center}
@@ -639,12 +645,12 @@ for the sake of brevity.}
 \subsection{Exact Matching of candidate segments}
 
 The most obvious way to evaluate an unseen translation is to compute the
-\metoda{Ratio of wins (ignoring ties)} only on the hits. Because we didn't have
-any spare systems which were not annotated, we do the following trick: in each
-step we choose one system and removed its segments from the database of
-annotations, then we try to match the system's segments with the segments in
-the database and compute the \metoda{Ratio of wins (ignoring ties)} only on
-that segments. We call this trick \metoda{leave-one-out}.
+\metoda{Ratio of wins (ignoring ties)} of all the systems (including the unseen
+one) only on the hit segments. We extracted the pairwise comparisons from all
+the segment annotations where the segment of the unseen system was hit and
+computed the \metoda{Ratio of wins (ignoring ties)} only on that extracted
+comparisons. We performed this experiment for all the systems using the
+\metoda{leave-one-out} trick.
 
 You can see the results of this experiment in the table \ref{one-out-results}.
 We also report \metoda{hit} rate, which is the ratio of hits to all (miss +
@@ -752,11 +758,10 @@ also in the last example:
   \end{tabular}
 \end{center}
 
-\noindent
-Both of the hit segments are translated very well and we can say that they are
-also very easy to translate. On the other hand, the missed segments
-understandable but not perfect. Compared to the green segment, they are also
-more difficult to translate.
+\noindent Both of the hit segments are translated very well and we can say that
+they are also very easy to translate. On the other hand, the missed segments
+are understandable but not perfect. Compared to the green segment, they are
+also more difficult to translate.
 
 Following the manual analysis we can conclude that MT systems are really more
 likely to agree on the better translations. This however prevent us to match
@@ -772,14 +777,199 @@ database with the closest edit distance. We use the character based Levenshtein
 distance which is defined as the minumum number of insertion, delition and
 substitution of characters required to transform a given string to another:
 
-\begin{equation}
+\begin{equation*}
   lev(a,b) = \#insertions + \#delition + \#substitution
-\end{equation}
+\end{equation*}
+
+Similarly to the previous experiment we extracted the pairwise compaisons 
 
 \XXX{No tady vubec uvest, ze neco podobneho delaji v clanku An Evaluation Tool for Machine
 Translation: Fast Evaluation for MT Research}
 \XXX{provest experimenty podobne tem z clanku An Evaluation Tool for Machine
 Translation: Fast Evaluation for MT Research}
+
+
+
+\begin{table}
+  %\begin{center}
+    \centering
+
+\subfloat[uedin-uncnstr., ad: 2.0]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ uedin-uncnstr. &   0.598 \\
+ cu-depfix           &   0.575 \\
+ onlineB                &   0.562 \\
+ cu-bojar            &   0.558 \\
+ cu-funky            &   0.554 \\
+ uedin-wmt14         &   0.548 \\
+ onlineA                &   0.498 \\
+ CU-TectoMT          &   0.446 \\
+ commercial1         &   0.396 \\
+ commercial2         &   0.346 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[commercial1, ad: 5.4]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-depfix           &   0.564 \\
+ onlineB                &   0.552 \\
+ uedin-uncnstr. &   0.550 \\
+ cu-bojar            &   0.547 \\
+ cu-funky            &   0.544 \\
+ uedin-wmt14         &   0.537 \\
+ commercial1         &   0.502 \\
+ onlineA                &   0.487 \\
+ CU-TectoMT          &   0.435 \\
+ commercial2         &   0.333 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[commercial2, ad: 5.7]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-depfix           &   0.558 \\
+ onlineB                &   0.548 \\
+ uedin-uncnstr. &   0.545 \\
+ cu-bojar            &   0.540 \\
+ cu-funky            &   0.538 \\
+ uedin-wmt14         &   0.532 \\
+ commercial2         &   0.489 \\
+ onlineA                &   0.483 \\
+ CU-TectoMT          &   0.429 \\
+ commercial1         &   0.379 \\
+\hline
+\end{tabular}
+}
+
+\subfloat[CU-TectoMT, ad: 3.9]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-depfix           &   0.565 \\
+ CU-TectoMT          &   0.563 \\
+ onlineB                &   0.553 \\
+ uedin-uncnstr. &   0.551 \\
+ cu-bojar            &   0.548 \\
+ cu-funky            &   0.544 \\
+ uedin-wmt14         &   0.539 \\
+ onlineA                &   0.488 \\
+ commercial1         &   0.387 \\
+ commercial2         &   0.337 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[onlineB, ad: 3.1]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ onlineB                &   0.621 \\
+ cu-depfix           &   0.573 \\
+ uedin-uncnstr. &   0.559 \\
+ cu-bojar            &   0.556 \\
+ cu-funky            &   0.552 \\
+ uedin-wmt14         &   0.546 \\
+ onlineA                &   0.496 \\
+ CU-TectoMT          &   0.443 \\
+ commercial1         &   0.395 \\
+ commercial2         &   0.344 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[onlineA, ad: 3.4]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ onlineA                &   0.588 \\
+ cu-depfix           &   0.570 \\
+ onlineB                &   0.556 \\
+ uedin-uncnstr. &   0.554 \\
+ cu-bojar            &   0.552 \\
+ cu-funky            &   0.549 \\
+ uedin-wmt14         &   0.541 \\
+ CU-TectoMT          &   0.440 \\
+ commercial1         &   0.391 \\
+ commercial2         &   0.341 \\
+\hline
+\end{tabular}
+}
+
+\subfloat[cu-funky, ad: 1.7]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-funky            &   0.600 \\
+ cu-depfix           &   0.574 \\
+ onlineB                &   0.561 \\
+ uedin-uncnstr. &   0.559 \\
+ cu-bojar            &   0.557 \\
+ uedin-wmt14         &   0.546 \\
+ onlineA                &   0.496 \\
+ CU-TectoMT          &   0.445 \\
+ commercial1         &   0.396 \\
+ commercial2         &   0.346 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[cu-bojar, ad: 0.4]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-bojar            &   0.580 \\
+ cu-depfix           &   0.576 \\
+ onlineB                &   0.562 \\
+ uedin-uncnstr. &   0.561 \\
+ cu-funky            &   0.555 \\
+ uedin-wmt14         &   0.548 \\
+ onlineA                &   0.499 \\
+ CU-TectoMT          &   0.447 \\
+ commercial1         &   0.398 \\
+ commercial2         &   0.348 \\
+\hline
+\end{tabular}
+}
+\,
+\subfloat[cu-depfix, ad: 0.2]{
+\begin{tabular}{|l|c|}
+\hline
+ system                   &   score \\
+\hline
+ cu-depfix           &   0.579 \\
+ onlineB                &   0.564 \\
+ uedin-uncnstr. &   0.563 \\
+ cu-bojar            &   0.561 \\
+ cu-funky            &   0.556 \\
+ uedin-wmt14         &   0.550 \\
+ onlineA                &   0.501 \\
+ CU-TectoMT          &   0.448 \\
+ commercial1         &   0.399 \\
+ commercial2         &   0.349 \\
+\hline
+\end{tabular}
+}
+
+
+  \caption{Edit distance scores}
+  \label{edit-distance-results}
+\end{table}
+
 
 \section{Tuning Systems}
 \label{tuning-systems}
