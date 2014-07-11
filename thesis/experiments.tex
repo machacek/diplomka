@@ -333,7 +333,7 @@ systems. This, however, does not explain that.
 
 For the explanation of the differences between the overall rankings computed on
 sentence-level and segment-level judgments we have to look into the data. We
-want to find candidate translations for wich the sentence judgments disagree as
+want to find candidate translations for which the sentence judgments disagree as
 much as possible with the segment judgments. To quantify this property we have
 defined \metoda{disagreement quotient}:
 
@@ -437,7 +437,7 @@ Machine translation systems often translate a short source segment identically.
 This was one of our main motivation for ranking translations of short segments.
 As you saw in the previous chapter, evaluating the annotated systems using the
 short segments annotations works even it has some shortcomings.  It would be
-very usefu if we could use the database of annotations to evaluate also yet
+very useful if we could use the database of annotations to evaluate also yet
 unseen systems. The more annotated systems we have in the database the more
 likely it is that an unseen MT system produce a translation of a short segment
 which is already in the database. We will call this situation a \metoda{hit},
@@ -665,11 +665,11 @@ are based on the Moses SMT toolkit and their hit rates are very high (0.74 ---
 0.93).
 
 As you can see the obtained orderings of the systems are not very good. The
-winnning system in each of the tables is that which was leaved out. Which is
+winning system in each of the tables is that which was leaved out. Which is
 obviously wrong. Besides that, systems similar to the leaved out system in each
 system gets also much better rank. For example, when the leaved system is one
 of the systems cu-bojar, cu-depfix and cu-funky, the other two of this group
-are right bellow the leaved out system. This could be explanied by the
+are right bellow the leaved out system. This could be explained by the
 following statement: MT systems are more likely to agree on a good translation
 of a segment than on a bad translation.
 
@@ -704,7 +704,7 @@ segments by \hit{green} and the missed segments by \miss{red}:
   \end{tabular}
 \end{center}
 
-\noindent You can see that the green hits are translated relativly correctly
+\noindent You can see that the green hits are translated relatively correctly
 and are understandable. We cannot say the same about the missed segments.
 
 \begin{center}
@@ -775,7 +775,7 @@ We would like to compute the scores on all the annotated segments to avoid the
 problem from the previous subsection. A natural way to approximate the
 ``correct'' ranks of unseen segments is to use the rank of the segment from the
 database with the closest edit distance. We use the character based Levenshtein
-distance which is defined as the minumum number of insertion, delition and
+distance which is defined as the minimum number of insertion, deletion and
 substitution of characters required to transform a given string to another:
 
 \begin{equation*}
@@ -997,10 +997,11 @@ are points around the good translation. Now let's have a few points around the
 good translation representing the translations in the database. When we get a
 new point it is quite likely in this high-dimensional space that the closest
 point is the good translation. You can see an illustration of this situation in
-two dimensions in the figure \ref{translation-space-illustration}. If we do not
-have enough candidates in the database it is quite likely that for a given
-unseen candidate the closest candidate is the good translation and not any
-other candidate translation of similar quality.
+two dimensions in the figure \ref{translation-space-illustration}. \XXX{Neni to
+uz moc velke fantazirovani?} If we do not have enough candidates in the
+database it is quite likely that for a given unseen candidate the closest
+candidate is the good translation and not any other candidate translation of
+similar quality.
 
 \begin{figure}
     \begin{center}
@@ -1015,17 +1016,77 @@ translation.}
     \label{translation-space-illustration}
 \end{figure}
 
-To support the above statements we have performed an analysis on a sample of
-the data. In the table \ref{segments-closest}, we listed a few candidate
-segments together with the corresponding closest segments from the database and
-their distances. We also report whether the closest segment was ranked better
-than the ``unseen'' one.
+To support the above statements we have performed the following analysis: For
+each leaved out system we computed how often the closest segment is better, equal or
+worse than the ``unseen'' segment (We can actually do that, because we know the true 
+rank of the segment removed from the database). We computed these relative frequencies
+only on the missed segments (the closest segment was not the same segment). You 
+can see this analysis in the table \ref{edit-distance-matching-analysis}.
+
+
+\begin{table}
+  \centering
+\begin{tabular}{|lrrr|}
+  \hline
+  \textbf{Unseen system}            &   \textbf{Worse} &   \textbf{Equal} &   \textbf{Better} \\
+  \hline
+   commercial1         &   27.9 \% &   19.0 \% &    53.1 \% \\
+   commercial2         &   23.3 \% &   17.5 \% &    59.2 \% \\
+   cu-bojar            &   22.5 \% &   31.5 \% &    46.0 \% \\
+   cu-depfix           &   32.7 \% &   33.2 \% &    34.0 \% \\
+   cu-funky            &   28.8 \% &   23.8 \% &    47.4 \% \\
+   CU-TectoMT          &   25.8 \% &   18.6 \% &    55.6 \% \\
+   onlineA             &   28.1 \% &   20.4 \% &    51.5 \% \\
+   onlineB             &   33.3 \% &   20.9 \% &    45.8 \% \\
+   uedin-unconstrained &   32.4 \% &   22.3 \% &    45.3 \% \\
+   uedin-wmt14         &   31.6 \% &   23.4 \% &    45.1 \% \\
+  \hline
+   All               &   28.1 \% &   20.6 \% &    51.2 \% \\
+  \hline
+\end{tabular}
+
+\caption[Comparisons of unseen and the closest systems]{Comparisons of unseen
+and the closest system. This table shows how often the closest segment in the
+database was worse, equally good or better than the original ``unseen''
+segment. These relative frequencies were computed only on missed segments
+(which weren't already in the database).}
+
+  \label{edit-distance-matching-analysis}
+\end{table}
+
+
+We also listed a few example candidate segments in the table
+\ref{segments-closest} together with the corresponding closest segments from
+the database and their distances. We also report whether the closest segment
+was ranked better, equal or worse than the ``unseen'' one.
 
 \begin{table}
   \begin{center}
-
+    \begin{tabular}{|p{5.5cm}p{5.5cm}rc|}
+      \hline
+      \textbf{Unseen segment} & \textbf{Closest segment} & \textbf{D} & \textbf{C} \\
+      \hline
+      s dokumenty upřednostňujícím doprovodem hradu & se dokumenty favorizovat doprovod hradu & 18 & \worse{} \\ \hline
+      ze 120 domova m2 & z 120 m2 domova & 7 & \better{} \\ \hline
+      vaše ústa ohřívá protein & vaše ústa zahřívání bílkovin & 10 & \better{} \\ \hline
+      videokonference & videokonferenci & 1 & \better{} \\ \hline
+      popřel užívání kokainu a & popřela užívání kokainu a & 1 & \worse{} \\ \hline
+      přibližně šedesát- drah kilometru & přibližně šedesát-dráha kilometru & 3 & \equal{} \\ \hline
+      v Liverpoolském porotním soudu & Liverpool Korunního soudu & 11 & \better{} \\ \hline
+      je nesmysl v gravitaci filmu & Je nesmysl ve filmu gravitace & 15 & \better{} \\ \hline
+      Pak 64,23 \% oprávněných voličů & pak 64,23 \% oprávněných voličů & 1 & \better{} \\ \hline
+      podle DPA agentury & podle DPA agentury té & 3 & \worse{} \\ \hline
+    \end{tabular}
   \end{center}
 
+  \caption[Example candidates and the closest segments]{ Example candidates and
+    the closest segments. The last but one collumn (\textbf{D}) stands for
+    distance and contains distances of the unseen candidates to the closest
+    segments. The last collumn (\textbf{C}) stands for comparison; the closest
+  segment is either worse (\worse{}), equally good (\equal{}) or better
+(\better{}) than the original unseen segment.}
+
+  \label{segments-closest}
 \end{table}
 
 \XXX{No tady vubec uvest, ze neco podobneho delaji v clanku An Evaluation Tool for Machine
