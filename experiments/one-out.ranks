@@ -1,0 +1,190 @@
+
+Excluded system: uedin-uncnstr.
+Hit ratio 0.67
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ uedin-uncnstr. &   0.633 \\
+ cu-depfix           &   0.580 \\
+ uedin-wmt14         &   0.576 \\
+ onlineB                &   0.571 \\
+ cu-bojar            &   0.564 \\
+ cu-funky            &   0.560 \\
+ onlineA                &   0.499 \\
+ CU-TectoMT          &   0.425 \\
+ commercial1         &   0.377 \\
+ commercial2         &   0.329 \\
+\hline
+\end{tabular}
+
+Excluded system: commercial1
+Hit ratio 0.28
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ commercial1         &   0.581 \\
+ uedin-uncnstr. &   0.557 \\
+ onlineB                &   0.552 \\
+ uedin-wmt14         &   0.540 \\
+ cu-depfix           &   0.535 \\
+ cu-funky            &   0.525 \\
+ cu-bojar            &   0.523 \\
+ onlineA                &   0.472 \\
+ CU-TectoMT          &   0.422 \\
+ commercial2         &   0.346 \\
+\hline
+\end{tabular}
+
+Excluded system: commercial2
+Hit ratio 0.28
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ commercial2         &   0.570 \\
+ onlineB                &   0.552 \\
+ uedin-uncnstr. &   0.548 \\
+ cu-depfix           &   0.535 \\
+ cu-bojar            &   0.529 \\
+ cu-funky            &   0.524 \\
+ uedin-wmt14         &   0.523 \\
+ onlineA                &   0.457 \\
+ CU-TectoMT          &   0.423 \\
+ commercial1         &   0.386 \\
+\hline
+\end{tabular}
+
+Excluded system: CU-TectoMT
+Hit ratio 0.45
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ CU-TectoMT          &   0.649 \\
+ cu-depfix           &   0.600 \\
+ cu-bojar            &   0.584 \\
+ cu-funky            &   0.575 \\
+ onlineB                &   0.528 \\
+ uedin-uncnstr. &   0.522 \\
+ uedin-wmt14         &   0.502 \\
+ onlineA                &   0.450 \\
+ commercial1         &   0.373 \\
+ commercial2         &   0.339 \\
+\hline
+\end{tabular}
+
+Excluded system: onlineB
+Hit ratio 0.52
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ onlineB                &   0.689 \\
+ uedin-uncnstr. &   0.584 \\
+ cu-depfix           &   0.578 \\
+ cu-funky            &   0.567 \\
+ cu-bojar            &   0.567 \\
+ uedin-wmt14         &   0.564 \\
+ onlineA                &   0.511 \\
+ CU-TectoMT          &   0.406 \\
+ commercial1         &   0.360 \\
+ commercial2         &   0.320 \\
+\hline
+\end{tabular}
+
+Excluded system: onlineA
+Hit ratio 0.47
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ onlineA                &   0.649 \\
+ onlineB                &   0.584 \\
+ uedin-uncnstr. &   0.577 \\
+ uedin-wmt14         &   0.568 \\
+ cu-depfix           &   0.566 \\
+ cu-bojar            &   0.555 \\
+ cu-funky            &   0.546 \\
+ CU-TectoMT          &   0.411 \\
+ commercial1         &   0.365 \\
+ commercial2         &   0.318 \\
+\hline
+\end{tabular}
+
+Excluded system: cu-funky
+Hit ratio 0.74
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ cu-funky            &   0.630 \\
+ cu-depfix           &   0.600 \\
+ cu-bojar            &   0.582 \\
+ uedin-uncnstr. &   0.559 \\
+ onlineB                &   0.557 \\
+ uedin-wmt14         &   0.542 \\
+ onlineA                &   0.491 \\
+ CU-TectoMT          &   0.446 \\
+ commercial1         &   0.378 \\
+ commercial2         &   0.331 \\
+\hline
+\end{tabular}
+
+Excluded system: cu-bojar
+Hit ratio 0.88
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ cu-bojar            &   0.588 \\
+ cu-depfix           &   0.582 \\
+ cu-funky            &   0.564 \\
+ onlineB                &   0.562 \\
+ uedin-uncnstr. &   0.559 \\
+ uedin-wmt14         &   0.545 \\
+ onlineA                &   0.498 \\
+ CU-TectoMT          &   0.449 \\
+ commercial1         &   0.392 \\
+ commercial2         &   0.346 \\
+\hline
+\end{tabular}
+
+Excluded system: uedin-wmt14
+Hit ratio 0.66
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ uedin-wmt14         &   0.622 \\
+ uedin-uncnstr. &   0.590 \\
+ cu-depfix           &   0.576 \\
+ onlineB                &   0.567 \\
+ cu-bojar            &   0.562 \\
+ cu-funky            &   0.555 \\
+ onlineA                &   0.507 \\
+ CU-TectoMT          &   0.429 \\
+ commercial1         &   0.378 \\
+ commercial2         &   0.327 \\
+\hline
+\end{tabular}
+
+Excluded system: cu-depfix
+Hit ratio 0.93
+\begin{tabular}{lr}
+\hline
+ system                   &   score \\
+\hline
+ cu-depfix           &   0.587 \\
+ cu-bojar            &   0.570 \\
+ cu-funky            &   0.566 \\
+ onlineB                &   0.562 \\
+ uedin-uncnstr. &   0.561 \\
+ uedin-wmt14         &   0.548 \\
+ onlineA                &   0.498 \\
+ CU-TectoMT          &   0.449 \\
+ commercial1         &   0.394 \\
+ commercial2         &   0.345 \\
+\hline
+\end{tabular}
