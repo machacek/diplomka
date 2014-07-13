@@ -358,7 +358,7 @@ judgments.  We have listed candidate sentences with the highest
 \metoda{disagreement quotient} and tried to analyze the cause of the
 disagreement between the sentence-level and segment-level judgments. In the
 following we present a few of these sentences with comments. The extracted
-segments which were ranked are bolded.
+segments which were ranked are in bold.
 
 \begin{center}
   \begin{tabular}{rp{11cm}}
@@ -423,10 +423,10 @@ reflected in segment-level judgments. This seems to be the main disadvantage of
 this method, extracted segments sometimes do not cover predicates which are
 very important for annotator when judging quality of machine translation.
 
-We have also listed candidate translations with the lowest \metoda{diasgreement
+We have also listed candidate translations with the lowest \metoda{disagreement
 quotient} (a candidate was highly ranked by sentence-level judgments but lowly
 ranked by system-level judgments). However, these candidates were not so
-interesting and we cannot see any general patern there. We feel that the
+interesting and we cannot see any general pattern there. We feel that the
 sentences which are ranked much better in segment-level judgments than in
 sentence-level judgments are much more serious problem.
 
@@ -638,7 +638,7 @@ call this trick \metoda{leave-one-out}.
       results of evaluating unseen systems using the exact matching and the
       \metoda{leave-one-out} trick. Each subtable is marked by the leaved
       system.  You can also see the hit rates. The table for system uedin-wmt14
-      is ommited for the sake of brevity.}
+      is omitted for the sake of brevity.}
 
   \label{one-out-results}
 \end{table}
@@ -965,7 +965,7 @@ segment, we pick one of them randomly.
   evaluating unseen systems using the edit distance matching and
   \metoda{leave-one-out} trick. Each subtable is marked by the leaved system.
   The abbreviation AED stands for average edit distance which is computed
-across all segments . The table for system uedin-wmt14 is ommited for the sake
+across all segments . The table for system uedin-wmt14 is omitted for the sake
 of brevity.}
 
   \label{edit-distance-results}
@@ -1131,9 +1131,9 @@ was ranked better, equal or worse than the ``unseen'' one.
   \end{center}
 
   \caption[Example candidates and the closest segments]{ Example candidates and
-    the closest segments. The last but one collumn (\textbf{D}) stands for
+    the closest segments. The last but one column (\textbf{D}) stands for
     distance and contains distances of the unseen candidates to the closest
-    segments. The last collumn (\textbf{C}) stands for comparison; the closest
+    segments. The last column (\textbf{C}) stands for comparison; the closest
   segment is either worse (\worse{}), equally good (\equal{}) or better
 (\better{}) than the original unseen segment.}
 
@@ -1144,13 +1144,13 @@ We have to unfortunately conclude, that the proposed method, which reuses the
 database for evaluating unseen translations, does not work. We analyzed the
 results and the main cause of this failure seems to be that the systems tend to
 agree on better translations and their translations tend to be more similar to
-better translations in the database so we cannot predict their rank accuratly. 
+better translations in the database so we cannot predict their rank accurately. 
 
 \subsection{Enhancing reference translation with good candidates from the database}
 
 Following the conclusions from the previous two subsections, it seems that
-errors in machine translation are very unique. Any database of bad exaples (bad
-translations) is therefore very sparse. It is very well known fact that a
+errors in machine translation are very unique. Any database of bad examples
+(bad translations) is therefore very sparse. It is very well known fact that a
 number of correct translations is very high \parcite{bojar2013scratching}. It
 seems, however, that the number of bad translations is much higher and
 therefore it make more sense to use a database of good translations. 
@@ -1221,15 +1221,67 @@ translations. We select these candidate segments for each source segment for
 each sentence.
 
 Finally, we use the selected good segments as the reference translations in
-addition to to the original reference sentence translated by human expert.
-Since the new references are only short segments and do not cover a whole
-sentence, we use only the length of the original reference sentence in the
-computation of the brevity penalty. Please note, that introducing the new
-reference translations, which do not change the brevity penalty, can only
-increase the clipped counts of n-grams occuring in the short segments.
-Candidates will be rewarded for having n-grams which are also in the good
-segment translations in the database.
+addition to the original reference sentence translated by human expert.  Since
+the new references are only short segments and do not cover a whole sentence,
+we use only the length of the original reference sentence in the computation of
+the brevity penalty. Please note, that introducing the new reference
+translations, which do not change the brevity penalty, can only increase the
+clipped counts of n-grams occurring in the short segments.  Candidates will be
+rewarded for having n-grams which are also in the good segment translations in
+the database.
 
+\begin{table}
+  \begin{center}
+      \subfloat[\metric{segranks-BLEU}, correlation: 0.9745 ]{
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+          cu-depfix & 0.3045 \\
+          cu-funky & 0.3020 \\
+          uedin-unconstrained & 0.3015 \\
+          cu-bojar & 0.3002 \\
+          uedin-wmt14 & 0.2957 \\
+          onlineB & 0.2893 \\
+          onlineA & 0.2594 \\
+          CU-TectoMT & 0.2252 \\
+          commercial1 & 0.1758 \\
+          commercial2 & 0.1595 \\
+          \hline
+        \end{tabular}
+      \label{enhanced-bleu-results}
+    }
+    \,
+    \subfloat[\metric{BLEU}, correlation: 0.9751]{
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+          cu-depfix & 0.221 \\
+          cu-bojar & 0.221 \\
+          cu-funky & 0.221 \\
+          uedin-unconstrained & 0.220 \\
+          uedin-wmt14 & 0.215 \\
+          onlineB & 0.207 \\
+          onlineA & 0.187 \\
+          CU-TectoMT & 0.157 \\
+          commercial1 & 0.114 \\
+          commercial2 & 0.102 \\
+
+          \hline
+        \end{tabular}
+      \label{bleu-results}
+    }
+
+  \end{center}
+
+  \caption[Overall system ranking according to \metric{enhancedBLEU} and
+  \metric{BLEU} scores]{Overall system ranking according to
+  \metric{segranks-BLEU} and \metric{BLEU} scores. Please see the chapter
+  \ref{metrics} for the details of computation of the reported correlations.}
+
+  \label{all-systems-results}
+\end{table}
 
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function, division
-from collections import Counter
+from collections import Counter, defaultdict
 import argparse
 import sys
 import pickle
@@ -30,38 +30,16 @@ def main():
     annotations = pickle.load(args.database)
     set_of_systems = set(next(iter(annotations.values()))[0].system_indexed)
 
-    distances = Counter()
-    d = {
-            -1 : Counter(),
-             0 : Counter(),
-             1 : Counter(),
-        }
+    distances = defaultdict(Counter)
 
     for leaved_system in set_of_systems:
-    
 
         for annotations_list in annotations.values():
             for annotation in annotations_list:
                 rank_cmp, edit_distance, comparisons = annotation.better_worse_without_fuzzy(leaved_system)
-                distances[edit_distance] += 1
-                d[rank_cmp][edit_distance] += 1
+                distances[leaved_system][edit_distance] += 1
 
-
-
-    results = []
-
-    for distance in sorted(distances.keys()):
-        sum = float(d[-1][distance] + d[0][distance] + d[1][distance])
-        results.append((distance, distances[distance], d[1][distance]/sum, d[0][distance]/sum, d[-1][distance]/sum))
-
-    print(tabulate.tabulate(
-        results,
-        headers=["Edit Distance", "Count", "Worse", "Equal", "Better"],
-        floatfmt=".3f",
-        tablefmt="simple",
-        ))
-
-
+    pickle.dump(distances, args.output)
     
 
 

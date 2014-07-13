@@ -38,7 +38,6 @@ def main():
         }
 
     for leaved_system in set_of_systems:
-    
 
         for annotations_list in annotations.values():
             for annotation in annotations_list:
@@ -46,22 +45,7 @@ def main():
                 distances[edit_distance] += 1
                 d[rank_cmp][edit_distance] += 1
 
-
-
-    results = []
-
-    for distance in sorted(distances.keys()):
-        sum = float(d[-1][distance] + d[0][distance] + d[1][distance])
-        results.append((distance, distances[distance], d[1][distance]/sum, d[0][distance]/sum, d[-1][distance]/sum))
-
-    print(tabulate.tabulate(
-        results,
-        headers=["Edit Distance", "Count", "Worse", "Equal", "Better"],
-        floatfmt=".3f",
-        tablefmt="simple",
-        ))
-
-
+    pickle.dump((distances, d), args.output)
     
 
 
