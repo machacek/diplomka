@@ -475,29 +475,29 @@ however, we are also reporting average scores computed by other variants.
 
 \begin{sidewaystable*}[t]
   \begin{center}
-    \tiny
-    \begin{tabular}{r|cccccc|ccc}
-        \textbf{Direction}           & \textbf{fr-en}           & \textbf{de-en}           & \textbf{hi-en}           & \textbf{cs-en}           & \textbf{ru-en}           & \textbf{Avg}             & \multicolumn{3}{|c}{\textbf{Averages of other variants of Kendall's $\tau$}} \\
-        \textbf{Extracted-pairs}     & 26090                    & 25260                    & 20900                    & 21130                    & 34460                    &                          & \textbf{WMT12}           & \textbf{WMT13}           & \textbf{HTIES}           \\
+    %\tiny
+    \begin{tabular}{r|cccccc}
+        \textbf{Direction}           & \textbf{fr-en}           & \textbf{de-en}           & \textbf{hi-en}           & \textbf{cs-en}           & \textbf{ru-en}           & \textbf{Avg} \\
+        \textbf{Extracted-pairs}     & 26090                    & 25260                    & 20900                    & 21130                    & 34460                    &              \\
         \hline
-        \metric{DiscoTK-party-tuned} & \best{.433 $\pm$ .012} & \best{.380 $\pm$ .013} & $.434 \pm .013$        & \best{.328 $\pm$ .015} & \best{.355 $\pm$ .011} & \best{.386 $\pm$ .013} & \best{.386 $\pm$ .013} & $.386 \pm .013$        & $.306 \pm .010$        \\
-        \metric{BEER}                & $.417 \pm .013$        & $.337 \pm .014$        & \best{.438 $\pm$ .013} & $.284 \pm .016$        & $.333 \pm .011$        & $.362 \pm .013$        & $.358 \pm .013$        & $.363 \pm .013$        & \oosmark{\best{.318 $\pm$ .011}} \\
-        \metric{REDcombSent}         & $.406 \pm .012$        & $.338 \pm .014$        & $.417 \pm .013$        & $.284 \pm .015$        & $.336 \pm .011$        & $.356 \pm .013$        & $.346 \pm .013$        & $.360 \pm .013$        & $.317 \pm .011$        \\
-        \metric{REDcombSysSent}      & $.408 \pm .012$        & $.338 \pm .014$        & $.416 \pm .013$        & $.282 \pm .014$        & $.336 \pm .011$        & $.356 \pm .013$        & $.346 \pm .013$        & $.359 \pm .013$        & $.316 \pm .010$        \\
-        \metric{Meteor}              & $.406 \pm .012$        & $.334 \pm .014$        & $.420 \pm .013$        & $.282 \pm .015$        & $.329 \pm .010$        & $.354 \pm .013$        & $.341 \pm .013$        & $.359 \pm .013$        & \oosmark{$.317 \pm .010$}        \\
-        \metric{REDSysSent}          & $.404 \pm .012$        & $.338 \pm .014$        & $.386 \pm .014$        & $.283 \pm .015$        & $.321 \pm .010$        & $.346 \pm .013$        & $.335 \pm .013$        & $.350 \pm .013$        & $.309 \pm .010$        \\
-        \metric{REDSent}             & $.403 \pm .012$        & $.336 \pm .014$        & $.383 \pm .014$        & $.283 \pm .015$        & $.323 \pm .011$        & $.345 \pm .013$        & $.334 \pm .013$        & $.349 \pm .013$        & $.308 \pm .010$        \\
-        \metric{UPC-IPA}             & $.412 \pm .012$        & $.340 \pm .014$        & $.368 \pm .014$        & $.274 \pm .015$        & $.316 \pm .011$        & $.342 \pm .013$        & \oosmark{$.340 \pm .014$}        & $.343 \pm .014$        & $.300 \pm .011$        \\
-        \metric{UPC-STOUT}           & $.403 \pm .012$        & $.345 \pm .014$        & $.352 \pm .014$        & $.275 \pm .015$        & $.317 \pm .011$        & $.338 \pm .013$        & $.336 \pm .013$        & $.339 \pm .013$        & $.294 \pm .011$        \\
-        \metric{VERTa-W}             & $.399 \pm .013$        & $.321 \pm .015$        & $.386 \pm .014$        & $.263 \pm .015$        & $.315 \pm .011$        & $.337 \pm .014$        & $.320 \pm .014$        & \oosmark{$.342 \pm .014$}        & \oosmark{$.304 \pm .011$}        \\
-        \metric{VERTa-EQ}            & $.407 \pm .013$        & $.315 \pm .014$        & $.384 \pm .013$        & $.263 \pm .015$        & $.312 \pm .011$        & $.336 \pm .013$        & \oosmark{$.323 \pm .013$}        & $.341 \pm .013$        & $.302 \pm .011$        \\
-        \metric{DiscoTK-party}       & $.395 \pm .013$        & $.334 \pm .014$        & $.362 \pm .013$        & $.264 \pm .016$        & $.305 \pm .011$        & $.332 \pm .013$        & \oosmark{$.332 \pm .013$}        & $.332 \pm .013$        & $.263 \pm .011$        \\
-        \metric{AMBER}               & $.367 \pm .013$        & $.313 \pm .014$        & $.362 \pm .013$        & $.246 \pm .016$        & $.294 \pm .011$        & $.316 \pm .013$        & $.302 \pm .013$        & $.321 \pm .014$        & \oosmark{$.286 \pm .011$}        \\
-        \metric{BLEU\_NRC}           & $.382 \pm .013$        & $.272 \pm .014$        & $.322 \pm .014$        & $.226 \pm .016$        & $.269 \pm .011$        & $.294 \pm .013$        & $.267 \pm .014$        & $.303 \pm .014$        & $.271 \pm .011$        \\
-        \metric{sentBLEU}            & $.378 \pm .013$        & $.271 \pm .014$        & $.300 \pm .013$        & $.213 \pm .016$        & $.263 \pm .011$        & $.285 \pm .013$        & $.258 \pm .014$        & $.293 \pm .014$        & $.264 \pm .011$        \\
-        \metric{APAC}                & $.364 \pm .012$        & $.271 \pm .014$        & $.288 \pm .014$        & $.198 \pm .016$        & $.276 \pm .011$        & $.279 \pm .013$        & $.243 \pm .014$        & $.290 \pm .014$        & $.261 \pm .011$        \\
-        \metric{DiscoTK-light}       & $.311 \pm .014$        & $.224 \pm .015$        & $.238 \pm .013$        & $.187 \pm .016$        & $.209 \pm .011$        & $.234 \pm .014$        & $.234 \pm .014$        & $.234 \pm .014$        & $.184 \pm .011$        \\
-        \metric{DiscoTK-light-kool}  & $.005 \pm .001$        & $.001 \pm .000$        & $.000 \pm .000$        & $.002 \pm .001$        & $.001 \pm .000$        & $.002 \pm .001$        & $-.996 \pm .001$       & \oosmark{\best{.676 $\pm$ .256}} & \oosmark{$.211 \pm .005$}        \\
+        \metric{DiscoTK-party-tuned} & \best{.433 $\pm$ .012} & \best{.380 $\pm$ .013} & $.434 \pm .013$        & \best{.328 $\pm$ .015} & \best{.355 $\pm$ .011} & \best{.386 $\pm$ .013} \\
+        \metric{BEER}                & $.417 \pm .013$        & $.337 \pm .014$        & \best{.438 $\pm$ .013} & $.284 \pm .016$        & $.333 \pm .011$        & $.362 \pm .013$        \\
+        \metric{REDcombSent}         & $.406 \pm .012$        & $.338 \pm .014$        & $.417 \pm .013$        & $.284 \pm .015$        & $.336 \pm .011$        & $.356 \pm .013$        \\
+        \metric{REDcombSysSent}      & $.408 \pm .012$        & $.338 \pm .014$        & $.416 \pm .013$        & $.282 \pm .014$        & $.336 \pm .011$        & $.356 \pm .013$        \\
+        \metric{Meteor}              & $.406 \pm .012$        & $.334 \pm .014$        & $.420 \pm .013$        & $.282 \pm .015$        & $.329 \pm .010$        & $.354 \pm .013$        \\
+        \metric{REDSysSent}          & $.404 \pm .012$        & $.338 \pm .014$        & $.386 \pm .014$        & $.283 \pm .015$        & $.321 \pm .010$        & $.346 \pm .013$        \\
+        \metric{REDSent}             & $.403 \pm .012$        & $.336 \pm .014$        & $.383 \pm .014$        & $.283 \pm .015$        & $.323 \pm .011$        & $.345 \pm .013$        \\
+        \metric{UPC-IPA}             & $.412 \pm .012$        & $.340 \pm .014$        & $.368 \pm .014$        & $.274 \pm .015$        & $.316 \pm .011$        & $.342 \pm .013$        \\
+        \metric{UPC-STOUT}           & $.403 \pm .012$        & $.345 \pm .014$        & $.352 \pm .014$        & $.275 \pm .015$        & $.317 \pm .011$        & $.338 \pm .013$        \\
+        \metric{VERTa-W}             & $.399 \pm .013$        & $.321 \pm .015$        & $.386 \pm .014$        & $.263 \pm .015$        & $.315 \pm .011$        & $.337 \pm .014$        \\
+        \metric{VERTa-EQ}            & $.407 \pm .013$        & $.315 \pm .014$        & $.384 \pm .013$        & $.263 \pm .015$        & $.312 \pm .011$        & $.336 \pm .013$        \\
+        \metric{DiscoTK-party}       & $.395 \pm .013$        & $.334 \pm .014$        & $.362 \pm .013$        & $.264 \pm .016$        & $.305 \pm .011$        & $.332 \pm .013$        \\
+        \metric{AMBER}               & $.367 \pm .013$        & $.313 \pm .014$        & $.362 \pm .013$        & $.246 \pm .016$        & $.294 \pm .011$        & $.316 \pm .013$        \\
+        \metric{BLEU\_NRC}           & $.382 \pm .013$        & $.272 \pm .014$        & $.322 \pm .014$        & $.226 \pm .016$        & $.269 \pm .011$        & $.294 \pm .013$        \\
+        \metric{sentBLEU}            & $.378 \pm .013$        & $.271 \pm .014$        & $.300 \pm .013$        & $.213 \pm .016$        & $.263 \pm .011$        & $.285 \pm .013$        \\
+        \metric{APAC}                & $.364 \pm .012$        & $.271 \pm .014$        & $.288 \pm .014$        & $.198 \pm .016$        & $.276 \pm .011$        & $.279 \pm .013$        \\
+        \metric{DiscoTK-light}       & $.311 \pm .014$        & $.224 \pm .015$        & $.238 \pm .013$        & $.187 \pm .016$        & $.209 \pm .011$        & $.234 \pm .014$        \\
+        \metric{DiscoTK-light-kool}  & $.005 \pm .001$        & $.001 \pm .000$        & $.000 \pm .000$        & $.002 \pm .001$        & $.001 \pm .000$        & $.002 \pm .001$        \\
         \hline
     \end{tabular}
   \end{center}
@@ -511,29 +511,29 @@ however, we are also reporting average scores computed by other variants.
   variant.}
 
   \label{segment-level-correlations-toEn}
-%\end{sidewaystable*}
+\end{sidewaystable*}
 
 
-%\begin{sidewaystable*}[t]
+\begin{sidewaystable*}[t]
   \begin{center}
-    \tiny
-    \begin{tabular}{r|cccccc|ccc}
-        \textbf{Direction}      & \textbf{en-fr}           & \textbf{en-de}           & \textbf{en-hi}           & \textbf{en-cs}           & \textbf{en-ru}           & \textbf{Avg}             & \multicolumn{3}{|c}{\textbf{Averages of other variants of Kendall's $\tau$}} \\
-        \textbf{Extracted-pairs}& 33350                    & 54660                    & 28120                    & 55900                    & 28960                    &                          & \textbf{WMT12}           & \textbf{WMT13}           & \textbf{HTIES}           \\
+    %\tiny
+    \begin{tabular}{r|cccccc}
+        \textbf{Direction}      & \textbf{en-fr}           & \textbf{en-de}           & \textbf{en-hi}           & \textbf{en-cs}           & \textbf{en-ru}           & \textbf{Avg} \\
+        \textbf{Extracted-pairs}& 33350                    & 54660                    & 28120                    & 55900                    & 28960                    &              \\
         \hline
-        \metric{BEER}           & $.292 \pm .012$        & \best{.268 $\pm$ .009} & $.250 \pm .013$        & \best{.344 $\pm$ .009} & \best{.440 $\pm$ .013} & \best{.319 $\pm$ .011} & \best{.314 $\pm$ .011} & \best{.320 $\pm$ .011} & $.272 \pm .009$        \\
-        \metric{Meteor}         & $.280 \pm .012$        & $.238 \pm .009$        & $.264 \pm .012$        & $.318 \pm .009$        & $.427 \pm .012$        & $.306 \pm .011$        & $.283 \pm .011$        & $.313 \pm .011$        & \oosmark{\best{.273 $\pm$ .008}} \\
-        \metric{AMBER}          & $.264 \pm .012$        & $.227 \pm .009$        & \best{.286 $\pm$ .012} & $.302 \pm .009$        & $.397 \pm .013$        & $.295 \pm .011$        & $.269 \pm .011$        & $.303 \pm .011$        & $.266 \pm .009$        \\
-        \metric{BLEU\_NRC}      & $.261 \pm .012$        & $.202 \pm .009$        & $.234 \pm .013$        & $.297 \pm .009$        & $.391 \pm .012$        & $.277 \pm .011$        & $.235 \pm .011$        & $.289 \pm .011$        & $.256 \pm .009$        \\
-        \metric{APAC}           & $.253 \pm .012$        & $.210 \pm .008$        & $.203 \pm .012$        & $.292 \pm .009$        & $.388 \pm .013$        & $.269 \pm .011$        & $.217 \pm .011$        & $.285 \pm .011$        & $.252 \pm .008$        \\
-        \metric{sentBLEU}       & $.256 \pm .012$        & $.191 \pm .009$        & $.227 \pm .012$        & $.290 \pm .009$        & $.381 \pm .013$        & $.269 \pm .011$        & \oosmark{$.232 \pm .011$}        & $.280 \pm .011$        & $.246 \pm .009$        \\
+        \metric{BEER}           & $.292 \pm .012$        & \best{.268 $\pm$ .009} & $.250 \pm .013$        & \best{.344 $\pm$ .009} & \best{.440 $\pm$ .013} & \best{.319 $\pm$ .011} \\
+        \metric{Meteor}         & $.280 \pm .012$        & $.238 \pm .009$        & $.264 \pm .012$        & $.318 \pm .009$        & $.427 \pm .012$        & $.306 \pm .011$        \\
+        \metric{AMBER}          & $.264 \pm .012$        & $.227 \pm .009$        & \best{.286 $\pm$ .012} & $.302 \pm .009$        & $.397 \pm .013$        & $.295 \pm .011$        \\
+        \metric{BLEU\_NRC}      & $.261 \pm .012$        & $.202 \pm .009$        & $.234 \pm .013$        & $.297 \pm .009$        & $.391 \pm .012$        & $.277 \pm .011$        \\
+        \metric{APAC}           & $.253 \pm .012$        & $.210 \pm .008$        & $.203 \pm .012$        & $.292 \pm .009$        & $.388 \pm .013$        & $.269 \pm .011$        \\
+        \metric{sentBLEU}       & $.256 \pm .012$        & $.191 \pm .009$        & $.227 \pm .012$        & $.290 \pm .009$        & $.381 \pm .013$        & $.269 \pm .011$        \\
         \hline
-        \metric{UPC-STOUT}      & $.279 \pm .011$        & $.234 \pm .008$        & n/a                      & $.282 \pm .009$        & $.425 \pm .013$        & $.305 \pm .011$        & $.300 \pm .010$        & $.306 \pm .011$        & $.256 \pm .008$        \\
-        \metric{UPC-IPA}        & $.264 \pm .012$        & $.227 \pm .009$        & n/a                      & $.298 \pm .009$        & $.426 \pm .013$        & $.304 \pm .011$        & $.292 \pm .011$        & \oosmark{$.308 \pm .011$}        & \oosmark{$.259 \pm .008$}        \\
-        \metric{REDSent}        & \best{.293 $\pm$ .012} & $.242 \pm .009$        & n/a                      & n/a                      & n/a                      & $.267 \pm .010$        & $.246 \pm .010$        & $.273 \pm .011$        & $.257 \pm .008$        \\
-        \metric{REDcombSysSent} & $.291 \pm .012$        & $.244 \pm .009$        & n/a                      & n/a                      & n/a                      & $.267 \pm .010$        & \oosmark{$.249 \pm .010$}        & $.272 \pm .010$        & $.256 \pm .008$        \\
-        \metric{REDcombSent}    & $.290 \pm .012$        & $.242 \pm .009$        & n/a                      & n/a                      & n/a                      & $.266 \pm .010$        & $.248 \pm .010$        & $.271 \pm .011$        & $.256 \pm .008$        \\
-        \metric{REDSysSent}     & $.290 \pm .012$        & $.239 \pm .008$        & n/a                      & n/a                      & n/a                      & $.264 \pm .010$        & $.235 \pm .010$        & \oosmark{$.273 \pm .010$}        & \oosmark{$.257 \pm .008$}        \\
+        \metric{UPC-STOUT}      & $.279 \pm .011$        & $.234 \pm .008$        & n/a                      & $.282 \pm .009$        & $.425 \pm .013$        & $.305 \pm .011$      \\
+        \metric{UPC-IPA}        & $.264 \pm .012$        & $.227 \pm .009$        & n/a                      & $.298 \pm .009$        & $.426 \pm .013$        & $.304 \pm .011$      \\
+        \metric{REDSent}        & \best{.293 $\pm$ .012} & $.242 \pm .009$        & n/a                      & n/a                      & n/a                      & $.267 \pm .010$  \\
+        \metric{REDcombSysSent} & $.291 \pm .012$        & $.244 \pm .009$        & n/a                      & n/a                      & n/a                      & $.267 \pm .010$  \\
+        \metric{REDcombSent}    & $.290 \pm .012$        & $.242 \pm .009$        & n/a                      & n/a                      & n/a                      & $.266 \pm .010$  \\
+        \metric{REDSysSent}     & $.290 \pm .012$        & $.239 \pm .008$        & n/a                      & n/a                      & n/a                      & $.264 \pm .010$  \\
         \hline
     \end{tabular}
   \end{center}
@@ -548,6 +548,79 @@ however, we are also reporting average scores computed by other variants.
 
   \label{segment-level-correlations-fromEn}
 \end{sidewaystable*}
+
+\begin{table}[t]
+  \begin{center}
+    \small
+    \begin{tabular}{r|cccc}
+      \textbf{Metric}              & \textbf{WMT14}           & \textbf{WMT12}           & \textbf{WMT13}           & \textbf{HTIES}           \\
+        \hline
+        \metric{DiscoTK-party-tuned} & \best{.386 $\pm$ .013} & \best{.386 $\pm$ .013} & $.386 \pm .013$        & $.306 \pm .010$        \\
+        \metric{BEER}                & $.362 \pm .013$        & $.358 \pm .013$        & $.363 \pm .013$        & \oosmark{\best{.318 $\pm$ .011}} \\
+        \metric{REDcombSent}         & $.356 \pm .013$        & $.346 \pm .013$        & $.360 \pm .013$        & $.317 \pm .011$        \\
+        \metric{REDcombSysSent}      & $.356 \pm .013$        & $.346 \pm .013$        & $.359 \pm .013$        & $.316 \pm .010$        \\
+        \metric{Meteor}              & $.354 \pm .013$        & $.341 \pm .013$        & $.359 \pm .013$        & \oosmark{$.317 \pm .010$}        \\
+        \metric{REDSysSent}          & $.346 \pm .013$        & $.335 \pm .013$        & $.350 \pm .013$        & $.309 \pm .010$        \\
+        \metric{REDSent}             & $.345 \pm .013$        & $.334 \pm .013$        & $.349 \pm .013$        & $.308 \pm .010$        \\
+        \metric{UPC-IPA}             & $.342 \pm .013$        & \oosmark{$.340 \pm .014$}        & $.343 \pm .014$        & $.300 \pm .011$        \\
+        \metric{UPC-STOUT}           & $.338 \pm .013$        & $.336 \pm .013$        & $.339 \pm .013$        & $.294 \pm .011$        \\
+        \metric{VERTa-W}             & $.337 \pm .014$        & $.320 \pm .014$        & \oosmark{$.342 \pm .014$}        & \oosmark{$.304 \pm .011$}        \\
+        \metric{VERTa-EQ}            & $.336 \pm .013$        & \oosmark{$.323 \pm .013$}        & $.341 \pm .013$        & $.302 \pm .011$        \\
+        \metric{DiscoTK-party}       & $.332 \pm .013$        & \oosmark{$.332 \pm .013$}        & $.332 \pm .013$        & $.263 \pm .011$        \\
+        \metric{AMBER}               & $.316 \pm .013$        & $.302 \pm .013$        & $.321 \pm .014$        & \oosmark{$.286 \pm .011$}        \\
+        \metric{BLEU\_NRC}           & $.294 \pm .013$        & $.267 \pm .014$        & $.303 \pm .014$        & $.271 \pm .011$        \\
+        \metric{sentBLEU}            & $.285 \pm .013$        & $.258 \pm .014$        & $.293 \pm .014$        & $.264 \pm .011$        \\
+        \metric{APAC}                & $.279 \pm .013$        & $.243 \pm .014$        & $.290 \pm .014$        & $.261 \pm .011$        \\
+        \metric{DiscoTK-light}       & $.234 \pm .014$        & $.234 \pm .014$        & $.234 \pm .014$        & $.184 \pm .011$        \\
+        \metric{DiscoTK-light-kool}  & $.002 \pm .001$        & $-.996 \pm .001$       & \oosmark{\best{.676 $\pm$ .256}} & \oosmark{$.211 \pm .005$}        \\
+        \hline
+    \end{tabular}
+  \end{center}
+
+  
+  \caption[Averages of other variants of Kendall's $\tau$ in directions into English ] { This table
+    contains average segment-level Kendall's $\tau$ computed by other variants
+    in directions into English. The average correlation of WMT14 variant is
+    repeated in the first column. The symbol ``$\wr$'' indicates where the
+  averages of other variants are out of sequence compared to the WMT14
+variant.}
+
+  \label{kendall-other-variants-toEn}
+\end{table}
+
+
+\begin{table}[t]
+  \begin{center}
+    \small
+    \begin{tabular}{r|cccc}
+      \textbf{Metric}          & \textbf{WMT14}                         & \textbf{WMT12}           & \textbf{WMT13}           & \textbf{HTIES}           \\
+        \hline
+        \metric{BEER}           & \best{.319 $\pm$ .011} & \best{.314 $\pm$ .011} & \best{.320 $\pm$ .011} & $.272 \pm .009$        \\
+        \metric{Meteor}         & $.306 \pm .011$        & $.283 \pm .011$        & $.313 \pm .011$        & \oosmark{\best{.273 $\pm$ .008}} \\
+        \metric{AMBER}          & $.295 \pm .011$        & $.269 \pm .011$        & $.303 \pm .011$        & $.266 \pm .009$        \\
+        \metric{BLEU\_NRC}      & $.277 \pm .011$        & $.235 \pm .011$        & $.289 \pm .011$        & $.256 \pm .009$        \\
+        \metric{APAC}           & $.269 \pm .011$        & $.217 \pm .011$        & $.285 \pm .011$        & $.252 \pm .008$        \\
+        \metric{sentBLEU}       & $.269 \pm .011$        & \oosmark{$.232 \pm .011$}        & $.280 \pm .011$        & $.246 \pm .009$        \\
+        \hline
+        \metric{UPC-STOUT}        & $.305 \pm .011$        & $.300 \pm .010$        & $.306 \pm .011$        & $.256 \pm .008$        \\
+        \metric{UPC-IPA}          & $.304 \pm .011$        & $.292 \pm .011$        & \oosmark{$.308 \pm .011$}        & \oosmark{$.259 \pm .008$}        \\
+        \metric{REDSent}              & $.267 \pm .010$        & $.246 \pm .010$        & $.273 \pm .011$        & $.257 \pm .008$        \\
+        \metric{REDcombSysSent}       & $.267 \pm .010$        & \oosmark{$.249 \pm .010$}        & $.272 \pm .010$        & $.256 \pm .008$        \\
+        \metric{REDcombSent}          & $.266 \pm .010$        & $.248 \pm .010$        & $.271 \pm .011$        & $.256 \pm .008$        \\
+        \metric{REDSysSent}           & $.264 \pm .010$        & $.235 \pm .010$        & \oosmark{$.273 \pm .010$}        & \oosmark{$.257 \pm .008$}        \\
+        \hline
+    \end{tabular}
+  \end{center}
+
+  \caption[Averages of other variants of Kendall's $\tau$ in directions out of English] { This table
+    contains average segment-level Kendall's $\tau$ computed by other variants
+    in directions out of English. The average correlation of WMT14 variant is
+    repeated in the first column. The symbol ``$\wr$'' indicates where the
+  averages of other variants are out of sequence compared to the WMT14
+variant.}
+
+  \label{kendall-other-variants-fromEn}
+\end{table}
 
 \afterpage{\clearpage}
 
