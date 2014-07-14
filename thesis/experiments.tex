@@ -1164,6 +1164,59 @@ reference translations. We have therefore decided to use one of the standard
 metrics -- \metric{BLEU} -- to measure this similarity. First, we are going to
 introduce the metric and then we are going to customize it for our experiment. 
 
+\begin{table}
+  \begin{center}
+      \subfloat[\metric{segranks-BLEU}, correlation: 0.9745 ]{
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+          cu-depfix & 0.3045 \\
+          cu-funky & 0.3020 \\
+          uedin-unconstrained & 0.3015 \\
+          cu-bojar & 0.3002 \\
+          uedin-wmt14 & 0.2957 \\
+          onlineB & 0.2893 \\
+          onlineA & 0.2594 \\
+          CU-TectoMT & 0.2252 \\
+          commercial1 & 0.1758 \\
+          commercial2 & 0.1595 \\
+          \hline
+        \end{tabular}
+      \label{enhanced-bleu-results}
+    }
+    \,
+    \subfloat[\metric{BLEU}, correlation: 0.9751]{
+        \begin{tabular}{|l|c|}
+          \hline
+          \textbf{System} & \textbf{Score} \\
+          \hline
+          cu-depfix & 0.221 \\
+          cu-bojar & 0.221 \\
+          cu-funky & 0.221 \\
+          uedin-unconstrained & 0.220 \\
+          uedin-wmt14 & 0.215 \\
+          onlineB & 0.207 \\
+          onlineA & 0.187 \\
+          CU-TectoMT & 0.157 \\
+          commercial1 & 0.114 \\
+          commercial2 & 0.102 \\
+
+          \hline
+        \end{tabular}
+      \label{bleu-results}
+    }
+
+  \end{center}
+
+  \caption[Overall system ranking according to \metric{enhancedBLEU} and
+  \metric{BLEU} scores]{Overall system ranking according to
+  \metric{segranks-BLEU} and \metric{BLEU} scores. Please see the chapter
+  \ref{metrics} for the details of computation of the reported correlations.}
+
+  \label{all-systems-results}
+\end{table}
+
 Metric \metric{BLEU} was developed by \perscite{Papineni02bleu:a} and it is the
 most used metric in the machine translation evaluation. It is defined as the
 geometric mean of n-gram precisions for $n \in \{1 \ldots N\}$, where $N$ is
@@ -1230,63 +1283,17 @@ clipped counts of n-grams occurring in the short segments.  Candidates will be
 rewarded for having n-grams which are also in the good segment translations in
 the database.
 
-\begin{table}
-  \begin{center}
-      \subfloat[\metric{segranks-BLEU}, correlation: 0.9745 ]{
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System} & \textbf{Score} \\
-          \hline
-          cu-depfix & 0.3045 \\
-          cu-funky & 0.3020 \\
-          uedin-unconstrained & 0.3015 \\
-          cu-bojar & 0.3002 \\
-          uedin-wmt14 & 0.2957 \\
-          onlineB & 0.2893 \\
-          onlineA & 0.2594 \\
-          CU-TectoMT & 0.2252 \\
-          commercial1 & 0.1758 \\
-          commercial2 & 0.1595 \\
-          \hline
-        \end{tabular}
-      \label{enhanced-bleu-results}
-    }
-    \,
-    \subfloat[\metric{BLEU}, correlation: 0.9751]{
-        \begin{tabular}{|l|c|}
-          \hline
-          \textbf{System} & \textbf{Score} \\
-          \hline
-          cu-depfix & 0.221 \\
-          cu-bojar & 0.221 \\
-          cu-funky & 0.221 \\
-          uedin-unconstrained & 0.220 \\
-          uedin-wmt14 & 0.215 \\
-          onlineB & 0.207 \\
-          onlineA & 0.187 \\
-          CU-TectoMT & 0.157 \\
-          commercial1 & 0.114 \\
-          commercial2 & 0.102 \\
-
-          \hline
-        \end{tabular}
-      \label{bleu-results}
-    }
-
-  \end{center}
-
-  \caption[Overall system ranking according to \metric{enhancedBLEU} and
-  \metric{BLEU} scores]{Overall system ranking according to
-  \metric{segranks-BLEU} and \metric{BLEU} scores. Please see the chapter
-  \ref{metrics} for the details of computation of the reported correlations.}
-
-  \label{all-systems-results}
-\end{table}
 
 \section{Tuning Systems}
 \label{tuning-systems}
 
-\XXX{Tady nejaky povidani}
+Automatic metrics are not used only for evaluating already developed systems on
+test sets. They are also often used when tuning a system to choose the
+parameters of a model which gives the best metric score computed on a
+development test set. One of the methods utilizing automatic metrics for system
+tuning is Minimum Error Rate Training (MERT). We will describe the theory
+behind the MERT in the following subsection a then we will experiment with
+using the short segments rank database in the MERT.
 
 \subsection{Minimum Error Rate Training}
 
@@ -1318,7 +1325,7 @@ log-linear formula could be simplified to the following:
 
 Now the problem with this log-linear model is how to find the weight vector
 $\vect{\lambda}$ which would give the best translations. And this is what the
-Minimum Error Rate Training (MERT) method solves.
+MERT method solves.
 
 Let $F = \{f_i;~ i \in I\}$ be a held out corpus in the source language and $R
 = \{r_i;~ i \in I\}$ be a corresponding reference translation. Traditionally
@@ -1365,7 +1372,7 @@ translation of a sentence $f$ with weights $\vect{\lambda}$:
     \label{eq:sentence-translation}
 \end{equation}
 
-The criteria \eqref{eq:errorrate-opt} is, however, not so easy to optimize. It
+The criterion \eqref{eq:errorrate-opt} is, however, not so easy to optimize. It
 contains argmax operation and therefore it is not smooth and it is not possible
 to use a gradient based method. It has also a lot of local maximums.
 \perscite{Och:2003} therefore suggested to use Powell's algorithm
@@ -1411,17 +1418,18 @@ get the following.
 candidate $e$. This means, that each candidate $e$ specifies a line given by
 the equation $x = t(e,f) + \gamma \cdot m(e,f)$ which computes the candidate
 score for the parameter $\gamma$. The argmax operator in the equation
-\ref{eq:argmax} then choose the candidate whose line is the highest in a given
-$\gamma$. You can see this situation illustrated in the figure \ref{fig:lines}.
-The line optimization method finds all the intersections of the lines where the
-best candidate (with the highest model score) changes. The intersections found
-for each sentence in the heldout data are then merged to obtain intervals of
-$\gamma$ in which the $\gamma$ does not change the set of the highest score
-candidates.  For each interval, the metric score is computed and the optimal
-$\gamma$ is chosen from the interval with the highest metric score. Since the
-metrics are often computed from sentence decomposable statistics, we can easily
-update the metric's score in each interval boundary by subtracting the old
-sentence's statistics and adding the new sentence's statistics.
+\eqref{eq:argmax} then choose the candidate whose line is the highest in a
+given $\gamma$. You can see this situation illustrated in the figure
+\ref{fig:lines}.  The line optimization method finds all the intersections of
+the lines where the best candidate (with the highest model score) changes. The
+intersections found for each sentence in the heldout data are then merged to
+obtain intervals of $\gamma$ in which the $\gamma$ does not change the set of
+the highest score candidates.  For each interval, the metric score is computed
+and the optimal $\gamma$ is chosen from the interval with the highest metric
+score. Since the metrics are often computed from sentence decomposable
+statistics, we can easily update the metric's score in each interval boundary
+by subtracting the old sentence's statistics and adding the new sentence's
+statistics.
 
 \begin{figure}
     \begin{center}
