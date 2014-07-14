@@ -1192,8 +1192,8 @@ $s$. The modified precision $p_n$ is then defined as:
         BLEU = BP \cdot \exp \left( \frac{1}{N} \sum_{i = 1}^N \log p_n \right) 
 \end{equation*}
 
-\noindent
-where $BP$ is the brevity penalty defined as follows:
+\noindent where $BP$ is the brevity penalty (meant to penalize short outputs to
+discourage improving precision at the expense of recall) defined as follows:
 
 \begin{equation*}
     BP = \left\{ 
@@ -1283,21 +1283,169 @@ the database.
   \label{all-systems-results}
 \end{table}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 \section{Tuning Systems}
 \label{tuning-systems}
 
+\XXX{Tady nejaky povidani}
+
+\subsection{Minimum Error Rate Training}
+
+Most of the statistical machine translation systems model the posterior
+probability of producing a sentence translation $e$ given a source sentence $f$
+using a log-linear model \parcite{Och:2002}: 
+
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\begin{equation}
+    P(e \mid f) = %p_{\lambda_1^M} (e \mid f) =
+    \frac
+        {\exp \left(\sum_{m=1}^M \lambda_m h_m(e,f) \right)}
+        {\sum_{e'} \exp \left(\sum_{m=1}^M \lambda_m h_m(e',f)\right)}
+    = \frac
+    {\exp \left( \vect{\lambda} \cdot \vect{h}(e,f)  \right)}
+    {\sum_{e'} \exp \left(\vect{\lambda} \cdot \vect{h}(e',f)\right)}
+\end{equation}
+
+\noindent where the vector $\vect{h}(e,f) = \{ h_1(e,f), h_2(e,f), \ldots ,
+h_M(e,f) \}$ is a feature vector and the vector $\vect{\lambda} = \{\lambda_1,
+\lambda_2, \ldots, \lambda_M \}$ is a feature weight vector. It can be easily
+shown that when searching for the best candidate $e_{best}$, the above
+log-linear formula could be simplified to the following:
+
+\begin{equation}
+  e_{best}  =  \argmax_e \left\{ P(e \mid f) \right\}
+  =  \argmax_e \left\{ \vect{\lambda} \cdot \vect{h}(e,f) \right\}
+\end{equation}
+
+Now the problem with this log-linear model is how to find the weight vector
+$\vect{\lambda}$ which would give the best translations. And this is what the
+Minimum Error Rate Training (MERT) method solves.
+
+Let $F = \{f_i;~ i \in I\}$ be a held out corpus in the source language and $R
+= \{r_i;~ i \in I\}$ be a corresponding reference translation. Traditionally
+the best weight vector $\vect{\lambda}$ can be found using the maximum
+likelihood principle:
+
+\begin{equation}
+  \vect{\hat\lambda} = \argmax_{\vect{\lambda}} \left\{ \prod_{i \in I}
+  P_{\vect{\lambda}} (e_i \mid f_i ) 
+\right\}
+\end{equation}
+
+\noindent This optimization problem has some very nice properties: there is
+one global optimum and there are algorithms which converge to this optimum.
+\perscite{Och:2003}, however, argues that that there is no proof that this
+method gives the best weights with respect to the translation quality. 
+
+He suggested to choose the weight vector $\vect{\lambda}$ which produces the
+best translation of the heldout data. We can measure the quality of the
+translation using an automatic metric $m(E,R)$, where $E$ is the set of
+candidate translations produced by the MT system and $R$ is a set of reference
+translation. We are therefore going to minimize the score (or minimize it in
+the case the metric is error based and returns lower scores for better
+translations) of the metric:
+
+\begin{equation}
+  \vect{\hat\lambda} = \argmax_{\vect{\lambda}} \left\{ m( \hat{E}(F,
+  \vect{\lambda}), R ) \right\}
+    \label{eq:errorrate-opt}
+\end{equation}
+
+\noindent where $\hat{E}(F, \vect{\lambda})$ is the corpus $F$ translated with
+the weights $\vect{\lambda}$ and $\hat{e}(f, \vect{\lambda})$ is the
+translation of a sentence $f$ with weights $\vect{\lambda}$:
+
+\begin{equation}
+  \hat{E}(F, \vect{\lambda}) = \left\{ \hat{e}(f_i, \vect{\lambda});~i \in I\right\}
+    \label{eq:corpus-translation}
+\end{equation}
+
+\begin{equation}
+  \hat{e}(f, \vect{\lambda}) = 
+    \argmax_{e} \left\{ \vect{\lambda} \cdot \vect{h}(e, f) \right\}
+    \label{eq:sentence-translation}
+\end{equation}
+
+The criteria \eqref{eq:errorrate-opt} is, however, not so easy to optimize. It
+contains argmax operation and therefore it is not smooth and it is not possible
+to use a gradient based method. It has also a lot of local maximums.
+\perscite{Och:2003} therefore suggested to use Powell's algorithm
+\parcite{Powell:1964} which does not need gradient to optimize a function.
+
+In each step, Powell's algorithm starts at a point from which it goes in
+several directions (possibly also in random directions) and optimizes the
+function along the lines which originate at the start point using a given line
+optimization method. The most optimal point found on the lines is then used as
+the new starting point in the next step. 
+
+The Powell's algorithm depends on an efficient line optimization method. Och
+proposed a method which takes advantage of log-linear model properties. In the
+following we limit the space of the optimization problem to a line defined by
+the following equation:
+
+\begin{equation}
+  \vect{\lambda}(\gamma) = \vect{\lambda'} + \gamma \vect{d}
+  \label{eq:line}
+\end{equation}
+
+\noindent where $\vect{\lambda'}$ defines a starting point and the vector
+$\vect{d}$ defines a direction of the line. Now, we can reformulate the limited
+optimization problem:
+
+\begin{equation}
+  \hat{\gamma} = \argmax_{\gamma \in \mathbb{R}} \left\{ m(\hat{E}(F,\vect{\lambda}(\gamma)),R) \right\}
+    \label{eq:line-opt}
+\end{equation}
+
+When we apply the line equation \ref{eq:line} in the argmax operator which
+choose the best translation in the equation \ref{eq:sentence-translation}, we
+get the following.
+
+\begin{eqnarray}
+  \hat{e}(f, \vect{\lambda}(\gamma))
+    & = & \argmax_{e} \left\{ \vect{\lambda}(\gamma) \cdot  \vect{h}(e, f) \right\} \\
+    & = & \argmax_{e} \left\{ \vect{\lambda'} \cdot \vect{h}(e, f) + \gamma \vect{d} \cdot \vect{h}(e, f) \right\} \\
+    & = & \argmax_{e} \left\{ t(e,f) + \gamma \cdot m(e,f) \right\} \label{eq:argmax}
+\end{eqnarray}
+
+\noindent where the scalars $t(e,f)$ and $m(e,f)$ are constant for a given
+candidate $e$. This means, that each candidate $e$ specifies a line given by
+the equation $x = t(e,f) + \gamma \cdot m(e,f)$ which computes the candidate
+score for the parameter $\gamma$. The argmax operator in the equation
+\ref{eq:argmax} then choose the candidate whose line is the highest in a given
+$\gamma$. You can see this situation illustrated in the figure \ref{fig:lines}.
+The line optimization method finds all the intersections of the lines where the
+best candidate (with the highest model score) changes. The intersections found
+for each sentence in the heldout data are then merged to obtain intervals of
+$\gamma$ in which the $\gamma$ does not change the set of the highest score
+candidates.  For each interval, the metric score is computed and the optimal
+$\gamma$ is chosen from the interval with the highest metric score. Since the
+metrics are often computed from sentence decomposable statistics, we can easily
+update the metric's score in each interval boundary by subtracting the old
+sentence's statistics and adding the new sentence's statistics.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=10cm]{img/mert.pdf}
+    \end{center}
+
+    \caption[An illustration of the line optimization in MERT]{
+      An illustration of the line optimization in MERT
+}
+
+    \label{fig:lines}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Experiments with MERT}
 \XXX{Zde zkusim pouzit vytvorenou databazi pro MT tuning}
 
