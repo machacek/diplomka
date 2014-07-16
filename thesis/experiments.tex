@@ -644,6 +644,7 @@ call this trick \metoda{leave-one-out}.
 \end{table}
 
 \subsection{Exact Matching of candidate segments}
+\label{exact:matching}
 
 The most obvious way to evaluate an unseen translation is to compute the
 \metoda{Ratio of wins (ignoring ties)} of all the systems (including the unseen
@@ -770,6 +771,7 @@ the segments exactly, because it gives us very overestimated scores for the
 unseen candidates.
 
 \subsection{Matching the Closest Segment by Edit Distance}
+\label{match:editdistance}
 
 We would like to compute the scores on all the annotated segments to avoid the
 problem from the previous subsection. A natural way to approximate the
@@ -1147,6 +1149,7 @@ agree on better translations and their translations tend to be more similar to
 better translations in the database so we cannot predict their rank accurately. 
 
 \subsection{Enhancing reference translation with good candidates from the database}
+\label{enhancing:bleu}
 
 Following the conclusions from the previous two subsections, it seems that
 errors in machine translation are very unique. Any database of bad examples
@@ -1166,21 +1169,21 @@ introduce the metric and then we are going to customize it for our experiment.
 
 \begin{table}
   \begin{center}
-      \subfloat[\metric{segranks-BLEU}, correlation: 0.9745 ]{
+      \subfloat[\metric{SegRanksBLEU}, correlation: 0.9745 ]{
         \begin{tabular}{|l|c|}
           \hline
           \textbf{System} & \textbf{Score} \\
           \hline
-          cu-depfix & 0.3045 \\
-          cu-funky & 0.3020 \\
-          uedin-unconstrained & 0.3015 \\
-          cu-bojar & 0.3002 \\
-          uedin-wmt14 & 0.2957 \\
-          onlineB & 0.2893 \\
-          onlineA & 0.2594 \\
-          CU-TectoMT & 0.2252 \\
-          commercial1 & 0.1758 \\
-          commercial2 & 0.1595 \\
+          cu-depfix & 0.305 \\
+          cu-funky & 0.302 \\
+          uedin-unconstrained & 0.302 \\
+          cu-bojar & 0.300 \\
+          uedin-wmt14 & 0.296 \\
+          onlineB & 0.289 \\
+          onlineA & 0.259 \\
+          CU-TectoMT & 0.225 \\
+          commercial1 & 0.176 \\
+          commercial2 & 0.160 \\
           \hline
         \end{tabular}
       \label{enhanced-bleu-results}
@@ -1209,12 +1212,12 @@ introduce the metric and then we are going to customize it for our experiment.
 
   \end{center}
 
-  \caption[Overall system ranking according to \metric{enhancedBLEU} and
+  \caption[Overall system ranking according to \metric{SegRanksBLEU} and
   \metric{BLEU} scores]{Overall system ranking according to
-  \metric{segranks-BLEU} and \metric{BLEU} scores. Please see the chapter
+  \metric{SegRanksBLEU} and \metric{BLEU} scores. Please see the chapter
   \ref{metrics} for the details of computation of the reported correlations.}
 
-  \label{all-systems-results}
+  \label{segranksbleu:experiment}
 \end{table}
 
 Metric \metric{BLEU} was developed by \perscite{Papineni02bleu:a} and it is the
@@ -1277,11 +1280,23 @@ Finally, we use the selected good segments as the reference translations in
 addition to the original reference sentence translated by human expert.  Since
 the new references are only short segments and do not cover a whole sentence,
 we use only the length of the original reference sentence in the computation of
-the brevity penalty. Please note, that introducing the new reference
+the brevity penalty. To distinguish this method from the standard \metric{BLEU}
+with the single official reference translation, we will call this method
+\metric{SegRanksBLEU}.
+
+Please note, that introducing the new reference
 translations, which do not change the brevity penalty, can only increase the
 clipped counts of n-grams occurring in the short segments.  Candidates will be
 rewarded for having n-grams which are also in the good segment translations in
 the database.
+
+You can see the overall rankings of the evaluated systems as given by
+\metric{SegRanksBLEU} and \metric{BLEU} in the table
+\ref{segranksbleu:experiment}. As expected, the \metric{SegRanksBLEU} scores
+are really much higher than \metric{BLEU}. However, the reported system level
+correlations of these two metrics are almost equal (correlation of
+\metric{SegRanksBLEU} is even a little bit lower).  \XXX{Jak tohle zanalyzovat
+a vysvetlit?}
 
 
 \section{Tuning Systems}
@@ -1455,13 +1470,13 @@ weight vector used to produce the initial n-best list. For that reason a new
 n-best list is produced with the new weights, it is merged with previous n-best
 lists and optimization process is run again in new MERT iteration. When the
 optimal weight vector converges or a maximum number of iterations is reached
-the mert method ends. 
+the MERT method ends. 
 
 \subsection{Experiments with MERT}
 
-MERT method is most often used with the BLEU metric even it does not have the
-best correlation with human judgments (please see the chapter \ref{metrics} for
-more details). However, there is a lot of experiments with utilizing also other
+MERT method is most often used with BLEU metric even it does not have the best
+correlation with human judgments (see the chapter \ref{metrics} for more
+details). However, there is a lot of experiments with utilizing also other
 automatic metrics in recent time. In WMT11 \parcite{wmt11}, there was a shared
 task in which participants tuned a common system with different metrics. The
 tuned systems were then evaluated by humans and some of them outperformed the
@@ -1532,15 +1547,119 @@ scorer class, implemented using the Python C API.
 
 \subsubsection{Metric Variants}
 
-Our original idea was that we will use the alignment produced by 
+Our original idea was that we will use the alignment produced by the Moses
+decoder during translating the n-best list to project the extracted short
+source segments to the target side to have candidates which would be extracted
+the same way as the ranked segments in the database. Unfortunately the
+alignment produced by Moses decoder is very sparse and unreliable (which may be
+caused by a bug in the code) so we had to get along without the alignment.
+
+The naive approximation is to just test whether the ranked candidate segments
+from the database also occurs in evaluated sentences. The first metric we use
+in MERT experiment is therefore very similar to the \metoda{Exact Matching}
+method in the section \ref{exact:matching}. For each ranked source segment we
+test if any of its candidate segment occurs in the evaluated sentence. If it
+does we extract all pairwise comparisons inferred from the matched segment. If
+more candidate segments occurs in the evaluated translation, we choose the
+longest segment (assuming that the sorter segments are just substring of the
+longest one). The final score is then computed as \metoda{Ratio of wins
+(ignoring ties)}. We call this metric \metric{ExactMatch} in the following.
+
+Even if the hit rate (percentage of segment candidates which are already ranked
+in the database) computed on a whole n-best list would be 100 \%, the
+\metric{ExactMatch} metric still does not evaluate whole sentences and could be
+too coarse and harsh. Moreover, if the hit rate drops during the tuning, the
+metric score would be computed on a very small percentage of development set
+and would be very unstable. To ensure the tuning is stable, we interpolate all
+the metrics in this section (if not said otherwise) together with BLEU with
+equal weights. We also tried to tune using the \metric{ExactMatch} metric
+solely but the tuned system translated very badly and the hit rate dropped very
+low during the tuning. We could explain this by that the system was tuned to
+translate a few ranked segments well (so these segments were hits) but other
+segments were missed and translated badly. The optimal metric score was
+therefore computed on a very small fraction of the development set and did not
+reflect the overall quality of the translation.
+
+Since we do not have the alignment and cannot extract the candidate segments
+exactly, we unfortunately cannot use the method introduced in the subsection
+\ref{match:editdistance} which matches the closest segment in the database by
+edit distance.  To avoid the shortcomings of the \metric{ExactMatch} metric
+(the metric is not computed on all the extracted source segments and an unseen
+system is more likely to cause hit in the database with better translations) we
+propose another variant called \metric{PenalizeUnknown}. This variant differs
+to \metric{ExactMatch} in that it considers all missed segments as the worst
+translations. We agree that the assumption that all unseen and unranked
+segments are wrong is not correct, but this approach could increase the hit
+rate. The question is then, whether we prefer to have a system which produces a
+lot of segments which were already ranked (even badly) or a system which
+produces a lot of unranked segments which we hope to be of better quality.
+
+The last variant we experiment with is \metric{SegRanksBLEU} metric introduced
+in subsection \ref{enhancing:bleu}. Because this metric is already based on
+BLEU metric (and use the reference translation) we do not interpolate it with
+BLEU anymore.
 
 
+\subsubsection{Results and Analysis}
+
+You can see the results of the tuned system in the table \ref{mert:results}. We
+used the tuned systems to translate the test set (newstest2013) and then we
+evaluated these translations automatically and manually. For the automatic
+evaluation we used metrics \metric{BLEU} \parcite{Papineni02bleu:a} and
+\metric{CDER} \parcite{Leusch06cder:efficient}. We have also conducted a small
+scale manual evaluation. For each evaluated system, we randomly sampled
+\XXX{100} sentences which were translated differently by the baseline and by
+the evaluated system. \XXX{Two} annotators then compared the sampled
+sentences with the corresponding translations produced by the baseline system.
+Their task was to choose which sentence is better or whether they are of the
+same quality. We report how many of the sampled sentences were better and
+better-or-equal than the corresponding baseline translation.
 
 
+\begin{table}
+  \centering
+  \begin{tabular}{|r|c|cc|cc|}
+    \hline
+    & \textbf{\#Mert} & \multicolumn{2}{|c|}{\textbf{Automatic}} & \multicolumn{2}{|c|}{\textbf{Manual}} \\
+    & \textbf{iter-} & \multicolumn{2}{|c|}{\textbf{Evaluation}} & \multicolumn{2}{|c|}{\textbf{Evaluation}} \\
+    \textbf{Tunable metric} & \textbf{ations} & \textbf{BLEU} & \textbf{CDER}  & $>$ & $\ge$ \\
+    \hline
+    \metric{BLEU} (baseline) & 11 & 0.1782 & 0.3855 & --- & --- \\
+    \metric{ExactMatch}      & 20 & 0.1637 & 0.3674 & \XXX{} & \XXX{} \\
+    \metric{PenalizeUnknown} &  8 & 0.1772 & 0.3850 & \XXX{} & \XXX{} \\
+    \metric{SegRanksBLEU}    &  & \XXX{} & \XXX{} & \XXX{} & \XXX{} \\
+    \hline
+  \end{tabular}
+
+  \caption[Results of systems tuned on SegRanks based metrics]{Results of
+    systems which were optimized to a SegRanks based metric. The items in the
+    first column specify the metric which was used when tuning the system on
+    the development test.  The columns BLEU and CDER contain just scores of
+    these metrics computed on the test set translated with the tuned weights.
+  The last two columns contain percentages of better and better-or-equal
+sentences compared to the baseline in the manual evaluation.}
+
+  \label{mert:results}
+\end{table}
+
+\XXX{Okomentovat vysledky, az budou vsechny a hlavne az bude lidske hodnoceni}
 
 
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=12cm]{img/hit-rates-plot.pdf}
+    \end{center}
+
+    \caption[]{
+}
+
+    \label{hit:rates:plot}
+\end{figure}
 
 
+To see the differences between \metric{ExactMatch} and \metric{PenalizeUnknown},
+we have plotted the values of hit rates computed in each MERT iteration in the figure
+\ref{hit:rates:plot}.
 
-\XXX{Zde zkusim pouzit vytvorenou databazi pro MT tuning}
+
 
