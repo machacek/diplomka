@@ -1,4 +1,4 @@
-\chapter{Segranks - Experiments With The Database of Annotations}
+\chapter{SegRanks - Experiments With The Database of Annotations}
 
 In this chapter we describe several experiments with the collected database of
 annotations. 
@@ -1437,23 +1437,110 @@ statistics.
     \end{center}
 
     \caption[An illustration of the line optimization in MERT]{
-      An illustration of the line optimization in MERT
+      An illustration of the line optimization in MERT. You can see two sentences and their
+      candidate translations represented by the lines. The best candidate in each interval
+      is marked by the red line. The bottom part of the figure illustrates how the metric score
+      depends on $\gamma$.
 }
 
     \label{fig:lines}
 \end{figure}
 
-
-
-
-
-
-
-
-
-
-
+The last difficulty in the MERT method is that we cannot easily enumerate all
+the candidate sentences. For that reason the n-best list approximation is used:
+the decoder produce $n$ best translations for each sentence and only these $n$
+translations are considered during the optimization. A problem arise when the
+optimal weight vector found during the optimization gets too far from the
+weight vector used to produce the initial n-best list. For that reason a new
+n-best list is produced with the new weights, it is merged with previous n-best
+lists and optimization process is run again in new MERT iteration. When the
+optimal weight vector converges or a maximum number of iterations is reached
+the mert method ends. 
 
 \subsection{Experiments with MERT}
+
+MERT method is most often used with the BLEU metric even it does not have the
+best correlation with human judgments (please see the chapter \ref{metrics} for
+more details). However, there is a lot of experiments with utilizing also other
+automatic metrics in recent time. In WMT11 \parcite{wmt11}, there was a shared
+task in which participants tuned a common system with different metrics. The
+tuned systems were then evaluated by humans and some of them outperformed the
+baseline system tuned with BLEU.
+
+It is not feasible to employ any sort of human evaluation directly in the MERT
+process. On the one hand human evaluation is very slow and expensive, on the
+other hand MERT requires to evaluate very long n-best list in each iteration.
+There are some suggestions to do the manual evaluation in a clever way and
+lower the amount of manual work. For example \perscite{human-in-the-loop}
+noticed that a lot of short segments is repeated in a n-best list and therefore
+suggest to extract these short segments from a n-best list in each MERT
+iteration and let humans rank them. (Actually our short segment extraction
+method was partially inspired by this work). However they did not try this
+method in an actual MERT run yet for lack of resources. 
+
+We believe that a much less expensive way to introduce an element of human
+evaluation in MERT method is to use some sort of semi-automatic metric in which
+a certain amount of manual work is needed at the beginning and then the metric
+evaluates translations automatically. In this subsection, we therefore
+experiment with previously introduced metrics which rely on the collected
+database of short segment ranks.
+
+\subsubsection{Tuned System}
+
+The system we tried to tune is the system cu-bojar \parcite{tamchyna2014},
+which we also used previous sections as one of the evaluated systems. This
+system is Moses-based and combines several different approaches:
+
+\begin{itemize}
+  \item factored phrase-based Moses model
+  \item domain-adapted language model
+  \item deep-syntactic MT system TectoMT
+\end{itemize}
+
+The parallel data used to train the phrase tables consists of 14.83 million
+parallel sentences taken from the CzEng corpus \parcite{bojar:czeng} and 0.65
+millions of sentences taken from the Europarl corpus \parcite{koehn:europarl}.
+The monolingual data used to train language models consists of 215.93 million
+sentences taken from the Czech side of the CzEng corpus and from 5 sources of
+news domain. 
+
+They used their baseline systems to translate WMT test sets from years
+2012--2014.  These translation were then used to retrieve similar Czech
+sentences using information retrieval techniques which were then used to train
+the domain-adapted language model.
+
+The deep-syntactic MT system TectoMT was used to translate WMT test sets from
+years 2007--2014. These new synthetic parallel training data were then used to 
+train an additional phrase table. 
+
+Please note that both the domain-adapted language model and the TectoMT phrase
+table were also trained on the data we use as development set and test set so
+that tuning can assign appropriate weights to them.
+
+There is 15 component weights to tune in total. \perscite{tamchyna2014} of
+course tuned their system cu-bojar when participating in the translation shared
+task but we use their system before it was tuned by them to tune it ourselves. 
+
+We used the implementation of MERT which is distributed with Moses
+toolkit\footnote{\url{http://www.statmt.org/moses/}}. It is implemented in C++
+and new metrics are created by subclassing the base \pojem{Scorer} class. Since
+the annotated database is stored in Python data structures and since a
+development in Python is much easier and faster, we have implemented new
+\pojem{PythonScorer} which is an universal wrapper around an arbitrary Python
+scorer class, implemented using the Python C API.
+
+
+\subsubsection{Metric Variants}
+
+Our original idea was that we will use the alignment produced by 
+
+
+
+
+
+
+
+
+
 \XXX{Zde zkusim pouzit vytvorenou databazi pro MT tuning}
 
