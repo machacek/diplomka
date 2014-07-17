@@ -1,18 +1,18 @@
-\chapter{SegRanks - Experiments With The Database of Annotations}
+\chapter{Using Short Segments in MT Development}
 
-In this chapter we describe several experiments with the collected database of
+In this chapter, we describe several experiments with the collected database of
 annotations. 
 
 \section{Overall Ranking of Annotated Systems}
 \label{evaluating-annotated-systems}
 
-In the first experiment we would like to show that the proposed method can be
+In the first experiment, we would like to show that the proposed method can be
 used to produce overall ranking of the annotated systems which will be very
 similar to the official human evaluation in WMT with much less human effort
 \XXX{dolozit, pokud je to vubec pravda a pokud to vubec pujde}.
 
 The obtained database contains a list of annotations for each extracted source
-segment from each source sentence. A list can be empty (not all of the
+segment from each source sentence. The list can be empty (not all of the
 sentences were annotated), it can contain more than one annotation (some
 segments were annotated twice by an annotator, some segments were annotated by
 multiple annotators), but most of the time it contains only one annotation.
@@ -20,10 +20,10 @@ multiple annotators), but most of the time it contains only one annotation.
 An annotation is a mapping from the set of candidate segments to the set of
 ranks ${1 \ldots N+1}$, where $N$ is the count of unique candidate segments.
 (To discriminate the relative quality of all segments, annotators had available
-$N$ ranks which could be all occupied when there are no ties. The rank $N+1$
+$N$ ranks which could be all occupied when there were no ties. The rank $N+1$
 represents the ``garbage'' category from the annotation application. However in
-all of our experiments reported in this thesis we consider this category as one
-more, the worst, rank). A Lower rank of a segment means that the candidate
+all of our experiments reported in this thesis we consider this category simply as one
+more, the worst, rank). A lower rank of a segment means that the candidate
 segment was ranked better. This is an example \metoda{segment annotation} of a
 source segment ``the huge volume'':
 
@@ -39,8 +39,8 @@ source segment ``the huge volume'':
 We expanded these segment annotations with the information about the systems
 which produced the segments. The ranks in the annotations are now indexed by
 the system names.  If more systems translated a source segment as the same
-candidate segment the candidate segment's rank is copied to all the systems.
-This is the time when we use advantage of ranking short segments which are
+candidate segment, the candidate segment's rank is copied to all the systems.
+This is the time when we take advantage of ranking short segments which are
 often translated identically.  The following is the \metoda{system annotation}
 after expansion of the above \metoda{segment annotation}:
 
@@ -81,7 +81,7 @@ number of all systems):
     ]
 \end{verbatim}
 
-The interpretation of these pairwise comparisons was changed several times
+The interpretation of these pairwise comparisons has changed several times
 during the WMT workshops. Here, we use \metoda{Ratio of wins (ignoring ties)}
 method, which was introduced by \perscite{bojar:grain:of:salt} and used in
 WMT12 workshop \parcite{callisonburch:wmt12}. This method is based on a method
@@ -198,15 +198,17 @@ computing expected wins on the sentence-level judgements is coarser while our
 method is more fine-grained.  \XXX{Co z toho vlastne plyne? Je to dobre, nebo
 spatne?}
 
-The overall rankings of systems obtained by both of the methods is very
+The overall rankings of systems obtained by both of the methods are very
 similar. However, there are two changes when comparing to the sentence-level
-judgments results: system online-B is better and system cu-bojar is worser
-according to the segments-level judgments results. We try to explain this in the Analysis.
+judgments results: system online-B is better and system cu-bojar is worse
+according to the segments-level judgments results. We try to explain this in 
+Section \ref{analysis} below.
 
 \subsection{Analysis}
+\label{analysis}
 
 To see the difference between the segment-level judgements and sentence-level
-judgements we have computed Kendall tau rank correlation coefficient, also
+judgements, we have computed Kendall tau rank correlation coefficient, also
 known as Kendall's $\tau$, between segment-level pairwise comparisons and
 sentence-level pairwise comparisons. This coefficient is used to measures how
 often a set of pairwise rankings agrees with another set of pairwise rankings.
@@ -220,11 +222,11 @@ The basic formula for Kendall's $\tau$ is:
 of pairwise rankings agrees with each other and $Discordant$ is the set of
 pairwise combination where the sets do not agree in pairwise ranking.
 \XXX{mozna vyhodit predchozi vetu}  We will discuss the Kendall's $\tau$ in
-more details in chapter \ref{metrics}. Here we computed $|Concordant|$ as the
+more details in chapter \ref{metrics}. Here, we computed $|Concordant|$ as the
 number of pairwise segment-level judgments which agrees with the corresponding
 sentence-level judgment. Similarly, $|Discordant|$ is the number of those which
-does not agree with the corresponding sentence-level judgment. In this section
-we does not consider any tied pairwise comparisons.
+does not agree with the corresponding sentence-level judgment. In this section,
+we do not consider any tied pairwise comparisons.
 
 \begin{table}
   \begin{center}
@@ -309,7 +311,7 @@ we does not consider any tied pairwise comparisons.
   \label{sentence-segments-judgments-correlations}
 \end{table}
 
-The computed correlations are tabulated in the table
+The computed correlations are given in Table
 \ref{sentence-segments-judgments-correlations}. The order of the systems in the
 table \ref{sentence-segments-judgments-correlations-better} is quite similar to
 the order of systems in the overall rankings (table \ref{all-systems-results});
@@ -317,7 +319,7 @@ better systems have higher correlation than worse systems.  This is somehow
 expected: Better systems, which were more often ranked better in the
 sentence-level judgements are also more likely to be ranked better in the
 segment-level judgments.  You can also read the table in the following way: If
-a sentence of system cu-funky was ranked better on sentence-level it is very
+a sentence of system cu-funky was ranked better on sentence-level, it is very
 likely (71\%) that the segments of the sentence were ranked better also. On the
 other hand, if system commercial2 was ranked better on sentence-level only a
 little more than half of the segments were ranked better also. The table
@@ -327,9 +329,9 @@ order.
 The influence of a system's quality should be canceled out in the table
 \ref{sentence-segments-judgments-correlations-all}. You can see, that systems
 cu-bojar and onlineB have the Kendall's $\tau$ lower (although not the lowest).
-This together with the fact that both systems lies in a cluster of systems of
-very similar quality is consistent with their change in the overall ranking of
-systems. This, however, does not explain that.
+This, together with the fact that both systems lie in a cluster of systems of
+very similar quality, is consistent with their change in the overall ranking of
+systems. 
 
 For the explanation of the differences between the overall rankings computed on
 sentence-level and segment-level judgments we have to look into the data. We
@@ -348,7 +350,7 @@ defined \metoda{disagreement quotient}:
 \noindent where $s$ is a system, $n$ is a sentence number, $win_{seg}(s,n)$ is
 the number of segment-level comparisons where the $n$-th candidate sentence
 translated by system $s$ won and $loss_{sent}(s,n)$ is the number of
-comparisons in which the candidate sentence losses. Finally, $win_{sent}(s,n)$
+comparisons in which the candidate sentence loses. Finally, $win_{sent}(s,n)$
 and $loss_{sent}(s,n)$ are defined similarly for the sentence-level
 comparisons.
 
@@ -357,7 +359,7 @@ ranked high by segment-level judgments but ranked low by the sentence-level
 judgments.  We have listed candidate sentences with the highest
 \metoda{disagreement quotient} and tried to analyze the cause of the
 disagreement between the sentence-level and segment-level judgments. In the
-following we present a few of these sentences with comments. The extracted
+following, we present some of these sentences with comments. The extracted
 segments which were ranked are in bold.
 
 \begin{center}
@@ -394,8 +396,8 @@ similar problem is also in the following sentence:
 \end{center}
 
 \noindent The translation of the segment is perfect but the subject of the
-candidate translation is wrongly expressed as a third person. The whole
-sentence is therefore correctly ranked as a poor translation. And again this is
+candidate translation is wrongly expressed as the third person. The whole
+sentence is therefore correctly ranked as a poor translation. And again, this is
 not covered by the extracted segments.
 
 \begin{center}
@@ -421,11 +423,11 @@ In all the previous examples, a predicate was wrongly translated but
 unfortunately it was not covered in the extracted segments and therefore
 reflected in segment-level judgments. This seems to be the main disadvantage of
 this method, extracted segments sometimes do not cover predicates which are
-very important for annotator when judging quality of machine translation.
+very important for annotator when judging the overall quality of the sentence.
 
 We have also listed candidate translations with the lowest \metoda{disagreement
-quotient} (a candidate was highly ranked by sentence-level judgments but lowly
-ranked by system-level judgments). However, these candidates were not so
+quotient} (a candidate was highly ranked by sentence-level judgments but ranked low
+by system-level judgments). However, these candidates were not so
 interesting and we cannot see any general pattern there. We feel that the
 sentences which are ranked much better in segment-level judgments than in
 sentence-level judgments are much more serious problem.
@@ -433,8 +435,8 @@ sentence-level judgments are much more serious problem.
 \section{Evaluating New Systems}
 \label{evaluating-new-systems}
 
-Machine translation systems often translate a short source segment identically.
-This was one of our main motivation for ranking translations of short segments.
+Machine translation systems often translate a given short source segment identically.
+This was one of our main motivations for ranking translations of short segments.
 As you saw in the previous chapter, evaluating the annotated systems using the
 short segments annotations works even it has some shortcomings.  It would be
 very useful if we could use the database of annotations to evaluate also yet
