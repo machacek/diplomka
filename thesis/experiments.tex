@@ -1603,7 +1603,7 @@ BLEU anymore.
 \subsubsection{Results and Analysis}
 
 You can see the results of the tuned system in the table \ref{mert:results}. We
-used the tuned systems to translate the test set (newstest2013) and then we
+used the tuned systems to translate the test set (newstest2012) and then we
 evaluated these translations automatically and manually. For the automatic
 evaluation we used metrics \metric{BLEU} \parcite{Papineni02bleu:a} and
 \metric{CDER} \parcite{Leusch06cder:efficient}. We have also conducted a small
@@ -1615,6 +1615,8 @@ Their task was to choose which sentence is better or whether they are of the
 same quality. We report how many of the sampled sentences were better and
 better-or-equal than the corresponding baseline translation.
 
+You can see that none of the metric variants outperformed the baseline system
+tuned solely to \metric{BLEU} in the automatic evaluation.
 
 \begin{table}
   \centering
@@ -1622,12 +1624,12 @@ better-or-equal than the corresponding baseline translation.
     \hline
     & \textbf{\#Mert} & \multicolumn{2}{|c|}{\textbf{Automatic}} & \multicolumn{2}{|c|}{\textbf{Manual}} \\
     & \textbf{iter-} & \multicolumn{2}{|c|}{\textbf{Evaluation}} & \multicolumn{2}{|c|}{\textbf{Evaluation}} \\
-    \textbf{Tunable metric} & \textbf{ations} & \textbf{BLEU} & \textbf{CDER}  & $>$ & $\ge$ \\
+    \textbf{Tunable metric} & \textbf{ations} & \textbf{BLEU} & \textbf{CDER}  & \textbf{Better} & \textbf{Worse} \\
     \hline
     \metric{BLEU} (baseline) & 11 & 0.1782 & 0.3855 & --- & --- \\
     \metric{ExactMatch}      & 20 & 0.1637 & 0.3674 & \XXX{} & \XXX{} \\
     \metric{PenalizeUnknown} &  8 & 0.1772 & 0.3850 & \XXX{} & \XXX{} \\
-    \metric{SegRanksBLEU}    &  & \XXX{} & \XXX{} & \XXX{} & \XXX{} \\
+    \metric{SegRanksBLEU}    &  8 & 0.1753 & 0.3835 & \XXX{} & \XXX{} \\
     \hline
   \end{tabular}
 
@@ -1650,16 +1652,27 @@ sentences compared to the baseline in the manual evaluation.}
         \includegraphics[width=12cm]{img/hit-rates-plot.pdf}
     \end{center}
 
-    \caption[]{
-}
+    \caption[Hit rates computed on the n-best lists produced in MERT]{Hit rates
+    computed on the n-best lists produced in each MERT iteration}
 
     \label{hit:rates:plot}
 \end{figure}
 
 
-To see the differences between \metric{ExactMatch} and \metric{PenalizeUnknown},
-we have plotted the values of hit rates computed in each MERT iteration in the figure
-\ref{hit:rates:plot}.
+To see the differences between \metric{ExactMatch} and
+\metric{PenalizeUnknown}, we have plotted the values of hit rates computed in
+each MERT iteration in the figure \ref{hit:rates:plot}. You can see that
+\metric{PenalizeUnknown} gets to the hit rate 0.7 very quickly (in the sixth
+iteration) and its growth is quite stable. This is however expected, since the
+objective function also indirectly optimizes the hit rate. The hit rate in
+\metric{ExactMatch} also grows but much more slowly. It stabilizes around the
+value 0.5. The good point is that the final value is quite high so the
+\metric{ExactMatch} is computed on nonnegligible amount of data. However, it
+takes much more iterations for \metric{ExactMatch} to get to the value 0.5 that
+it takes for \metric{PenalizeUnknown} to get to the value 0.7. \XXX{Tady to jeste
+shrnout po manualni evaluaci}.
 
 
 
+
+\XXX{Je otaka, zda jsme se podle Penalize Unknown nedostali k puvodnimu systemu}
