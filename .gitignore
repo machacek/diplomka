@@ -14,7 +14,7 @@ tokenized
 *.lot
 *.out
 *.toc
-*.pdf
+main.pdf
 
 
 # Packages
