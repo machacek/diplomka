@@ -1,16 +1,19 @@
 \chapter{Evaluation and Comparison of Automatic Metrics}
 \label{metrics}
 
-\XXX{Pretavit abstrakt do nejakeho uvodu}
-This paper presents the results of the WMT14 Metrics Shared Task. We asked
-participants of this task to score the outputs of the MT systems involved in
-WMT14 Shared Translation Task. We collected scores of 23 metrics from 12
-research groups. In addition to that we computed scores of 6 standard metrics
-(BLEU, NIST, WER, PER, TER and CDER) as baselines. The collected scores were
-evaluated in terms of system level correlation (how well each metric's scores
-correlate with WMT14 official manual ranking of systems) and in terms of
-segment level correlation (how often a metric agrees with humans in comparing
-two translations of a particular sentence).
+% \XXX{Pretavit abstrakt do nejakeho uvodu}
+%
+% Puvodni abstrakt, neco z toho dat do vlastniho abstraktu
+%
+% This paper presents the results of the WMT14 Metrics Shared Task. We asked
+% participants of this task to score the outputs of the MT systems involved in
+% WMT14 Shared Translation Task. We collected scores of 23 metrics from 12
+% research groups. In addition to that we computed scores of 6 standard metrics
+% (BLEU, NIST, WER, PER, TER and CDER) as baselines. The collected scores were
+% evaluated in terms of system level correlation (how well each metric's scores
+% correlate with WMT14 official manual ranking of systems) and in terms of
+% segment level correlation (how often a metric agrees with humans in comparing
+% two translations of a particular sentence).
 
 Automatic machine translation metrics play a very important role in the
 development of MT systems and their evaluation. There are many different
@@ -18,17 +21,47 @@ metrics of diverse nature and one would like to assess their quality. For this
 reason, the Metrics Shared Task is held annually at the Workshop of Statistical
 Machine Translation\footnote{\url{http://www.statmt.org/wmt13}}, starting with
 \perscite{koehn-monz:2006:WMT} and following up to
-\perscite{wmt14-overview-paper}.
+\perscite{wmt14-overview-paper}. In WMT13, we took over the organization of the
+task \parcite{machacek:2013} and continued to do that also in WMT14
+\parcite{machacek:2014}. In this chapter, we present the results of WMT14
+metrics shared task with some additional informations and comments.
 
 In this task, we asked metrics developers to score the outputs of WMT14 Shared
 Translation Task \parcite{wmt14-overview-paper}. We have collected the computed
-metrics' scores and use them to evaluate quality of the metrics. 
+metrics' scores and use them to evaluate quality of the metrics.  There are
+actually two subtasks: a system level task and a segment level task.
 
-The systems' outputs, human judgements and evaluated metrics are described in
-Section \ref{section:data}. The quality of the metrics in terms of system level
-correlation is reported in Section \ref{system-level}. Segment level
-correlation with a detailed discussion and a slight change in the calculation
-compared to the previous year is reported in Section \ref{segment-level}.
+\begin{itemize}
+
+    \item \textbf{System Level.} In the system level subtask, participants
+        compute one score for the whole test set, as translated by each of the
+        systems. We then measure the correlation of those scores with systems'
+        official human scores.  The goal of metrics in this subtask is to give
+        an overall ranking of systems as close as possible to the official
+        ranking according to human scores in each direction.
+    
+    \item \textbf{Segment Level.} In this subtask, participants compute one
+        score for each sentence of each system's translation. We then measure
+        the correlation of these scores with pairwise human judgements. The
+        goal of metrics in this subtask is to compare two candidate segments in
+        the same way as humans would do.
+
+\end{itemize}
+
+In the previous years, a lot of metrics performed very well in the system level
+task. In some of the translation directions, they predicted the overall ranking
+of systems almost perfectly. However, there is still a space for metrics to
+improove.  In contrast to the system level task, the segment level task is much
+more diffcult. The correlations in previous years were very low. It is
+therefore very interesting to see whether metrics perform better this year.
+
+The systems' outputs, human judgements and evaluated metrics are summarized in
+Section \ref{section:data}. In Section \ref{section:metrics:description}, we
+describe the participated metrics in more detail. The quality of the metrics
+in terms of system level correlation is reported in Section \ref{system-level}.
+Segment level correlation with a detailed discussion and a slight change in the
+calculation compared to the previous year is reported in Section
+\ref{segment-level}.
 
 \section{Data}
 \label{section:data}
@@ -70,7 +103,7 @@ can also find inter- and intra-annotator agreement estimates there.
     \begin{tabular}{rl}
       \textbf{Metric} & \textbf{Participant} \\
       \hline
-      \metric{AMBER} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
+      \metric{AMBER} & National Research Council of Canada \parcite{improving:amber} \\
       \metric{APAC} & Hokkai-Gakuen University \parcite{wmt14-metric-apac} \\
       \metric{BEER} & ILLC -- University of Amsterdam \parcite{wmt14-metric-beer} \\
       \metric{BLEU-NRC} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
@@ -106,7 +139,7 @@ metrics as baselines:
     which is used in the OpenMT Evaluation Campaign and includes its own
     tokenization.  We run \texttt{mteval} with the flag
     \texttt{-{}-international-tokenization} since it performs slightly better
-    \parcite{machacek-bojar:2013:WMT}.
+    \parcite{machacek:2013}.
 
 \item \textbf{Moses Scorer.} The metrics \metric{TER} \parcite{Snover06astudy},
     \metric{WER}, \metric{PER} and \metric{CDER} \parcite{Leusch06cder:efficient}
@@ -118,6 +151,127 @@ metrics as baselines:
 \end{itemize}
 
 We have normalized all metrics' scores such that better translations get higher scores. 
+
+\section{Descriptions of the Metrics}
+\label{section:metrics:description}
+
+In this section, we present short descriptions of some interesting metrics which
+participated in the shared task.  Please see the cited papers for more details
+about the metrics. Please note that the description of the \metric{BLEU} metric
+has been already presented in Subsection \ref{enhancing:bleu}.
+
+\subsection{AMBER}
+
+Metric \metric{AMBER} is developed by \perscite{improving:amber}. The abbreviation 
+stands for ``A Modified Bleu, Enhanced Ranking metric''. This metric is based
+on \metric{BLEU} metric because, as the authors explain, \metric{BLEU}
+
+\begin{itemize}
+    \item is language independent,
+    \item can be computed quickly (important for tuning),
+    \item seems to be the best tuning metric.
+\end{itemize}
+
+\noindent They want to improve the correlation with human judgments while
+preserving the advantages which make \metric{BLEU} so popular.
+The basic formula for this metrics follows:
+
+\begin{equation*}
+    AMBER = score \cdot penalty
+\end{equation*}
+
+\noindent where $penalty$ is a weighted geometric average of 10 various penalty
+measures and $score$ is given by:
+
+\begin{equation*}
+    score  = \theta_1 \cdot AvgP
+           + \theta_2 \cdot Fmean 
+           + \theta_3 \cdot AvgF 
+\end{equation*}
+
+\noindent where $AvgP$ is a geometric average of n-gram precisions (this is the
+same as in \metric{BLEU}), $Fmean$ is the F-measure computed on the average
+n-gram precision and average n-gram recall (averages are computed across $n \in
+\{1, \ldots, N\}$). And $AvgF$ is an average (across $n \in \{1, \ldots, N\}$)
+of F-measures computed on n-gram precision and n-gram recall for given $n$.
+
+This is the basic computation but the authors propose many more enhancements,
+for example they propose 8 different preprocessing (normalization and
+tokenization) methods which are used to compute \metric{AMBER} metric on each
+method separately and then return the average of scores computed after applying
+all the methods. All free parameters of this metric were manually tuned on a
+development set.
+
+While we agree that the authors managed to preserve the key properties of
+\metric{BLEU} mentioned above, we think that one of the most popular properties
+of \metric{BLEU} is its implementation simplicity which is definitely not
+preserved in \metric{AMBER}. 
+
+\subsection{BEER}
+
+This metric is proposed by \perscite{wmt14-metric-beer}. Its abbreviation
+stands for ``BEtter Evaluation as Ranking''. Their metric model can employ
+various features which measure the similarity of candidate and reference
+translations from various aspects.  Individual features are then combined using
+a simple linear interpolation of feature functions:
+
+\begin{equation*}
+    score(h,r) = \sum_i w_i \cdot \phi_i(h,r) = \vect{w} \cdot \vect{\phi}(h,r)
+\end{equation*}
+
+They propose two groups of features. For adequacy features, they use precision,
+recall and F1-score features for each of the following entities: function
+words, content words, all words and character n-grams for $n \in \{1, \ldots,
+6\}$. The total number of all adequacy features is 27.
+
+The second group of features are ordering features. They represent orderings as
+permutations. One of the ordering features is Kendall's $tau$ distance to
+monotone permutation. Other 5 ordering features are based on permutation trees
+introduced by \perscite{zhang2007factorization}.
+
+They tune the feature weights to get best correlation with human sentence level
+judgments. Let $h_{good}$ and $h_{bad}$ be two hypothesis translations of a source
+sentence with reference translation $r$ and let $h_{good}$ be ranked better than
+$h_{bad}$ by human judgments.  Given that the metric's model is linear, one can
+derive:
+
+\begin{eqnarray*}
+    score(h_{good},r) > score(h_{bad},r) & \Leftrightarrow & \vect{w} \cdot \vect{\phi}(h_{good},r) > \vect{w} \cdot \vect{\phi}(h_{bad},r) \\
+                                         & \Leftrightarrow & \vect{w} \cdot \vect{\phi}(h_{good},r) - \vect{w} \cdot \vect{\phi}(h_{bad},r) > 0 \\
+                                         & \Leftrightarrow & \vect{w} \cdot \left( \vect{\phi}(h_{good},r) - \vect{\phi}(h_{bad},r) \right) > 0
+\end{eqnarray*}
+
+Using the last equation, a binary classification problem can be formulated.  For
+each human pairwise comparison we have one positive training instance with the
+feature verctor $\vect{\phi}(h_{good},r) - \vect{\phi}(h_{bad},r)$ and one
+negative training instance with the feature vector $\vect{\phi}(h_{bad},r) -
+\vect{\phi}(h_{good},r)$. A regression is than used to train the
+weight vector $\vect{w}$.
+
+Please note, that once the weight vector is trained, there is no need to
+classify a pair of hypothesis when evaluating. A score of a single evaluated hypothesis $h$
+is computed as $\vect{w} \cdot \vect{\phi}(h,r)$.
+
+
+
+
+
+
+\subsection{BLEU-NRC}
+\subsection{CDER}
+\subsection{DiscoTK}
+\subsection{ELEXR}
+\subsection{LAYERED}
+\subsection{Meteor}
+\subsection{NIST}
+\subsection{Parmesan}
+\subsection{PER}
+\subsection{RED}
+\subsection{tBLEU}
+\subsection{TER}
+\subsection{UPC}
+\subsection{VERTa}
+\subsection{WER}
 
 
 \section{System-Level Metric Analysis}
@@ -140,7 +294,6 @@ translation direction:
 the given
 direction, $M$ is the vector of the corresponding scores as predicted by the
 given metric. $\bar{H}$ and $\bar{M}$ are their means respectively.
-
 
 Since we have normalized all metrics such that better translations get higher
 score, we consider metrics with values of Pearson's $r$ closer to 1 as better. 
@@ -353,7 +506,7 @@ The basic formula for Kendall's $\tau$ is:
 given metric suggests the same order and $Discordant$ is the set of all human comparisons for
 which a given metric disagrees. In the original Kendall's $\tau$, comparisons
 with human or metric ties are considered neither concordant nor discordant.
-However in the past, Metrics Tasks (\cite{callisonburch-EtAl:2012:WMT} and
+However in the past, Metrics Tasks (\cite{callisonburch:wmt12} and
 earlier), comparisons with human ties were considered as discordant.
 
 To easily see which pairs are counted as concordant and which as discordant, we
