@@ -175,7 +175,7 @@ computed using the following formula:
 
 The overall ranking of systems, which participated in WMT14 Translation Task in
 English-Czech direction, according to the \metoda{Ratio of wins (ignoring
-ties)} computed on the short segments judgements is reported in the table
+ties)} computed on the short segments judgements is reported in Table
 \ref{all-systems-segranks-results}.
 
 To compare our method with the classic method of judging whole sentences, we
@@ -326,7 +326,7 @@ little more than half of the segments were ranked better also. The table
 \ref{sentence-segments-judgments-correlations-worse} is similar but in reversed
 order.
 
-The influence of a system's quality should be canceled out in the table
+The influence of a system's quality should be canceled out in Table
 \ref{sentence-segments-judgments-correlations-all}. You can see, that systems
 cu-bojar and onlineB have the Kendall's $\tau$ lower (although not the lowest).
 This, together with the fact that both systems lie in a cluster of systems of
@@ -435,22 +435,23 @@ sentence-level judgments are much more serious problem.
 \section{Evaluating New Systems}
 \label{evaluating-new-systems}
 
-Machine translation systems often translate a given short source segment identically.
-This was one of our main motivations for ranking translations of short segments.
-As you saw in the previous chapter, evaluating the annotated systems using the
-short segments annotations works even it has some shortcomings.  It would be
-very useful if we could use the database of annotations to evaluate also yet
-unseen systems. The more annotated systems we have in the database the more
-likely it is that an unseen MT system produce a translation of a short segment
-which is already in the database. We will call this situation a \metoda{hit},
-if the translated segment is not already annotated, we will call it a
-\metoda{miss}.
+Machine translation systems often translate a given short source segment
+identically.  This was one of our main motivations for ranking translations of
+short segments.  As you saw in the previous chapter, evaluating the annotated
+systems using the short segments annotations works reasonably well (despite
+there are some shortcomings as described above).  It would be very useful if we
+could use the database of annotations to evaluate also unseen systems. The more
+annotated systems we have in the database the more likely it is that an unseen
+MT system produces a translation of a short segment which is already in the
+database. We will call this situation a \metoda{hit}.  If the translated
+segment is not already annotated, we will call it a \metoda{miss}.
 
 Because we didn't have any spare systems which were not annotated, we did the
-following trick: in each step we choose one system and removed its segments
+following trick: in each step, we choose one system and removed its segments
 from the database of annotations. Then we consider this system as unseen and
 tried to match the system's segments with the segments left in the database. We
-call this trick \metoda{leave-one-out}.
+call this trick \metoda{leave-one-out}. In essence, it is very similar to
+standard cross validation.
 
 \begin{table}
   %\begin{center}
@@ -638,8 +639,8 @@ call this trick \metoda{leave-one-out}.
 
     \caption[Results of evaluating unseen systems by exact matching]{The
       results of evaluating unseen systems using the exact matching and the
-      \metoda{leave-one-out} trick. Each subtable is marked by the leaved
-      system.  You can also see the hit rates. The table for system uedin-wmt14
+      \metoda{leave-one-out} trick. Each subtable is marked by the left-out
+      system.  You can also see the hit rates. The table for the system uedin-wmt14
       is omitted for the sake of brevity.}
 
   \label{one-out-results}
@@ -652,29 +653,29 @@ The most obvious way to evaluate an unseen translation is to compute the
 \metoda{Ratio of wins (ignoring ties)} of all the systems (including the unseen
 one) only on the hit segments. We extracted the pairwise comparisons from all
 the segment annotations where the segment of the unseen system was hit and
-computed the \metoda{Ratio of wins (ignoring ties)} only on that extracted
+computed the \metoda{Ratio of wins (ignoring ties)} only on such extracted
 comparisons. We performed this experiment for all the systems using the
 \metoda{leave-one-out} trick.
 
-You can see the results of this experiment in the table \ref{one-out-results}.
-We also report \metoda{hit} rate, which is the ratio of hits to all (miss +
-hits).
+You can see the results of this experiment in Table \ref{one-out-results}.
+We also report \metoda{hit} rate, which is the ratio of hits to all relevant
+segments (miss + hits).
 
 The average hit rate is 58.8 \% which is above our expectation. However, as you
-can see, the hit rate varies a lot across the leaved out systems. This is
+can see, the hit rate varies a lot across the systems that were left out. This is
 caused by the fact, that some systems are very similar, they use the same tools
 and/or training data. For example all the systems cu-bojar, cu-depfix, cu-funky
 are based on the Moses SMT toolkit and their hit rates are very high (0.74 ---
 0.93).
 
-As you can see the obtained orderings of the systems are not very good. The
-winning system in each of the tables is that which was leaved out. Which is
-obviously wrong. Besides that, systems similar to the leaved out system in each
-system gets also much better rank. For example, when the leaved system is one
-of the systems cu-bojar, cu-depfix and cu-funky, the other two of this group
-are right bellow the leaved out system. This could be explained by the
-following statement: MT systems are more likely to agree on a good translation
-of a segment than on a bad translation.
+As you can see, the obtained orderings of the systems are not very good. The
+winning system in each of the tables is the one that which was left out. This
+is obviously wrong. Besides that, systems similar to the left-out one get also
+a much better rank. For example, when the left-out system is one of the systems
+cu-bojar, cu-depfix and cu-funky, the other two of this group are right below
+the left-out system. This could be explained by the following statement: MT
+systems are more likely to agree on a good translation of a segment than on a
+bad translation.
 
 To support this statement we have performed an analysis of some sentences from
 the test set. In the following examples of sentences, we have marked the hit
@@ -967,9 +968,9 @@ segment, we pick one of them randomly.
 
 \caption[Results of evaluating unseen systems by edit distance matching]{The results of
   evaluating unseen systems using the edit distance matching and
-  \metoda{leave-one-out} trick. Each subtable is marked by the leaved system.
+  \metoda{leave-one-out} trick. Each subtable is marked by the left-out system.
   The abbreviation AED stands for average edit distance which is computed
-across all segments . The table for system uedin-wmt14 is omitted for the sake
+across all segments . The table for the system uedin-wmt14 is omitted for the sake
 of brevity.}
 
   \label{edit-distance-results}
@@ -977,13 +978,13 @@ of brevity.}
 
 Similarly to the previous experiment we extracted the pairwise comparisons and
 computed the \metoda{Ratio of wins (ignoring ties)}. You can see the results
-tabulated in the table \ref{edit-distance-results}. For each leaved out system,
+tabulated in Table \ref{edit-distance-results}. For each left-out system,
 we also report the average edit distance (AED) of the unseen segments to the closest
 segments in the database.
 
 The overall rankings of the systems are much more reasonable compared to the
 exact matching, although they are still not perfect. The scores of systems
-which were leaved out are not always the best in the obtained rankings but they
+which were left out are not always the best in the obtained rankings but they
 are still heavily overestimated. This shows not only that systems are more
 likely to agree on the better translations than on the worse ones, but also
 that they produce translations which are closer to better translations than to
@@ -993,7 +994,7 @@ are points around the good translation. Now let's have a few points around the
 good translation representing the translations in the database. When we get a
 new point it is quite likely in this high-dimensional space that the closest
 point is the good translation. You can see an illustration of this situation in
-two dimensions in the figure \ref{translation-space-illustration}. \XXX{Neni to
+two dimensions in Figure \ref{translation-space-illustration}. \XXX{Neni to
 uz moc velke fantazirovani?} If we do not have enough candidates in the
 database it is quite likely that for a given unseen candidate the closest
 candidate is the good translation and not any other candidate translation of
@@ -1022,7 +1023,7 @@ commercial2 have the highest AEDs. This could be explained by the fact that
 both of the systems are rule based and produce dissimilar translations to those
 generated by the statistical based systems. It is, however, interesting that
 their translations are not even similar to each other. You can see the distribution of the absolute
-counts with respect to the edit distance plotted in the figure
+counts with respect to the edit distance plotted in Figure
 \ref{absolute-counts-per-distance}.
 
 \begin{figure}
@@ -1039,14 +1040,14 @@ counts with respect to the edit distance plotted in the figure
 
 To support the above statement (that the closest segment to an unseen candidate
 is more likely to be of better quality) we have performed the following
-analysis: For each leaved out system we computed how often the closest segment
+analysis: For each left-out system we computed how often the closest segment
 has better, equal or worse rank than the ``unseen'' segment (We can actually do
 that, because we know the true rank of the segment removed from the database).
 We computed these relative frequencies only on the missed segments (the closest
 segment was not the same segment). You can see this analysis performed for the
-individual systems in the table \ref{edit-distance-matching-analysis}.  You can
+individual systems in Table \ref{edit-distance-matching-analysis}.  You can
 also see how these relative frequencies change with with a change of the edit
-distance in the figure \ref{better-worse-equal-with-edit-distance}. More than a
+distance in Figure \ref{better-worse-equal-with-edit-distance}. More than a
 half of the closest segments has better rank than the original segments and
 only 20.6 \% of the segments have the same rank. This is really very poor
 because it means that our approximation method which ranks unseen translations
@@ -1054,7 +1055,7 @@ has the accuracy only 20.6 \%. This accuracy does not differ much for
 individual systems but there is an expected trend of similar systems (cu-bojar,
 cu-depfix) having this accuracy slightly higher. 
 
-As you can see in the figure \ref{better-worse-equal-with-edit-distance} the
+As you can see in Figure \ref{better-worse-equal-with-edit-distance} the
 relative number of closest systems which are ranked better grows quite
 significantly with the edit distance. The relative number of the worse segments
 is quite stable (around 0.3) and does not change significantly with the edit
@@ -1110,7 +1111,7 @@ systems.}
 
 
 
-We also listed a few example candidate segments in the table
+We also listed a few example candidate segments in Table
 \ref{segments-closest} together with the corresponding closest segments from
 the database and their distances. We also report whether the closest segment
 was ranked better, equal or worse than the ``unseen'' one.
@@ -1293,7 +1294,7 @@ rewarded for having n-grams which are also in the good segment translations in
 the database.
 
 You can see the overall rankings of the evaluated systems as given by
-\metric{SegRanksBLEU} and \metric{BLEU} in the table
+\metric{SegRanksBLEU} and \metric{BLEU} in Table
 \ref{segranksbleu:experiment}. As expected, the \metric{SegRanksBLEU} scores
 are really much higher than \metric{BLEU}. However, the reported system level
 correlations of these two metrics are almost equal (correlation of
@@ -1436,7 +1437,7 @@ candidate $e$. This means, that each candidate $e$ specifies a line given by
 the equation $x = t(e,f) + \gamma \cdot m(e,f)$ which computes the candidate
 score for the parameter $\gamma$. The argmax operator in the equation
 \eqref{eq:argmax} then choose the candidate whose line is the highest in a
-given $\gamma$. You can see this situation illustrated in the figure
+given $\gamma$. You can see this situation illustrated in Figure
 \ref{fig:lines}.  The line optimization method finds all the intersections of
 the lines where the best candidate (with the highest model score) changes. The
 intersections found for each sentence in the heldout data are then merged to
@@ -1559,7 +1560,7 @@ caused by a bug in the code) so we had to get along without the alignment.
 The naive approximation is to just test whether the ranked candidate segments
 from the database also occurs in evaluated sentences. The first metric we use
 in MERT experiment is therefore very similar to the \metoda{Exact Matching}
-method in the section \ref{exact:matching}. For each ranked source segment we
+method in Section \ref{exact:matching}. For each ranked source segment we
 test if any of its candidate segment occurs in the evaluated sentence. If it
 does we extract all pairwise comparisons inferred from the matched segment. If
 more candidate segments occurs in the evaluated translation, we choose the
@@ -1583,7 +1584,7 @@ therefore computed on a very small fraction of the development set and did not
 reflect the overall quality of the translation.
 
 Since we do not have the alignment and cannot extract the candidate segments
-exactly, we unfortunately cannot use the method introduced in the subsection
+exactly, we unfortunately cannot use the method introduced in Subsection
 \ref{match:editdistance} which matches the closest segment in the database by
 edit distance.  To avoid the shortcomings of the \metric{ExactMatch} metric
 (the metric is not computed on all the extracted source segments and an unseen
@@ -1597,14 +1598,14 @@ lot of segments which were already ranked (even badly) or a system which
 produces a lot of unranked segments which we hope to be of better quality.
 
 The last variant we experiment with is \metric{SegRanksBLEU} metric introduced
-in subsection \ref{enhancing:bleu}. Because this metric is already based on
+in Subsection \ref{enhancing:bleu}. Because this metric is already based on
 BLEU metric (and use the reference translation) we do not interpolate it with
 BLEU anymore.
 
 
 \subsubsection{Results and Analysis}
 
-You can see the results of the tuned system in the table \ref{mert:results}. We
+You can see the results of the tuned system in Table \ref{mert:results}. We
 used the tuned systems to translate the test set (newstest2012) and then we
 evaluated these translations automatically and manually. For the automatic
 evaluation we used metrics \metric{BLEU} \parcite{Papineni02bleu:a} and
@@ -1663,7 +1664,7 @@ sentences compared to the baseline in the manual evaluation.}
 
 To see the differences between \metric{ExactMatch} and
 \metric{PenalizeUnknown}, we have plotted the values of hit rates computed in
-each MERT iteration in the figure \ref{hit:rates:plot}. You can see that
+each MERT iteration in Figure \ref{hit:rates:plot}. You can see that
 \metric{PenalizeUnknown} gets to the hit rate 0.7 very quickly (in the sixth
 iteration) and its growth is quite stable. This is however expected, since the
 objective function also indirectly optimizes the hit rate. The hit rate in
