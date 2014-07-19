@@ -780,15 +780,18 @@ We would like to compute the scores on all the annotated segments to avoid the
 problem from the previous subsection. A natural way to approximate the
 ``correct'' ranks of unseen segments is to use the rank of the segment from the
 database with the closest edit distance. We use the character based Levenshtein
-distance which is defined as the minimum number of insertion, deletion and
-substitution of characters required to transform a given string to another:
+distance which is defined as the minimum number of insertions, deletions and
+substitutions of characters required to transform a given string to another:
 
 \begin{equation*}
-  lev(a,b) = \#insertions + \#delition + \#substitution
+    lev(a,b) = \min_{e \in E(a,b)} \left( D(e) + S(e) + I(e) \right)
 \end{equation*}
 
-\noindent If more segments in the database has the minimal distance to the ``unseen'' 
-segment, we pick one of them randomly.
+\noindent where $E(a,b)$ denotes a set of all sequences of edit operations
+which transform the string $a$ to the string $b$, and $D(e)$, $S(e)$, $I(e)$
+denote number of deletions, substitutions and insertions respectively in the
+sequence $s$. If more segments in the database has the minimal distance to the
+``unseen'' segment, we pick one of them randomly.
 
 
 \begin{table}

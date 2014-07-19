@@ -106,7 +106,7 @@ can also find inter- and intra-annotator agreement estimates there.
       \metric{AMBER} & National Research Council of Canada \parcite{improving:amber} \\
       \metric{APAC} & Hokkai-Gakuen University \parcite{wmt14-metric-apac} \\
       \metric{BEER} & ILLC -- University of Amsterdam \parcite{wmt14-metric-beer} \\
-      \metric{BLEU-NRC} & National Research Council of Canada \parcite{wmt14-metric-amber} \\
+      \metric{BLEU-NRC} & National Research Council of Canada \parcite{wmt14-metric-bleunrc} \\
       \metric{DiscoTK-*} & Qatar Computing Research Institute \parcite{wmt14-metric-discotk} \\
       \metric{ELEXR} & University of Tehran \parcite{wmt14-metric-elexr} \\
       \metric{LAYERED} & IIT, Bombay \parcite{wmt14-metric-layered} \\
@@ -243,7 +243,7 @@ derive:
 
 Using the last equation, a binary classification problem can be formulated.  For
 each human pairwise comparison we have one positive training instance with the
-feature verctor $\vect{\phi}(h_{good},r) - \vect{\phi}(h_{bad},r)$ and one
+feature vector $\vect{\phi}(h_{good},r) - \vect{\phi}(h_{bad},r)$ and one
 negative training instance with the feature vector $\vect{\phi}(h_{bad},r) -
 \vect{\phi}(h_{good},r)$. A regression is than used to train the
 weight vector $\vect{w}$.
@@ -254,24 +254,152 @@ is computed as $\vect{w} \cdot \vect{\phi}(h,r)$.
 
 
 
-
-
-
 \subsection{BLEU-NRC}
+
+Original \metric{BLEU} is not very suitable for evaluating single sentences. It
+can easily happen that for a higher values of $n$, no n-gram from the candidate
+does not match the reference translation. The precision is then zero and since
+the \metric{BLEU} score is computed as the geometric average, it is also zero.
+A lot of sentence therefore gets zero scores even they can be meaningful. There
+is also a problem with very short sentences for which the precisions of higher
+$n$ values could be undefined. To compute \metric{BLEU} on sentence level, one
+has to smooth the precision values.
+
+Let $m_n$ be the clipped count of n-grams occurring in the both reference and
+candidate translations and let $l_n$ be the total count of n-grams in the
+candidate. In original \metric{BLEU}, the precision is computed as $p_n = m_n /
+l_n$. When smoothing, a modified clipped count $m_n'$ is computed and then the
+precision is computed as $p_n = m_n' / l_n$. 
+
+\perscite{wmt14-metric-bleunrc} compare various smoothing methods and choose
+the method with correlates best with sentence level judgments. Their best
+performing smoothing method is a combination of two methods. They compute first
+modified counts $m_n'$ and based on them, they compute second modified counts
+$m_n''$.
+
+The first modified counts are computed using the following algorithm:
+\begin{algorithmic}[1] \Let{$invcnt$}{$1$} \For{$n$ \textbf{in} 1 \textbf{in}
+    $N$} \If{$m_n = 0$} \Let{$invcnt$}{$invcnt \cdot \frac{K}{\ln(\len(c))}$}
+    \Let{$m_n'$}{$1 / invcnt$} \Else \Let{$m_n'$}{$m_n$} \EndIf \EndFor
+\end{algorithmic} where $K$ is set empirically (they use $K = 5$). The
+assignment in the line 4 means that for shorter sentences, the smoothed clipped
+counts are smaller. The motivation for this is the fact that the denominator in
+the precision computation is smaller for shorter sentences and therefor the
+numerator should be also smaller so that precisions for shorter sentences are
+not inflated. However, we think that this allows to game the metric by
+producing very long sentences with no n-gram matched: if $\len{c} > e^K$, than
+the variable $invcnt$ will decrease and the clipped counts $m_n'$ will
+therefore increase. For each positive real number, there exists a sentence
+length which would ensure the metric score to be higher than the given number.
+We, however, do not consider this as a serious problem.
+
+The second smoothing technique used on top of the first method is inspired by
+the intuition that matched counts for similar values of $n$ should be similar.
+This method therefore computes the modified matched counts as an average of
+neighbouring clipped counts. The authors define $m_0'' = m_1' + 1$ and
+calculate $m_n''$ for $n > 0$ as follows:
+
+\begin{equation*}
+    m_n'' = \frac{
+        m''_{n-1} + m_n' + m_{n+1}'
+    }{
+        3
+    }
+\end{equation*}
+
+Finally, the n-gram precisions and BLEU score are computed from the modified
+clipped counts $m_n''$.
+
+For completeness, we also report how the \metric{BLEU} metric is smoothed in
+the Moses MERT implementations since it is used for computing a baseline metric
+\metric{sentBLEU} in the segment-level results. To both the numerator and denominator
+in the precision computation, a one is added:
+\begin{equation*}
+    p_n = \frac{
+        m_n + 1
+    }{
+        l_n + 1
+    }
+\end{equation*}
+
+\subsection{WER}
+
+Word Error Rate metric is based on an edit distance. It is similar to the Levenshtein
+distance but the edit operations work with tokens instead of characters and the edit
+distance is normalized by the length of the reference $r$:
+
+\begin{equation*}
+    WER(c,r) = \frac{
+        \min_{e \in E(c,r)} \left( D(e) + S(e) + I(e) \right)
+    }{
+        |r|
+    }
+\end{equation*}
+
+\noindent where $E(c,r)$ denotes a set of all sequences of edit operations
+which transform the candidate $c$ to the reference $r$, and $D(e)$, $S(e)$,
+$I(e)$ denote number of deletions, substitutions and insertions of tokens
+respectively in the sequence $s$.
+
+The minimal sequence can be easily computed using a dynamic programing algorithm.
+This computation can be visualized with an alignment grid which you can see
+in Figure \ref{wer-grid}.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=10cm]{img/wer-grid.pdf}
+    \end{center}
+
+    \caption{An example of WER alignment grid}
+    \label{wer-grid}
+\end{figure}
+
 \subsection{CDER}
+
+The abbreviation of this metric stands for ``Cover Disjoint Error Rate'' and it
+is developed by \perscite{Leusch06cder:efficient}. This metric is similar to
+\metric{WER} in that it is also an edit distance based metric. In addition the
+insertions, substitutions and deletions, \metric{CDER} also allows long jumps.
+The long jump is an operation in which we move in an alignment grid to any
+position in the candidate (we can get to any position in an actual row of the
+alignment grid for a unit price). This simulates movements of blocks (longer
+sequences of tokens) and it is motivated by that block movements should not be
+penalized so harshly. The \metric{CDER} is computed as follows:
+
+\begin{equation*}
+    CDER(c,r) = \frac{
+        \min_{e \in E(c,r)} \left( D(e) + S(e) + I(e) + LJ(e) \right)
+    }{
+        |r|
+    }
+\end{equation*}
+
+\noindent where $E(c,r)$ denotes a set of all sequences of edit operations
+which transform the candidate $c$ to the reference $r$, and $D(e)$, $S(e)$,
+$I(e)$, $LJ(e)$ denote number of deletions, substitutions, insertions and long
+jumps respectively in the sequence $s$. You can see an example of an alignment grid with
+long jumps in Figure \ref{cder-grid}.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=12cm]{img/cder-grid.pdf}
+    \end{center}
+
+    \caption{An example of CDER alignment grid with long jumps}
+    \label{cder-grid}
+\end{figure}
+
 \subsection{DiscoTK}
 \subsection{ELEXR}
 \subsection{LAYERED}
 \subsection{Meteor}
-\subsection{NIST}
-\subsection{Parmesan}
-\subsection{PER}
-\subsection{RED}
-\subsection{tBLEU}
-\subsection{TER}
+%\subsection{NIST}
+%\subsection{Parmesan}
+%\subsection{PER}
+%\subsection{RED}
+%\subsection{tBLEU}
 \subsection{UPC}
 \subsection{VERTa}
-\subsection{WER}
 
 
 \section{System-Level Metric Analysis}
