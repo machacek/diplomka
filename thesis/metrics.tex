@@ -390,6 +390,24 @@ long jumps in Figure \ref{cder-grid}.
 \end{figure}
 
 \subsection{DiscoTK}
+
+\metric{DiscoTK} metric family is developed by \perscite{wmt14-metric-discotk}.
+Its abbreviation stands for ``Discourse Tree Kernel''. The basic princip is
+that both reference and candidate translations are parsed to discourse parse
+trees which are then compared using convolution tree kernels. There are 5
+different discourse tree representations, all of them are compared and
+normalized kernels scores are then averaged with uniform weights to get the
+\metric{DiscoTK-light} score.  Please see the paper for more details.
+
+One of the weaknesses of the above discourse-based metrics is that they use
+unigram lexical information, which does not capture reordering. To make a more
+robust metric, \perscite{wmt14-metric-discotk} combined the above five measures
+with twelve more metrics implemented by \perscite{gimenez2010linguistic} in the
+\textsc{Asiya} toolkit.\footnote{\url{http://nlp.lsi.upc.edu/asiya/}}. The 17
+measures in total are then averaged with uniform weights to get
+\metric{DiscoTK-party} score. The second variant of this metric,
+\metric{DiscoTK-party-tuned}, averages the measures with tuned weights.
+
 \subsection{ELEXR}
 \subsection{LAYERED}
 \subsection{Meteor}
