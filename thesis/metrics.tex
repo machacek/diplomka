@@ -408,9 +408,161 @@ measures in total are then averaged with uniform weights to get
 \metric{DiscoTK-party} score. The second variant of this metric,
 \metric{DiscoTK-party-tuned}, averages the measures with tuned weights.
 
-\subsection{ELEXR}
 \subsection{LAYERED}
+
+\metric{LAYERED} is developed by \perscite{wmt14-metric-layered}. Its name
+comes from combining metrics on various linguistic layers:
+
+\begin{itemize}
+
+    \item \textbf{Lexical Layer.} The authors decided to use ordinary
+        \metric{BLEU} from this layer.
+
+    \item \textbf{Syntactic Layer.} \metric{LAYERED} employs three metrics
+        working on this layer, 
+        all of them are permutation based
+        metrics and therefore consider only reordering of words. Permutations
+        are constructed from source-candidate and source-reference alignments.
+        The first two metrics are designed by \perscite{birch2011reordering}.
+
+        The first metric is Hamming Score (HAMMING) which is a normalized
+        Hamming distance defined as the number of disagreements between two
+        permutations: $\left| \left\{ i \in \{1 \ldots n\} \mid \pi(i) \ne
+        \sigma(i) \right\} \right|$. 
+
+        The second metric is Kendall's $\tau$ distance (\metric{KTD}) which
+        measures the minimum number of transpositions of two adjacent symbols
+        necessary to transform one permutation into another.
+        
+        The last metric
+        is Spearman rank correlation coefficient (\metric{SPEARMAN}) which
+        measures how much is the permutation between the candidate and the
+        reference monotone. (We also use Spearman rank correlation coefficient
+        for the metrics evaluation. You can find the exact definition later in
+        this chapter).
+
+    \item \textbf{Semantic Layer.} There are two metrics working on this layer.
+        Both of them compute precision and recall of matched dependencies in
+        candidate and reference parse trees and then average them to get a
+        single score.\footnote{A question is why the authors do not use
+            F-measure which is usually used to combine precision and recall.
+        They even do not use the terms precision and recall and instead they
+    define the concepts of precision and recall using a textual entailment
+concept.}  The first metric (\metric{SHALLOW}) uses the Stanford dependency
+parser \parcite{Marneffe06generatingtyped} to generate the dependencies. The
+second metric (\metric{DEEP}) uses the UNL dependency graph generator to
+construct the dependencies.
+
+\end{itemize}
+
+All the metrics from all layers are then linearly combined (using tuned weights)
+to get a final \metric{LAYERED} score: 
+
+\begin{eqnarray*}
+    LAYERED & = & 0.26 \cdot BLEU + 0.13 \cdot HAMMING + 0.03 \cdot KTD \\ 
+            & + & 0.04 \cdot SPEARMAN + 0.28 \cdot SHALLOW + 0.26 \cdot DEEP 
+\end{eqnarray*}
+
 \subsection{Meteor}
+
+\metric{Meteor} \parcite{wmt14-metric-meteor} evaluates candidate translations
+in two phases. In the first phase, it aligns a candidate translation to a
+reference translation. In the second phase, a sentence level similarity score
+is computed using the constructed alignment. 
+
+When aligning the candidate and the reference translations, the words
+(sometimes phrases) in the candidate are matched to the words (phrases) in the
+reference using the following matchers:
+
+\begin{itemize}
+    \item \textbf{Exact:} Matches words if their surface forms are identical.
+    \item \textbf{Stem:} Matches words if their stem is identical. A language appropriate
+        stemmer is used.
+    \item \textbf{Synonym:} Matches words if both of them are in any synonym set according 
+        to the WordNet database.
+    \item \textbf{Paraphrase:} Matches phrases if they are listed in a language appropriate 
+        paraphrase table. These tables can be automatically extracted from ordinary phrase tables
+        used in statistical machine translation. 
+\end{itemize}
+
+Since there could be more possible alignments, the final alignment is then
+resolved as the largest subset of all matches which meet the following
+criteria:
+
+\begin{enumerate}
+    \item Each word in each sentence has to be covered by zero or one match.
+    \item The total number of matched words in each sentence is maximal.
+    \item The number of chunks is minimal (chunk is a contiguous sequence of
+        candidate words which is monotonically mapped to a contiguous
+        sequence of reference words).
+    \item An alignment with less total sum of absolute distances between positions
+        of aligned words is preferred. 
+\end{enumerate}
+
+The \metric{METEOR} for an aligned sentence is then computed as follows. Let
+$h_c$ and $h_f$ be content words and function words respectively in the
+hypothesis (candidate translation), and similarly let $r_c$ and $r_f$ be
+content and function words in the reference. For each of the matchers $m_i$
+defined above, let $m_i(h_c)$, $m_i(h_f)$ be the counts of matched content and
+function words in the hypothesis and similarly let $m_i(r_c)$, $m_i(r_f)$ be
+the counts of matched content and function words in the reference. Finally
+a weighted precision and recall are computed:
+
+\begin{equation*}
+    P = \frac{
+        \sum_i w_i \cdot ( \delta \cdot m_i(h_c) + (1-\delta) \cdot m_i(h_c))
+    }{
+        \delta \cdot |h_c| + (1-\delta) \cdot |h_f|
+    }
+\end{equation*}
+
+\begin{equation*}
+    R = \frac{
+        \sum_i w_i \cdot ( \delta \cdot m_i(r_c) + (1-\delta) \cdot m_i(r_c))
+    }{
+        \delta \cdot |r_c| + (1-\delta) \cdot |r_f|
+    }
+\end{equation*}
+
+\noindent where $w_1 \ldots w_n$ are weights of the matchers and $\delta$ is a weight
+controlling the importance of content words over function words.
+Using the computed precision and recall, a F mean is computed:
+\begin{equation*}
+    F_{mean} = \frac{
+        P \cdot R
+    }{
+        \alpha \cdot P + (1 - \alpha) \cdot R
+    }
+\end{equation*}
+
+\noindent Finally, the \metric{Meteor} score is computed as follows:
+
+\begin{equation*}
+    METEOR = (1-Pen)\cdot F_{mean}
+\end{equation*}
+
+\noindent where $Pen$ is a fragmentation penalty calculated as 
+
+\begin{equation*}
+    Pen = \gamma \cdot \left( \frac{ch}{m} \right)^\beta
+\end{equation*}
+
+\noindent where $ch$ is the number of chunks (as defined above) and $m$ is the
+total number of matched words. All the parameters $\alpha$, $\beta$, $\gamma$,
+$\delta$ and $w_1 \ldots w_n$ are tuned to maximize correlation with human
+judgments.
+
+Some of the \metric{Meteor} components needs language specific resources.
+While some of the resources are limited to one or a few languages, other
+resources can be easily trained from bilingual or monolingual data. For
+example, the list of function words consists of all words with relative
+frequency above a certain treshold. Paraphrase tables are constructed with a
+simple method from a phrase table. The weights are tuned for each language
+direction independently, however, developers of \metric{Meteor} have also tuned
+an universal set of weights which can be used for any language direction. This
+is the case, for example, for directions from Russian and Hindi (The results
+for these directions are also very poor).
+
 %\subsection{NIST}
 %\subsection{Parmesan}
 %\subsection{PER}
@@ -804,10 +956,8 @@ however, we are also reporting average scores computed by other variants.
   \caption[Segment-level correlations when translating into
   English]{Segment-level Kendall's $\tau$ correlations of automatic evaluation
       metrics and the official WMT human judgements when translating into
-      English.  The last three columns contain average Kendall's $\tau$
-  computed by other variants.  The symbol ``$\wr$'' indicates where the
-  averages of other variants are out of sequence compared to the WMT14
-  variant.}
+      English.
+  }
 
   \label{segment-level-correlations-toEn}
 \end{sidewaystable*}
@@ -840,10 +990,8 @@ however, we are also reporting average scores computed by other variants.
   \caption[Segment-level correlations when translating out of
   English]{Segment-level Kendall's $\tau$ correlations of automatic evaluation
       metrics and the official WMT human judgements when translating out of
-      English.  The last three columns contain average Kendall's $\tau$
-  computed by other variants.  The symbol ``$\wr$'' indicates where the
-  averages of other variants are out of sequence compared to the WMT14
-  variant.}
+      English.
+ }
 
   \label{segment-level-correlations-fromEn}
 \end{sidewaystable*}
@@ -931,13 +1079,14 @@ The final Kendall's $\tau$ results are shown in Table
 \ref{segment-level-correlations-fromEn} for directions out of English.  Each
 row in the tables contains correlations of a metric in given directions. The
 metrics are sorted by average correlation across translation directions.  The
-highest correlation in each column is in bold.  The tables also contain average
-Kendall's $\tau$ computed by other variants including the variant WMT13 used
-last year.  Metrics which did not compute scores in all directions
-are at the bottom of the tables. The possible values of $\tau$ range between -1
-(a metric always predicted a different order than humans did) and 1 (a metric
-always predicted the same order as humans). Metrics with a higher $\tau$ are
-better.
+highest correlation in each column is in bold. Table
+\ref{kendall-other-variants-toEn} and Table \ref{kendall-other-variants-fromEn}
+contain average Kendall's $\tau$ computed by other variants including the
+variant WMT13 used last year.  Metrics which did not compute scores in all
+directions are at the bottom of the tables. The possible values of $\tau$ range
+between -1 (a metric always predicted a different order than humans did) and 1
+(a metric always predicted the same order as humans). Metrics with a higher
+$\tau$ are better.
 
 We also computed empirical confidence intervals of Kendall's $\tau$ using bootstrap
 resampling. We varied the ``golden truth'' by sampling from human judgments. We
