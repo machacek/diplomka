@@ -23,7 +23,7 @@ ranks ${1 \ldots N+1}$, where $N$ is the count of unique candidate segments.
 $N$ ranks which could be all occupied when there were no ties. The rank $N+1$
 represents the ``garbage'' category from the annotation application. However in
 all of our experiments reported in this thesis we consider this category simply as one
-more, the worst, rank). A lower rank of a segment means that the candidate
+more rank, the worst one). A lower rank of a segment means that the candidate
 segment was ranked better. This is an example \metoda{segment annotation} of a
 source segment ``the huge volume'':
 
@@ -40,7 +40,7 @@ We expanded these segment annotations with the information about the systems
 which produced the segments. The ranks in the annotations are now indexed by
 the system names.  If more systems translated a source segment as the same
 candidate segment, the candidate segment's rank is copied to all the systems.
-This is the time when we take advantage of ranking short segments which are
+At this point we take advantage of ranking short segments which are
 often translated identically.  The following is the \metoda{system annotation}
 after expansion of the above \metoda{segment annotation}:
 
@@ -63,8 +63,8 @@ These rankings are now very similar to those obtained in the official WMT human
 evaluation. These annotations are mostly interpreted as pairwise systems'
 comparisons (for each combination of size 2 of all systems we have a pairwise
 comparison), where the absolute values of the ranks and their absolute
-differences between them are not considered. From above \metoda{system
-annotation}, the following \metoda{pairwise comparisons} are be extracted (only
+differences between them are not considered. From the above \metoda{system
+annotation}, the following \metoda{pairwise comparisons} are extracted (only
 a few extracted pairwise comparisons are listed here for the sake of brevity,
 generally $N \times (N-1) / 2$ pairwise comparisons are extracted, where $N$ is
 number of all systems):
@@ -164,8 +164,8 @@ computed using the following formula:
 
   \caption[Overall system rankings computed on short segment judgments]{Overall
     rankings of systems according to \metoda{Ratio of wins (ignoring ties)}
-    score. You can see the results computed on both short segments judgements
-    and on official WMT14 human judgements side by side to compare the
+    score. You can see the results computed on short segments judgements
+    and the results computed on the official WMT14 human judgements side by side to compare the
   differences.}
 
   \label{all-systems-results}
@@ -173,32 +173,32 @@ computed using the following formula:
 
 \subsection{Results}
 
-The overall ranking of systems, which participated in WMT14 Translation Task in
+The overall ranking of systems which participated in WMT14 Translation Task in
 English-Czech direction, according to the \metoda{Ratio of wins (ignoring
-ties)} computed on the short segments judgements is reported in Table
+ties)} computed on the short segments judgements, is reported in Table
 \ref{all-systems-segranks-results}.
 
 To compare our method with the classic method of judging whole sentences, we
 have also computed the \metoda{Ratio of wins (ignoring ties)} on the judgements
-collected during WMT14 manual evaluation. You can see these results in the
-table \ref{all-systems-wmt-results}.
+collected during WMT14 manual evaluation. You can see these results in
+Table \ref{all-systems-wmt-results}.
 
 You can notice that the range of scores computed on the short segments
-judgements is much narrower (0.35 --- 0.58) than the range of scores computed
+judgements is much more narrow (0.35 --- 0.58) than the range of scores computed
 on the sentence judgements (0.28 --- 0.61). This can be explained by the
-following: If system A beats system B in a sentence-level judgement of a
+following: if system A beats system B in a sentence-level judgement of a
 particular sentence it does not necessarily mean that in segment-level judging
 system A will be better than system B on all segments of the sentence. System A
 will be probably better on a majority of the segments (but even that does not
 have to be always true). When computing the ratio of wins on the sentence-level
 judgements, system A gets one win and system B gets one loss. However, when
-computing the ratio of wins on the segment-level system A gets for example two
+computing the ratio of wins on the segment-level system A gets for instance two
 wins and one loss, system B one win and two losses. It should be clear now that
 computing expected wins on the sentence-level judgements is coarser while our
 method is more fine-grained.  \XXX{Co z toho vlastne plyne? Je to dobre, nebo
 spatne?}
 
-The overall rankings of systems obtained by both of the methods are very
+The overall rankings of the systems obtained by both of the methods are very
 similar. However, there are two changes when comparing to the sentence-level
 judgments results: system online-B is better and system cu-bojar is worse
 according to the segments-level judgments results. We try to explain this in 
@@ -222,10 +222,10 @@ The basic formula for Kendall's $\tau$ is:
 of pairwise rankings agrees with each other and $Discordant$ is the set of
 pairwise combination where the sets do not agree in pairwise ranking.
 \XXX{mozna vyhodit predchozi vetu}  We will discuss the Kendall's $\tau$ in
-more details in chapter \ref{metrics}. Here, we computed $|Concordant|$ as the
+more detail in chapter \ref{metrics}. Here, we computed $|Concordant|$ as the
 number of pairwise segment-level judgments which agrees with the corresponding
 sentence-level judgment. Similarly, $|Discordant|$ is the number of those which
-does not agree with the corresponding sentence-level judgment. In this section,
+do not agree with the corresponding sentence-level judgment. In this section,
 we do not consider any tied pairwise comparisons.
 
 \begin{table}
@@ -299,12 +299,12 @@ we do not consider any tied pairwise comparisons.
   \caption[Correlations between the segment-level judgments and sentence-level
   judgments]{Kendall's $\tau$ correlations between the segment-level and
     sentence-level judgments. For a given system we computed the correlation on
-    all pairwise comparisons including the given system. The table
+    all pairwise comparisons including the given system. Table
     \ref{sentence-segments-judgments-correlations-better} contains correlations
     computed on sentence-level judgments where the given system was better, the
-    table \ref{sentence-segments-judgments-correlations-worse} is computed on
-    sentence-level comparisons where the given system was worse and finally the
-    table \ref{sentence-segments-judgments-correlations-all} was computed on
+    Table \ref{sentence-segments-judgments-correlations-worse} is computed on
+    sentence-level comparisons where the given system was worse. Finally,
+    Table \ref{sentence-segments-judgments-correlations-all} was computed on
     all pairwise comparisons including the system. The systems are sorted by
     the correlation in reverse order.} 
 
@@ -312,9 +312,9 @@ we do not consider any tied pairwise comparisons.
 \end{table}
 
 The computed correlations are given in Table
-\ref{sentence-segments-judgments-correlations}. The order of the systems in the
-table \ref{sentence-segments-judgments-correlations-better} is quite similar to
-the order of systems in the overall rankings (table \ref{all-systems-results});
+\ref{sentence-segments-judgments-correlations}. The order of the systems in
+Table \ref{sentence-segments-judgments-correlations-better} is quite similar to
+the order of systems in the overall rankings (Table \ref{all-systems-results});
 better systems have higher correlation than worse systems.  This is somehow
 expected: Better systems, which were more often ranked better in the
 sentence-level judgements are also more likely to be ranked better in the
@@ -322,12 +322,12 @@ segment-level judgments.  You can also read the table in the following way: If
 a sentence of system cu-funky was ranked better on sentence-level, it is very
 likely (71\%) that the segments of the sentence were ranked better also. On the
 other hand, if system commercial2 was ranked better on sentence-level only a
-little more than half of the segments were ranked better also. The table
+little more than half of the segments were ranked better also. Table
 \ref{sentence-segments-judgments-correlations-worse} is similar but in reversed
 order.
 
 The influence of a system's quality should be canceled out in Table
-\ref{sentence-segments-judgments-correlations-all}. You can see, that systems
+\ref{sentence-segments-judgments-correlations-all}. You can see that systems
 cu-bojar and onlineB have the Kendall's $\tau$ lower (although not the lowest).
 This, together with the fact that both systems lie in a cluster of systems of
 very similar quality, is consistent with their change in the overall ranking of
@@ -349,7 +349,7 @@ defined \metoda{disagreement quotient}:
 
 \noindent where $s$ is a system, $n$ is a sentence number, $win_{seg}(s,n)$ is
 the number of segment-level comparisons where the $n$-th candidate sentence
-translated by system $s$ won and $loss_{sent}(s,n)$ is the number of
+translated by system $s$ won and $loss_{sent}(s,n)$ being the number of
 comparisons in which the candidate sentence loses. Finally, $win_{sent}(s,n)$
 and $loss_{sent}(s,n)$ are defined similarly for the sentence-level
 comparisons.
@@ -430,7 +430,7 @@ quotient} (a candidate was highly ranked by sentence-level judgments but ranked 
 by system-level judgments). However, these candidates were not so
 interesting and we cannot see any general pattern there. We feel that the
 sentences which are ranked much better in segment-level judgments than in
-sentence-level judgments are much more serious problem.
+sentence-level judgments are a much more severe problem.
 
 \section{Evaluating New Systems}
 \label{evaluating-new-systems}
@@ -661,15 +661,15 @@ You can see the results of this experiment in Table \ref{one-out-results}.
 We also report \metoda{hit} rate, which is the ratio of hits to all relevant
 segments (miss + hits).
 
-The average hit rate is 58.8 \% which is above our expectation. However, as you
+The average hit rate is 58.8 \% which is above our expectations. However, as you
 can see, the hit rate varies a lot across the systems that were left out. This is
-caused by the fact, that some systems are very similar, they use the same tools
+caused by the fact that some systems are very similar; they use the same tools
 and/or training data. For example all the systems cu-bojar, cu-depfix, cu-funky
 are based on the Moses SMT toolkit and their hit rates are very high (0.74 ---
 0.93).
 
 As you can see, the obtained orderings of the systems are not very good. The
-winning system in each of the tables is the one that which was left out. This
+winning system in each of the tables is the one that was left out, which
 is obviously wrong. Besides that, systems similar to the left-out one get also
 a much better rank. For example, when the left-out system is one of the systems
 cu-bojar, cu-depfix and cu-funky, the other two of this group are right below
@@ -732,11 +732,11 @@ and are understandable. We cannot say the same about the missed segments.
 \end{center}
 
 \noindent The missed segment ``Kromě jiných věcí'' in this sentence is
-traslated quite well (so the above statement does not hold here). However, the
+translated quite well (so the above statement does not hold here). However, the
 only hit segment here ``mobilní telefon'' is translated correctly and the
 missed segment ``Germana kancléře Angely Merkelové'' is not translated
-correctly. Judging how easy is a segment to translate is even more difficult
-than judging the translations, but you may agree with us that the hit segment
+correctly. Judging how easy a segment is to translate, is even more difficult
+than judging the translations. Nevertheless you may agree with us that the hit segment
 ``the mobile phone'' is easy to translate and the missed segment ``of German
 Chancellor Angela Merkel'' is much more difficult to translate. We can see this
 also in the last example:
@@ -768,16 +768,16 @@ they are also very easy to translate. On the other hand, the missed segments
 are understandable but not perfect. Compared to the green segment, they are
 also more difficult to translate.
 
-Following the manual analysis we can conclude that MT systems are really more
-likely to agree on the better translations. This however prevent us to match
-the segments exactly, because it gives us very overestimated scores for the
-unseen candidates.
+Following the manual analysis we can conclude that MT systems are much more
+likely to agree on the better translations. This however prevents us from
+matching the segments exactly, because it gives us very overestimated scores
+for the unseen candidates.
 
 \subsection{Matching the Closest Segment by Edit Distance}
 \label{match:editdistance}
 
 We would like to compute the scores on all the annotated segments to avoid the
-problem from the previous subsection. A natural way to approximate the
+problem stated in the previous subsection. A natural way to approximate the
 ``correct'' ranks of unseen segments is to use the rank of the segment from the
 database with the closest edit distance. We use the character based Levenshtein
 distance which is defined as the minimum number of insertions, deletions and
@@ -790,7 +790,7 @@ substitutions of characters required to transform a given string to another:
 \noindent where $E(a,b)$ denotes a set of all sequences of edit operations
 which transform the string $a$ to the string $b$, and $D(e)$, $S(e)$, $I(e)$
 denote number of deletions, substitutions and insertions respectively in the
-sequence $s$. If more segments in the database has the minimal distance to the
+sequence $s$. If more segments in the database have the minimal distance to the
 ``unseen'' segment, we pick one of them randomly.
 
 
@@ -993,7 +993,7 @@ likely to agree on the better translations than on the worse ones, but also
 that they produce translations which are closer to better translations than to
 other translations of similar quality. Our notion of that idea is that a good
 translation is a point  in a high-dimensional space and candidate translations
-are points around the good translation. Now let's have a few points around the
+are points around the good translation. Now, let's have a few points around the
 good translation representing the translations in the database. When we get a
 new point it is quite likely in this high-dimensional space that the closest
 point is the good translation. You can see an illustration of this situation in
@@ -1010,9 +1010,9 @@ translation, zmenit obrazek?}
     \end{center}
 
     \caption[An illustration of a space of translations]{An example of a good
-    translation with only a few candidate translations around it. If a number
-  of dimensions is higher than the number of candidates it is intuitively quite
-probable that the closest point to a new unseen candidate is the good
+    translation with only a few candidate translations around it. If the number
+  of dimensions is higher than the number of candidates, it is intuitively quite
+likely that the closest point to the new unseen candidate is the good
 translation.}
     \label{translation-space-illustration}
 \end{figure}
@@ -1024,7 +1024,7 @@ Systems CU-TectoMT, onlineA and onlineB are in the middle of the AED range (3.1
 consider their AEDs as representative values.  Systems commercial1 and
 commercial2 have the highest AEDs. This could be explained by the fact that
 both of the systems are rule based and produce dissimilar translations to those
-generated by the statistical based systems. It is, however, interesting that
+generated by the statistical based systems. It is interesting, however, that
 their translations are not even similar to each other. You can see the distribution of the absolute
 counts with respect to the edit distance plotted in Figure
 \ref{absolute-counts-per-distance}.
@@ -1048,24 +1048,25 @@ has better, equal or worse rank than the ``unseen'' segment (We can actually do
 that, because we know the true rank of the segment removed from the database).
 We computed these relative frequencies only on the missed segments (the closest
 segment was not the same segment). You can see this analysis performed for the
-individual systems in Table \ref{edit-distance-matching-analysis}.  You can
-also see how these relative frequencies change with with a change of the edit
-distance in Figure \ref{better-worse-equal-with-edit-distance}. More than a
-half of the closest segments has better rank than the original segments and
-only 20.6 \% of the segments have the same rank. This is really very poor
+individual systems in Table \ref{edit-distance-matching-analysis}.  In total,
+more than a half of the closest segments have a better rank than the original
+segments and only 20.6 \% of the segments have the same rank. This is very poor
 because it means that our approximation method which ranks unseen translations
-has the accuracy only 20.6 \%. This accuracy does not differ much for
+has the accuracy of only 20.6 \%. This accuracy does not differ much for
 individual systems but there is an expected trend of similar systems (cu-bojar,
 cu-depfix) having this accuracy slightly higher. 
 
-As you can see in Figure \ref{better-worse-equal-with-edit-distance} the
-relative number of closest systems which are ranked better grows quite
+You can also see how these relative frequencies vary with a change of the edit
+distance in Figure \ref{better-worse-equal-with-edit-distance}.  As you can
+see, the relative number of closest systems which are ranked better grows quite
 significantly with the edit distance. The relative number of the worse segments
 is quite stable (around 0.3) and does not change significantly with the edit
-distance. The relative number of closest segments which are equally raked as
+distance. The relative number of closest segments which are equally ranked as
 the source segment is decreasing with the edit distance. For example, for the
 segments whose edit distance to the closest segment is 17, only 10 percent of
-the closest segments is equally ranked, which is really poor. 
+the closest segments is equally ranked, which is very poor. 
+
+\XXX{Zkontrolovat, popripade lepe vysvetlit predchozi dva odstavce}
 
 
 \begin{table}
@@ -1092,7 +1093,7 @@ the closest segments is equally ranked, which is really poor.
 \caption[Comparisons of unseen and the closest systems]{Comparisons of unseen
 and the closest system. This table shows how often the closest segment in the
 database was worse, equally good or better than the original ``unseen''
-segment. These relative frequencies were computed only on missed segments
+segment. These relative frequencies were computed only on the missed segments
 (which weren't already in the database).}
 
   \label{edit-distance-matching-analysis}
@@ -1104,9 +1105,9 @@ segment. These relative frequencies were computed only on missed segments
     \end{center}
 
     \caption[Comparisons of unseen and the closest systems with respect to the
-    edit distance]{Comparisons of unseen and the closest systems with respect
-    to the edit distance. The results in this figure are computed on all the
-systems.}
+    edit distance]{Comparisons of the unseen and the closest systems with respect
+    to the edit distance. The results in this figure are computed on all of the
+  systems.\XXX{Tady nejakej lepsi popisek}}
 
     \label{better-worse-equal-with-edit-distance}
 \end{figure}
@@ -1139,7 +1140,7 @@ was ranked better, equal or worse than the ``unseen'' one.
   \end{center}
 
   \caption[Example candidates and the closest segments]{ Example candidates and
-    the closest segments. The last but one column (\textbf{D}) stands for
+    the closest segments. The second last column (\textbf{D}) stands for
     distance and contains distances of the unseen candidates to the closest
     segments. The last column (\textbf{C}) stands for comparison; the closest
   segment is either worse (\worse{}), equally good (\equal{}) or better
@@ -1159,14 +1160,14 @@ better translations in the database so we cannot predict their rank accurately.
 
 Following the conclusions from the previous two subsections, it seems that
 errors in machine translation are very unique. Any database of bad examples
-(bad translations) is therefore very sparse. It is very well known fact that a
+(bad translations) is therefore very sparse. It is a very well known fact that a
 number of correct translations is very high \parcite{bojar2013scratching}. It
 seems, however, that the number of bad translations is much higher and
-therefore it make more sense to use a database of good translations. 
+therefore it makes more sense to use a database of good translations. 
 
 In the following experiment we therefore use only the good candidate segments
 from the annotated database. The approach used here is, however, different from
-the previous experiments. We would like to measure how similar are candidates
+the previous experiments. We would like to measure how similar candidates are
 to the good translations from the database. This is very similar to what
 automatic metrics do when measuring similarity between a candidate and a
 reference translations. We have therefore decided to use one of the standard
@@ -1220,7 +1221,7 @@ introduce the metric and then we are going to customize it for our experiment.
 
   \caption[Overall system ranking according to \metric{SegRanksBLEU} and
   \metric{BLEU} scores]{Overall system ranking according to
-  \metric{SegRanksBLEU} and \metric{BLEU} scores. Please see the chapter
+  \metric{SegRanksBLEU} and \metric{BLEU} scores. Please see Chapter
   \ref{metrics} for the details of computation of the reported correlations.}
 
   \label{segranksbleu:experiment}
@@ -1254,7 +1255,7 @@ $s$. The modified precision $p_n$ is then defined as:
         BLEU = BP \cdot \exp \left( \frac{1}{N} \sum_{i = 1}^N \log p_n \right) 
 \end{equation*}
 
-\noindent where $BP$ is the brevity penalty (meant to penalize short outputs to
+\noindent where $BP$ is the brevity penalty (meant to penalize short outputs, to
 discourage improving precision at the expense of recall) defined as follows:
 
 \begin{equation*}
@@ -1283,7 +1284,7 @@ translations. We select these candidate segments for each source segment for
 each sentence.
 
 Finally, we use the selected good segments as the reference translations in
-addition to the original reference sentence translated by human expert.  Since
+addition to the original reference sentence translated by a human expert.  Since
 the new references are only short segments and do not cover a whole sentence,
 we use only the length of the original reference sentence in the computation of
 the brevity penalty. To distinguish this method from the standard \metric{BLEU}
@@ -1299,7 +1300,7 @@ the database.
 You can see the overall rankings of the evaluated systems as given by
 \metric{SegRanksBLEU} and \metric{BLEU} in Table
 \ref{segranksbleu:experiment}. As expected, the \metric{SegRanksBLEU} scores
-are really much higher than \metric{BLEU}. However, the reported system level
+are indeed much higher than \metric{BLEU}. However, the reported system level
 correlations of these two metrics are almost equal (correlation of
 \metric{SegRanksBLEU} is even a little bit lower).  \XXX{Jak tohle zanalyzovat
 a vysvetlit?}
@@ -1313,8 +1314,8 @@ test sets. They are also often used when tuning a system to choose the
 parameters of a model which gives the best metric score computed on a
 development test set. One of the methods utilizing automatic metrics for system
 tuning is Minimum Error Rate Training (MERT). We will describe the theory
-behind the MERT in the following subsection a then we will experiment with
-using the short segments rank database in the MERT.
+behind MERT in the following subsection a then we will experiment with it using
+the short segments rank database.
 
 \subsection{Minimum Error Rate Training}
 
@@ -1337,7 +1338,7 @@ using a log-linear model \parcite{Och:2002}:
 h_M(e,f) \}$ is a feature vector and the vector $\vect{\lambda} = \{\lambda_1,
 \lambda_2, \ldots, \lambda_M \}$ is a feature weight vector. It can be easily
 shown that when searching for the best candidate $e_{best}$, the above
-log-linear formula could be simplified to the following:
+log-linear formula can be simplified to the following:
 
 \begin{equation}
   e_{best}  =  \argmax_e \left\{ P(e \mid f) \right\}
@@ -1349,7 +1350,7 @@ $\vect{\lambda}$ which would give the best translations. And this is what the
 MERT method solves.
 
 Let $F = \{f_i;~ i \in I\}$ be a held out corpus in the source language and $R
-= \{r_i;~ i \in I\}$ be a corresponding reference translation. Traditionally
+= \{r_i;~ i \in I\}$ be a corresponding reference translation. Traditionally,
 the best weight vector $\vect{\lambda}$ can be found using the maximum
 likelihood principle:
 
@@ -1394,7 +1395,7 @@ translation of a sentence $f$ with weights $\vect{\lambda}$:
 \end{equation}
 
 The criterion \eqref{eq:errorrate-opt} is, however, not so easy to optimize. It
-contains argmax operation and therefore it is not smooth and it is not possible
+contains an argmax operation and therefore it is not smooth and it is not possible
 to use a gradient based method. It has also a lot of local maximums.
 \perscite{Och:2003} therefore suggested to use Powell's algorithm
 \parcite{Powell:1964} which does not need gradient to optimize a function.
@@ -1436,14 +1437,14 @@ get the following.
 \end{eqnarray}
 
 \noindent where the scalars $t(e,f)$ and $m(e,f)$ are constant for a given
-candidate $e$. This means, that each candidate $e$ specifies a line given by
-the equation $x = t(e,f) + \gamma \cdot m(e,f)$ which computes the candidate
+candidate $e$. This means that each candidate $e$ specifies a line given by
+the equation $x = t(e,f) + \gamma \cdot m(e,f)$, which computes the candidate
 score for the parameter $\gamma$. The argmax operator in the equation
 \eqref{eq:argmax} then choose the candidate whose line is the highest in a
 given $\gamma$. You can see this situation illustrated in Figure
 \ref{fig:lines}.  The line optimization method finds all the intersections of
 the lines where the best candidate (with the highest model score) changes. The
-intersections found for each sentence in the heldout data are then merged to
+intersections found for each sentence in the heldout data is then merged to
 obtain intervals of $\gamma$ in which the $\gamma$ does not change the set of
 the highest score candidates.  For each interval, the metric score is computed
 and the optimal $\gamma$ is chosen from the interval with the highest metric
@@ -1470,37 +1471,37 @@ statistics.
 The last difficulty in the MERT method is that we cannot easily enumerate all
 the candidate sentences. For that reason the n-best list approximation is used:
 the decoder produce $n$ best translations for each sentence and only these $n$
-translations are considered during the optimization. A problem arise when the
+translations are considered during the optimization. A problem arises when the
 optimal weight vector found during the optimization gets too far from the
 weight vector used to produce the initial n-best list. For that reason a new
-n-best list is produced with the new weights, it is merged with previous n-best
-lists and optimization process is run again in new MERT iteration. When the
+n-best list is produced with the new weights; it is merged with previous n-best
+lists and the optimization process is run again in new MERT iteration. When the
 optimal weight vector converges or a maximum number of iterations is reached
 the MERT method ends. 
 
 \subsection{Experiments with MERT}
 
-MERT method is most often used with BLEU metric even it does not have the best
-correlation with human judgments (see the chapter \ref{metrics} for more
-details). However, there is a lot of experiments with utilizing also other
-automatic metrics in recent time. In WMT11 \parcite{wmt11}, there was a shared
-task in which participants tuned a common system with different metrics. The
-tuned systems were then evaluated by humans and some of them outperformed the
-baseline system tuned with BLEU.
+The MERT method is most often used with BLEU metric even though it does not
+have the best correlation with human judgments (see Chapter \ref{metrics}
+for more details). However, there are a lot of experiments being done utilizing also
+other automatic metrics in recent time. In WMT11 \parcite{wmt11}, there was a
+shared task in which participants tuned a common system with different metrics.
+The tuned systems were then evaluated by humans and some of them outperformed
+the baseline system tuned with BLEU.
 
 It is not feasible to employ any sort of human evaluation directly in the MERT
-process. On the one hand human evaluation is very slow and expensive, on the
-other hand MERT requires to evaluate very long n-best list in each iteration.
+process. On one hand human evaluation is very slow and expensive, on the
+other, MERT requires to evaluate very long n-best list in each iteration.
 There are some suggestions to do the manual evaluation in a clever way and
 lower the amount of manual work. For example \perscite{human-in-the-loop}
-noticed that a lot of short segments is repeated in a n-best list and therefore
+noticed that a lot of short segments are repeated in a n-best list and therefore
 suggest to extract these short segments from a n-best list in each MERT
 iteration and let humans rank them. (Actually our short segment extraction
 method was partially inspired by this work). However they did not try this
 method in an actual MERT run yet for lack of resources. 
 
 We believe that a much less expensive way to introduce an element of human
-evaluation in MERT method is to use some sort of semi-automatic metric in which
+evaluation in the MERT method is to use some sort of semi-automatic metric in which
 a certain amount of manual work is needed at the beginning and then the metric
 evaluates translations automatically. In this subsection, we therefore
 experiment with previously introduced metrics which rely on the collected
@@ -1509,7 +1510,7 @@ database of short segment ranks.
 \subsubsection{Tuned System}
 
 The system we tried to tune is the system cu-bojar \parcite{tamchyna2014},
-which we also used previous sections as one of the evaluated systems. This
+which we also used in previous sections as one of the evaluated systems. This
 system is Moses-based and combines several different approaches:
 
 \begin{itemize}
@@ -1520,15 +1521,15 @@ system is Moses-based and combines several different approaches:
 
 The parallel data used to train the phrase tables consists of 14.83 million
 parallel sentences taken from the CzEng corpus \parcite{bojar:czeng} and 0.65
-millions of sentences taken from the Europarl corpus \parcite{koehn:europarl}.
+million of sentences taken from the Europarl corpus \parcite{koehn:europarl}.
 The monolingual data used to train language models consists of 215.93 million
 sentences taken from the Czech side of the CzEng corpus and from 5 sources of
-news domain. 
+a news domain. 
 
-They used their baseline systems to translate WMT test sets from years
-2012--2014.  These translation were then used to retrieve similar Czech
-sentences using information retrieval techniques which were then used to train
-the domain-adapted language model.
+Authors of the system used their baseline systems to translate WMT test sets
+from years 2012--2014.  These translations were then used to retrieve similar
+Czech sentences using information retrieval techniques which were then used to
+train the domain-adapted language model.
 
 The deep-syntactic MT system TectoMT was used to translate WMT test sets from
 years 2007--2014. These new synthetic parallel training data were then used to 
@@ -1538,36 +1539,36 @@ Please note that both the domain-adapted language model and the TectoMT phrase
 table were also trained on the data we use as development set and test set so
 that tuning can assign appropriate weights to them.
 
-There is 15 component weights to tune in total. \perscite{tamchyna2014} of
+There are 15 component weights to tune in total. \perscite{tamchyna2014} of
 course tuned their system cu-bojar when participating in the translation shared
-task but we use their system before it was tuned by them to tune it ourselves. 
+task, but we use their system in the state it was before the tuning to tune it ourselves. 
 
 We used the implementation of MERT which is distributed with Moses
 toolkit\footnote{\url{http://www.statmt.org/moses/}}. It is implemented in C++
 and new metrics are created by subclassing the base \pojem{Scorer} class. Since
 the annotated database is stored in Python data structures and since a
 development in Python is much easier and faster, we have implemented new
-\pojem{PythonScorer} which is an universal wrapper around an arbitrary Python
+\pojem{PythonScorer} which is a universal wrapper around an arbitrary Python
 scorer class, implemented using the Python C API.
 
 
 \subsubsection{Metric Variants}
 
 Our original idea was that we will use the alignment produced by the Moses
-decoder during translating the n-best list to project the extracted short
+decoder when translating the n-best list to project the extracted short
 source segments to the target side to have candidates which would be extracted
 the same way as the ranked segments in the database. Unfortunately the
-alignment produced by Moses decoder is very sparse and unreliable (which may be
+alignment produced by the Moses decoder is very sparse and unreliable (which may be
 caused by a bug in the code) so we had to get along without the alignment.
 
 The naive approximation is to just test whether the ranked candidate segments
 from the database also occurs in evaluated sentences. The first metric we use
-in MERT experiment is therefore very similar to the \metoda{Exact Matching}
+in the MERT experiment is therefore very similar to the \metoda{Exact Matching}
 method in Section \ref{exact:matching}. For each ranked source segment we
 test if any of its candidate segment occurs in the evaluated sentence. If it
-does we extract all pairwise comparisons inferred from the matched segment. If
-more candidate segments occurs in the evaluated translation, we choose the
-longest segment (assuming that the sorter segments are just substring of the
+does, we extract all the pairwise comparisons inferred from the matched segment. If
+more candidate segments occur in the evaluated translation, we choose the
+longest segment (assuming that the shorter segments are just substring of the
 longest one). The final score is then computed as \metoda{Ratio of wins
 (ignoring ties)}. We call this metric \metric{ExactMatch} in the following.
 
@@ -1575,8 +1576,8 @@ Even if the hit rate (percentage of segment candidates which are already ranked
 in the database) computed on a whole n-best list would be 100 \%, the
 \metric{ExactMatch} metric still does not evaluate whole sentences and could be
 too coarse and harsh. Moreover, if the hit rate drops during the tuning, the
-metric score would be computed on a very small percentage of development set
-and would be very unstable. To ensure the tuning is stable, we interpolate all
+metric score would be computed on a very small percentage of a development set
+and it would be very unstable. To ensure that the tuning is stable, we interpolate all
 the metrics in this section (if not said otherwise) together with BLEU with
 equal weights. We also tried to tune using the \metric{ExactMatch} metric
 solely but the tuned system translated very badly and the hit rate dropped very
@@ -1591,9 +1592,9 @@ exactly, we unfortunately cannot use the method introduced in Subsection
 \ref{match:editdistance} which matches the closest segment in the database by
 edit distance.  To avoid the shortcomings of the \metric{ExactMatch} metric
 (the metric is not computed on all the extracted source segments and an unseen
-system is more likely to cause hit in the database with better translations) we
+system is more likely to cause a hit in the database with better translations) we
 propose another variant called \metric{PenalizeUnknown}. This variant differs
-to \metric{ExactMatch} in that it considers all missed segments as the worst
+from \metric{ExactMatch} in that it considers all missed segments as the worst
 translations. We agree that the assumption that all unseen and unranked
 segments are wrong is not correct, but this approach could increase the hit
 rate. The question is then, whether we prefer to have a system which produces a
@@ -1668,14 +1669,14 @@ sentences compared to the baseline in the manual evaluation.}
 To see the differences between \metric{ExactMatch} and
 \metric{PenalizeUnknown}, we have plotted the values of hit rates computed in
 each MERT iteration in Figure \ref{hit:rates:plot}. You can see that
-\metric{PenalizeUnknown} gets to the hit rate 0.7 very quickly (in the sixth
-iteration) and its growth is quite stable. This is however expected, since the
+\metric{PenalizeUnknown} gets to the hit rate of 0.7 very quickly (in the sixth
+iteration) and it's growth is quite stable. This is however expected, since the
 objective function also indirectly optimizes the hit rate. The hit rate in
-\metric{ExactMatch} also grows but much more slowly. It stabilizes around the
-value 0.5. The good point is that the final value is quite high so the
-\metric{ExactMatch} is computed on nonnegligible amount of data. However, it
-takes much more iterations for \metric{ExactMatch} to get to the value 0.5 that
-it takes for \metric{PenalizeUnknown} to get to the value 0.7. \XXX{Tady to jeste
+\metric{ExactMatch} also grows but much more slowly. It stabilizes around the of
+value 0.5. It is good that the final value is quite high so the
+\metric{ExactMatch} is computed on a nonnegligible amount of data. However, it
+takes much more iterations for \metric{ExactMatch} to get to the value of 0.5 that
+it takes for \metric{PenalizeUnknown} to get to the value of 0.7. \XXX{Tady to jeste
 shrnout po manualni evaluaci}.
 
 
