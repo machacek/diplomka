@@ -575,23 +575,35 @@ for these directions are also very poor).
 \section{System-Level Metric Analysis}
 \label{system-level}
 
+When evaluating metrics on the system level, we would like to reward metrics
+which predicts the ordering of the systems as similar as possible to the
+ordering given by the human scores.
 
-While the Spearman's $\rho$ correlation coefficient was used as the main
-measure of system-level metrics' quality in the past, we have decided to use
-Pearson correlation coefficient as the main measure this year. At the end of
-this section we give reasons for this change. 
+While the Spearman's $\rho$ correlation coefficient was used traditionally as
+the main measure of system-level metrics' quality in the past, we have decided
+to use Pearson correlation coefficient as the main measure this year. At the
+end of this section we give reasons for this change. 
 
-We use the following formula to compute the Pearson's $r$ for each metric and
-translation direction:
+Pearson correlation coefficient is a metaevaluation metric which measures how
+much two variables are linearly correlated.  In our case, the first variable is
+the human score and the second variable is the metric score. We use the
+following formula to compute the Pearson's $r$ for each metric and translation
+direction:
 
 \begin{equation}
     r = \frac{\sum ^n _{i=1}(H_i - \bar{H})(M_i - \bar{M})}{\sqrt{\sum ^n _{i=1}(H_i - \bar{H})^2} \sqrt{\sum ^n _{i=1}(M_i - \bar{M})^2}} 
 \end{equation}
 
 \noindent where $H$ is the vector of human scores of all systems translating in
-the given
-direction, $M$ is the vector of the corresponding scores as predicted by the
-given metric. $\bar{H}$ and $\bar{M}$ are their means respectively.
+the given direction, $M$ is the vector of the corresponding scores as predicted
+by the given metric. $\bar{H}$ and $\bar{M}$ are their means respectively.
+
+The Pearson's $r$ ranges from -1 to 1. A value of 1 implies that a linear
+equation describes the relationship between the human scores and the metric
+scores and the metric score increases as the human score increases. A value of
+-1 also implies a linear relationship but this time the metric score decreases
+as the human score decreases. A value of 0 implies that there is no
+relationship between the human scores and metric scores.
 
 Since we have normalized all metrics such that better translations get higher
 score, we consider metrics with values of Pearson's $r$ closer to 1 as better. 
@@ -603,10 +615,17 @@ correlations of a metric in each of the examined translation directions. The
 metrics are sorted by average Pearson correlation coefficient across
 translation directions. The best results in each direction are in bold.
 
+For the sake of completeness and for the possibility to compare the results to
+previous years, we have also compute and report Spearman rank correlation
+coefficient in the tables. This metaevaluation measure \XXX{Dodelat a uvest vzorec
+pro vypocet Spearmanovy korelace}
+
+
 The reported empirical confidence intervals of system level correlations were
-obtained through
-bootstrap resampling of 1000
-samples (confidence level of 95\,\%).
+obtained through bootstrap resampling of 1000 samples (confidence level of
+95\,\%).
+
+\XXX{Rozdelit sekci}
 
 As in previous years, a lot of metrics outperformed \metric{BLEU} in system
 level correlation. In into-English directions, metric
