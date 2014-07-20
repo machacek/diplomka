@@ -1,14 +1,14 @@
 \chapter{SegRanks: Manual Evaluation Based on Short Segments}
 
 In the following two chapters, we propose a novel manual evaluation method in
-which we create a database of human annotations which could be reused
+which we create a database of human annotations. This database could be reused
 later to automatically evaluate similar but unseen translations or even
 to tune systems.  This method therefore lies on the boundary of automatic and
 manual evaluation methods.
 
-The proposed method consists of two parts which we describe and experiment with
-in the following two chapters. In this chapter, we describe the way of
-collecting the database of humans judgements and report the human annotation
+The proposed method consists of two parts, which we describe and experiment
+with in the following two chapters. In this chapter, we describe the way of
+collecting the database of human judgements and report the human annotation
 experiment which we conducted using the proposed method. In the following
 chapter, we present some methods which exploit the collected database: besides
 the evaluation of annotated systems, we experiment with extrapolating the
@@ -18,10 +18,10 @@ system using the database.
 In the WMT official human evaluation, humans judge whole sentences. They get
 five candidate translations of a given source sentence and their task is to
 rank these candidates relatively to one another (ties are allowed). One of
-disadvantages of this method is that sentences are quite long and therefore
+the disadvantages of this method is that the sentences are quite long and therefore
 quite hard to remember for the judge to compare them. Also, when comparing
 longer sentences, there are many more aspects in which one sentence can be
-better or worse than another sentence and therefore it is more difficult for
+better or worse than another, and therefore it is more difficult for
 judges to choose the better of the candidates. 
 
 \begin{algorithm}
@@ -52,11 +52,11 @@ judging whole sentences, we extract shorter segments from candidates and give
 them to judges to rank them. In order to extract meaningful segments with the
 same meaning from all candidates, we do the following procedure: First, we
 parse the source sentence and then recursively descend the parsed tree and find
-nodes which cover source segments of a given maximum length. This is exactly
-described in Algorithm \ref{segment:extraction}. Finally, we project these
+nodes which cover source segments of a given maximum length. This is described exactly
+in Algorithm \ref{segment:extraction}. Finally, we project these
 extracted source segments to their counterpart segments in all candidate
 sentences using an automatic alignment.  You can find the whole process
-illustrated in Figure \ref{tree-align} This extraction method is inspired by
+illustrated in Figure \ref{tree-align}. This extraction method is inspired by
 \perscite{human-in-the-loop} and by the WMT07 manual evaluation
 \parcite{wmt-overview-2007}.
 
@@ -65,11 +65,11 @@ illustrated in Figure \ref{tree-align} This extraction method is inspired by
         \includegraphics[width=\textwidth]{img/tree-align.pdf}
     \end{center}
 
-    \caption[An illustration of candidate segments extraction process]{ An
+    \caption[An illustration of the candidate segments extraction process]{ An
       illustration of candidate segments extraction process. For a given MT
       system, two segments were extracted from this sentence. The
-      \pojem{maxLength} constant was set to the value 5 here to illustrate that
-      not all words are always covered by extracted segments.
+      \pojem{maxLength} constant was set to the value 5 here, to illustrate that
+      not all of the words are always covered by the extracted segments.
 
 }
 
@@ -78,7 +78,7 @@ illustrated in Figure \ref{tree-align} This extraction method is inspired by
 
 In the segment evaluation in \parcite{wmt-overview-2007}, these extracted
 segments are only highlighted and shown to judges together with the rest of the
-sentence.  Judges are asked to rank the highlighted segments in the context of
+sentence.  Judges are asked to rank the highlighted segments in the context of the
 whole candidate sentences.
 
 We use a different approach here which is more similar to that used by
@@ -100,7 +100,7 @@ system which was not in the set of annotated systems (we present this
 experiment in Section \ref{evaluating-new-systems}) or to tune parameters
 of a system (we present this experiment in Section \ref{tuning-systems}).
 
-The following list summarizes disadvantages of this method which we are aware
+The following list summarizes disadvantages of this method, which we are aware
 of. However, we believe that the advantages still outweight the problems
 and that our method is worth exploration.
 
@@ -109,55 +109,56 @@ and that our method is worth exploration.
   \item Annotators do not see the whole context of annotated short segments.
     For instance, the rest of the sentence around a given short candidate segment
     could require to have a noun in the segment in a particular grammatical
-    case. Because annotators do not see this requirement, they cannot judge the
+    case. Because the annotators do not see this requirement, they cannot judge the
     candidate segment properly.  To partially remedy this disadvantage we
     give all extracted short segments to annotators to judge at once, so they
     can at least imagine the context.
 
-  \item This is very similar to the previous one. A system could translate
-    shorter segments quite well but it can fail to combine them properly when
-    creating the whole sentence translation. For instance a system may fail to
-    preserve the subject -- verb agreement, which is very important in Czech.
-    In their paper, \perscite{human-in-the-loop} suggest to go up the parse
-    tree and extract also the longer segments which consist of already
-    extracted shorter segments. However, if we use this approach, the amount of
-    annotation work would multiply several times. Furthermore, the longer segments
-    are more difficult to rank and the chance that systems' candidates will be
-    identical (so that we can merge them for annotation) is lower.
+  \item This is very similar to the previous disadvantage. A system could
+    translate shorter segments quite well but it can fail to combine them
+    properly when creating the whole sentence translation. For instance a
+    system may fail to preserve the subject -- verb agreement, which is very
+    important in the Czech language.  In their paper,
+    \perscite{human-in-the-loop} suggest to go up the parse tree and extract
+    also the longer segments which consist of already extracted shorter
+    segments. However, if we use this approach the amount of annotation work
+    would multiply several times. Furthermore, the longer segments are more
+    difficult to rank and the chance that systems' candidates will be identical
+    (so that we can merge them for annotation) is lower.
 
   \item Extracted short segments do not cover the whole sentence. For example
-    in Figure \label{tree-align}, the words `jsou' and `pak' are not part of any
+    in Figure \ref{tree-align}, the words `jsou' and `pak' are not part of any
     extracted segment. We would avoid this problem if we set the variable
-    \pojem{minLength} to zero but it would generate a high number of short
+    \pojem{minLength} to zero. This, however, would generate a high number of short
     segments to annotate. \XXX{Spocitat kolik, mozna ale v dalsi subsekci,
     mozna tam udelat i graf}
 
   \item Some segment candidates are much more important to convey the meaning
-    than others and therefore should not have equal weight when interpreting
-    them. When an annotator ranks system A better than system B in two of three
-    ranked segments and system B better than system A in the third segment, it
-    does not always mean that he would ranked system A better than system B
-    when ranking whole sentences. The third segment could be much more
-    important for the quality of translation than the first two. We are afraid
-    that it is not possible to easily avoid this problem. However, we also
-    believe that this problem is not so serious and that possible differences
-    in the importance of individual segments cancel out.
+    of a sentence than others, and therefore should not have equal weight when
+    being interpreted. When an annotator ranks system A better than system B in
+    two of three ranked segments, and system B better than system A in the
+    third segment, it does not always mean that he would have ranked system A
+    better than system B when ranking whole sentences. The third segment could
+    be much more important for the quality of translation than the first two.
+    We are afraid that it is not possible to easily avoid this problem.
+    However, we also believe that this problem is not so severe and that
+    possible differences in the importance of individual segments cancel out.
 
 \end{itemize}
 
 \section{Data and Segment Preparation}
 
 We have conducted an annotation experiment using the proposed method. In this
-section, we describe what data we have used and how we prepared them for the
+section, we describe what data we have used and how we prepared it for the
 annotation experiment.
 
 We used English to Czech part of the WMT14 \parcite{wmt14-overview-paper} test
-set. We choose this data set to be able to compare experiments' results with
+set. We chose this data set to be able to compare experiments' results with
 the official WMT14 human evaluation. 
 
 The testset consists of 3003 sentences (68866 tokens). It contains both source
-sentences and reference translations. Roughly a half of the sentences was
-originally in Czech and was translated by human translators into English. The
+sentences and reference translations. Roughly a half of the sentences were
+originally in Czech and were translated by human translators into English. The
 second half of the sentences was translated in the opposite direction. Besides the
 source and reference translations, we also used candidate translations of 10
 systems which participated in the WMT14 translation task. All systems are
@@ -219,7 +220,7 @@ lowercased before the alignment computation.
 We extracted short segments from the parsed source trees using the algorithm
 \ref{segment:extraction}. The constant \pojem{minLength} was set to the value 3
 to filter out very short segments which are hard to judge without context. This
-also helped to reduce the number of extracted segments to be annotated. The
+also helped reduce the number of extracted segments to be annotated. The
 constant \pojem{maxLength} was set to the value 6 so the extracted segments
 were not too long to judge and at the same time it was more likely that two
 candidate translations of a segment were equal and therefore there would be
@@ -232,7 +233,7 @@ From the 3003 source sentences, we have extracted 8485 segments of length 3 to
 6 tokens. That is approximately 2.83 segments per sentence on average. By
 projecting the source segments to the candidate sentences using the computed
 alignments, we got $10 \times 8485 = 84850$ candidate segments. However, after
-the merging of equal segments only 50011 candidate segments were left. This
+the merging of equal segments, only 50011 candidate segments were left. This
 represents 58.9 \% of the original candidate segments, or in other words, after
 the merging we got 5.89 (instead of original 10) candidate segments to be
 ranked for each source segment on average. These prepared candidate segments
@@ -262,9 +263,9 @@ distinguish acceptable candidate translations (the meaning of the segment can
 be guessed despite a few or more errors) from unacceptable ones (the meaning is
 definitely not possible to guess from the candidate segment). Also please rank
 the acceptable candidate translations relatively from the best ones to the
-worst ones.  Please, place better candidate translations higher and the worser
+worst ones.  Please place better candidate translations higher and the worser
 ones lower. You can place candidates of the same quality on the same rank.
-Please place unacceptable candidates to the position ``Garbage''
+We ask that you place unacceptable candidates to the position ``Garbage''
 
 Please note that source segments and their candidate translations are chosen
 automatically and do not have to be perfect. Consider them only as approximate
@@ -278,13 +279,14 @@ candidate translation you should consider it an error.
 Our goal was to make the annotation as efficient and user friendly as possible.
 Annotators rank all the source segments of a sentence on a single screen (so
 that they have to read the whole source sentence and reference translation only
-once). For each annotated segment they see the source sentence repeated with
+once). For each annotated segment they see the source sentence repeated, with
 the annotated segment highlighted. Annotators rank the segment candidates by
-dragging and dropping them to appropriate rank positions. When all candidates of all
-source segments of a sentence are ranked, annotators are allowed to submit the
-results to the server.  The web interface has responsive design, so it works
-correctly on mobile devices.  The drag-and-drop works also on touch screens.
-Annotators were therefore able to rank segments on a tablet.
+dragging and dropping them to appropriate rank positions. When all the
+candidates of all the source segments of the sentence are ranked, annotators
+are allowed to submit their annotations to the server.  The web interface has a
+responsive design, so it is displayed correctly on smaller screens, and the
+drag-and-drop works also on touch screens.  Annotators were therefore able to
+rank segments on a tablet.
 
 \begin{figure}
     \begin{center}
@@ -297,7 +299,7 @@ sentence on a single screen.}
     \label{segranks-screenshot}
 \end{figure}
 
-The very annotation experiment was conducted during May/June 2014. It lasted
+The very annotation experiment was conducted during May/June 2014 and it lasted
 exactly one month. During this time, 17 annotators ranked segments of 2765
 sentences, which is more than 92 \% of the prepared English-Czech test set.
 
@@ -328,11 +330,11 @@ sentences, which is more than 92 \% of the prepared English-Czech test set.
         \end{tabular}
     \end{center}
 
-    \caption[The list of annotators and their statistics]{The list of
+    \caption[A list of annotators and their statistics]{The list of
         annotators and their statistics. The annotators are anonymized using
         their ID. The table contains the number of sentences annotated, the
         number of segments ranked, the time spend annotating, the reward in
-    CZK, average time in seconds spent on one segment annotation and
+    CZK, the average time in seconds spent on one segment annotation and
 intra-annotator and inter-annotator agreements. }
 
     \label{big-table}
@@ -355,12 +357,12 @@ Cohen's $\kappa$ is computed using the following formula:
 \end{equation*}
 
 \noindent Simply put, $\kappa$ is the proportion of times the annotators agrees
-from all the times they would not agree by chance. Note that $\kappa$ is a
-normalized version of $P(A)$, it considers how difficult it is to agree without
-knowing anything about the task.  Values of $\kappa$ can be therefore compared in principle
-across various annotation experiments. The maximum value is 1 which means
-that annotators always agree.  The zero value means that annotators agree as
-often as they would by chance.
+of all the times they would not agree by chance. Note that $\kappa$ is a
+normalized version of $P(A)$; it considers how difficult it is to agree without
+knowing anything about the task.  Values of $\kappa$ can be therefore compared
+in principle across various annotation experiments. The maximum value is 1
+which would mean that annotators always agree.  A value of zero would mean that
+annotators agree as often as they would by chance.
 
 In our case, $P(A)$ and $P(E)$ are computed in the context of pairwise comparisons.
 Approximately 5 \% of the annotated sentences were annotated twice by two
@@ -390,15 +392,14 @@ on the same testset for comparisons.  The exact interpretation of the Kappa
 coefficient is difficult, but according to \cite{landis77}, 0 -- 0.2 is slight,
 0.2 -- 0.4 is fair, 0.4 -- 0.6 is moderate, 0.6 -- 0.8 is substantial and 0.8
 -- 1.0 is almost perfect.  You can see that we get both $\kappa$ scores better
-than they are in WMT14. However, they are still quite low and we expected them
+than those of WMT14. However, they are still quite low and we expected them
 to be higher, since the annotation task was designed to be much simpler than
 the ranking full segments in the official WMT human evaluation.
 
-We also computed the agreements $\kappa$ for
-individual annotators and report them in Table \ref{big-table}.  As you can
-see, these scores are varying a lot. Based on these scores, we could filter out
-unreliable annotators. However we do not do that to have the experiment
-comparable to the WMT14 experiment.
+We also computed the agreements $\kappa$ for individual annotators and report
+them in Table \ref{big-table}.  As you can see, these scores are varying a lot.
+Based on these scores, we could filter out unreliable annotators. However, we
+do not do that in order to maintain comparability to the WMT14 experiment.
 
 
 \begin{table}
