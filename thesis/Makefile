@@ -1,7 +1,10 @@
 SHELL = /bin/bash
 .PHONY: all clean
 
-all: main.pdf
+all: main.pdf abstract_cz.pdf abstract_en.pdf
+
+abstract_%.pdf: abstract_%.tex abstract_text_%.tex
+	pdflatex $<
    
 main.pdf: $(wildcard *.tex)
 	pdflatex main.tex
@@ -10,4 +13,4 @@ main.pdf: $(wildcard *.tex)
 	pdflatex main.tex
 
 clean:
-	rm -f *.{log,dvi,aux,toc,lof,out,bbl,blg,lot} main.pdf
+	rm -f *.{log,dvi,aux,toc,lof,out,bbl,blg,lot} main.pdf abstract_cz.pdf abstract_en.pdf

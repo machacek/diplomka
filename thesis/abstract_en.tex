@@ -1,0 +1,27 @@
+\documentclass[12pt,a4paper]{report}
+
+%% Verze pro jednostranný tisk:
+% Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
+% (ale pozor, LaTeX si sám přidává 1in)
+%\setlength\textwidth{145mm}
+%\setlength\textheight{247mm}
+%\setlength\oddsidemargin{15mm}
+%\setlength\evensidemargin{15mm}
+%\setlength\topmargin{0mm}
+%\setlength\headsep{0mm}
+%\setlength\headheight{0mm}
+
+%% Použité kódování znaků
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+\pagenumbering{gobble}
+\vbox to 0.5\vsize{
+\setlength\parindent{0mm}
+\setlength\parskip{5mm}
+
+\include{abstract_text_en}
+
+\vss} %\nobreak
+
+\end{document}

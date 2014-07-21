@@ -15,7 +15,8 @@ tokenized
 *.out
 *.toc
 main.pdf
-
+abstract_cz.pdf
+abstract_en.pdf
 
 # Packages
 *.egg
