@@ -60,8 +60,10 @@ def main():
     sample = random.sample(tuples, args.count)
 
     counts = [0,0,0]
+    i=0
     for reference_sent, baseline_sent, candidate_sent in sample:
-        result = compare_sentences(baseline_sent, candidate_sent, reference_sent)
+        i += 1
+        result = compare_sentences(baseline_sent, candidate_sent, reference_sent, i)
         counts[result] +=1
 
 
@@ -79,7 +81,7 @@ def main():
 
 
 
-def compare_sentences(sent1, sent2, refesent):
+def compare_sentences(sent1, sent2, refesent, i):
 
     colored1 = ""
     colored2 = ""
@@ -102,6 +104,7 @@ def compare_sentences(sent1, sent2, refesent):
         colored1, colored2 = colored2, colored1
 
     print 100 * "\n"
+    print " sentence:", i
     print "reference:", refesent
     print "   veta 1:", colored1
     print "   veta 2:", colored2
