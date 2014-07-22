@@ -45,7 +45,9 @@ def main():
 
     baseline = (line.strip() for line in args.baseline)
     candidate = (line.strip() for line in args.candidate)
-    sample = random.sample(list(zip(baseline, candidate)), args.count)
+    tuples = zip(baseline, candidate)
+    tuples = list(filter(lambda x: x[0] != x[1], tuples))
+    sample = random.sample(tuples, args.count)
 
     counts = [0,0,0]
     for baseline_sent, candidate_sent in sample:
