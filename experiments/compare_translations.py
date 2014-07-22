@@ -14,6 +14,11 @@ def parse_args():
         anntations are then evaluated.""", 
         epilog="Author: Matous Machacek <machacekmatous@gmail.com>")
     
+    parser.add_argument("reference",
+            help="File with reference translations",
+            type=argparse.FileType('r'),
+            )
+    
     parser.add_argument("baseline",
             help="File with baseline translations",
             type=argparse.FileType('r'),
@@ -43,19 +48,20 @@ def main():
 
     random.seed(args.rseed)
 
+    reference = (line.decode('utf8').strip() for line in args.reference)
     baseline = (line.decode('utf8').strip() for line in args.baseline)
     candidate = (line.decode('utf8').strip() for line in args.candidate)
-    tuples = list(zip(baseline, candidate))
+    tuples = list(zip(reference, baseline, candidate))
     all = len(tuples)
 
-    tuples = list(filter(lambda x: x[0] != x[1], tuples))
+    tuples = list(filter(lambda x: x[1] != x[2], tuples))
     unequal = len(tuples)
 
     sample = random.sample(tuples, args.count)
 
     counts = [0,0,0]
-    for baseline_sent, candidate_sent in sample:
-        result = compare_sentences(baseline_sent, candidate_sent)
+    for reference_sent, baseline_sent, candidate_sent in sample:
+        result = compare_sentences(baseline_sent, candidate_sent, reference_sent)
         counts[result] +=1
 
 
@@ -73,7 +79,7 @@ def main():
 
 
 
-def compare_sentences(sent1, sent2):
+def compare_sentences(sent1, sent2, refesent):
 
     colored1 = ""
     colored2 = ""
@@ -96,7 +102,7 @@ def compare_sentences(sent1, sent2):
         colored1, colored2 = colored2, colored1
 
     print 100 * "\n"
-    # print "reference:", reference
+    print "reference:", refesent
     print "   veta 1:", colored1
     print "   veta 2:", colored2
     print "\n"
