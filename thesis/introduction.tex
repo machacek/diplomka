@@ -7,14 +7,14 @@ require a lot of computer resources to both learn statistics from data and then
 to use them in translation.
 
 In the globalized world we live in, there is a need for translating from one
-language to another. The translation itself is often not easy even for people
-who have to be trained for that and therefore well paid. There is therefore a
-very high demand for cheap and high-quality machine translation. A lot of
-researchers and companies try to satisfy this demand and constantly improve
-their translations system. The first presumption for improving your system is
-that you know how to measure the improvement.
+human language to another. The translation itself is often not easy even for
+people who have to be trained for that and therefore well paid. There is
+therefore a very high demand for cheap and high-quality machine translation. A
+lot of researchers and companies try to satisfy this demand and constantly
+improve their translations system. The first presumption for improving your
+system is that you know how to measure the improvement.
 
-There are actually more situation in which you need to evaluate machine
+There are a lot of situations in which you need to evaluate machine
 translation. If you are a customer who would like to buy a machine translation
 system you want to buy the system which will best suit you. There are many
 criteria of MT systems (speed, price, memory consumption, scalability etc.) but
@@ -23,16 +23,25 @@ Therefore, you would like to evaluate this quality on a sample of documents you
 are going to translate.
 
 If you are a developer of a machine translation system you need to evaluate
-your system during different phases of the development process. Let us go
-through the development phases which need an evaluation in reversed order. From
-time to time, you have a ready-to-sell or ready-to-use system and you would like
-to have a comparison to your competitors
+your system during various phases of the development process. Let us go through
+the phases which need an evaluation in reversed order. From time to time, you
+have a ready-to-use system and you would like to have a comparison to systems
+of your competitors or another researchers. You can evaluate your system
+yourself in a way that the obtained score is comparable to other scores, or you
+can participate in a shared evaluation campaign, for instance NIST
+OpenMT\footnote{\url{http://www.nist.gov/itl/iad/mig/openmt12.cfm}} or at
+Workshop on Statistical Machine
+Translation\footnote{\url{http://www.statmt.org/wmt14/translation-task.html}}
+(WMT) organized by \perscite{wmt14-overview-paper}.  During the day-to-day
+development process of your system, you try various configuration, new
+components and features. You have to evaluate your system with every change to
+know how much the change improved (or sometimes worsen) the translation
+quality. Recently, new automatic methods which tune parameters of your system
+to directly optimize an evaluation measure emerged.
 
-competitors
 
 
-For all these reasons, we explore the area of evaluating machine translation
-quality in this thesis.
+
 
 Unlike other applications of machine learning, the evaluation in machine
 translation is not easy at all. The main reason for that is that when
@@ -42,10 +51,10 @@ there are hundreds of thousands correct translations
 
 
 
+For all these reasons, we explore the area of evaluating machine translation
+quality in this thesis.
 
 \begin{itemize}
-  \item zminit prekotny vyvoj strojoveho prekladu
-  \item proc je potreba merit kvalitu
   \item zakladni pristupy mereni kvality, manualni, automaticke, dalsi zpusoby 
 \end{itemize}
 
