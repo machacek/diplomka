@@ -43,10 +43,14 @@ def main():
 
     random.seed(args.rseed)
 
-    baseline = (line.strip() for line in args.baseline)
-    candidate = (line.strip() for line in args.candidate)
-    tuples = zip(baseline, candidate)
+    baseline = (line.decode('utf8').strip() for line in args.baseline)
+    candidate = (line.decode('utf8').strip() for line in args.candidate)
+    tuples = list(zip(baseline, candidate))
+    all = len(tuples)
+
     tuples = list(filter(lambda x: x[0] != x[1], tuples))
+    unequal = len(tuples)
+
     sample = random.sample(tuples, args.count)
 
     counts = [0,0,0]
@@ -63,6 +67,8 @@ def main():
     print "Equal:", counts[0], "(%.1f %%)" % (100 * counts[0] / float(total))
     print "Worse:", counts[1], "(%.1f %%)" % (100 * counts[1] / float(total))
     print "Total:", total, "(%.1f %%)" % (100 * total / float(total))
+    print "\n"
+    print "Unequal:", unequal, "(%.1f %%)" % (100*unequal / float(all)), "of", all
 
 
 
@@ -100,7 +106,9 @@ def compare_sentences(sent1, sent2):
         print "Zadej cislo vety, ktera je lepsi. Pokud jsou obe stejne, zadej 0."
         try:
             answer = int(raw_input('--> '))
-        except:
+        except EOFError:
+            pass
+        except ValueError:
             pass
 
     if swaped:
