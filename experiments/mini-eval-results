@@ -1,0 +1,20 @@
+Matous:
+--count 100 --rseed 1234
+
+../compare_translations.py --count 100 --rseed 1234 reference bleu-baseline enhanced-bleu
+Better: 29 (29.0 %)
+Equal: 22 (22.0 %)
+Worse: 49 (49.0 %)
+Total: 100 (100.0 %)
+Unequal: 1759 (58.6 %) of 3003
+
+../compare_translations.py --count 100 --rseed 1234 reference bleu-baseline interpolated-penalizeunknow
+Results
+Better: 34 (34.0 %)
+Equal: 41 (41.0 %)
+Worse: 25 (25.0 %)
+Total: 100 (100.0 %)
+Unequal: 1873 (62.4 %) of 3003
+
+Bara:
+--count 100 --rseed 4321
