@@ -39,24 +39,51 @@ know how much the change improved (or sometimes worsen) the translation
 quality. Recently, new automatic methods which tune parameters of your system
 to directly optimize an evaluation measure emerged.
 
+Unlike other applications of natural language processing, for instance speech
+recognition, the evaluation in machine translation is not easy at all. The main
+reason for that is that when translating an average sentence there is no single
+correct solution, in fact there are hundreds of thousands correct translations
+\parcite{bojar2013scratching}.
 
 
+There are two fundamental approaches in the machine translation evaluation: a
+manual evaluation and an automatic evaluation.  In the manual evaluation, human
+judges assess the quality of each sentence manually. The most widely used
+methodology in the past was to assign values from two five point scales
+representing fluency and adequacy. However, it was shown that a) people had
+difficulties with separating these two aspects of translation and b) there was
+a very small inter-annotator agreement, since each annotator had different
+expectation of a good translation. In later evaluation campaigns started by
+\perscite{wmt-overview-2007}, annotators ranked translations relatively 
+to each other.
+
+In the automatic evaluation, an output of a machine translation system is
+compared to a reference translation. However, Unlike other machine learning
+problems, you cannot simply compute the proportion of translated sentences
+which match the reference translation. If a translated sentence is not
+identical to its reference counterpart it does not have to be a bad translation
+because there is the very large number of correct translations. Automatic
+metrics\footnote{Automatic metrics for machine translation evaluation are not
+actually metrics according to the mathematical definition. For example, the
+triangle inequality usually does not hold and some metrics are not even
+symmetric. However, we are going to use this traditional term in this thesis.}
+are used to measure the similarity between the candidate and reference
+translations. The more similar they are, the better the translation is
+considered.
+
+As you can see, the evaluation of machine translation is very important and at
+the same time, very difficult. We explore both manual and automatic evaluation
+in this thesis.
+
+\section{Motivation and Goals}
+
+There are a lot of various metrics of different quality, the most
+used one is \metric{BLEU} \parcite{Papineni02bleu:a}.
 
 
-Unlike other applications of machine learning, the evaluation in machine
-translation is not easy at all. The main reason for that is that when
-translating an average sentence there is no single correct solution, in fact
-there are hundreds of thousands correct translations
-\parcite{bojar2013scratching}. Unlike other problems
+\section{Outline}
 
-
-
-For all these reasons, we explore the area of evaluating machine translation
-quality in this thesis.
-
-\begin{itemize}
-  \item zakladni pristupy mereni kvality, manualni, automaticke, dalsi zpusoby 
-\end{itemize}
+\XXX{\parcite{bojar2012cestina}}
 
 
 
@@ -83,12 +110,6 @@ to annotate wmt14 test data. The new measure will be analysed and compared to
 current manual and automatic evaluation measures. 
 \end{comment}
 
-\section{Motivation and Goals}
-
-\section{Outline}
-
-\XXX{\parcite{wmt14-overview-paper}}
-\XXX{\parcite{bojar2012cestina}}
 
 
 
