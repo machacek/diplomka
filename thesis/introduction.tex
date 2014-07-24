@@ -89,7 +89,7 @@ require to evaluate millions of sentences.
 
 Automatic metrics, on the other hand, are fast, reproducible and cost almost
 nothing. However, they are only proxies to human evaluation and their
-correlation to human judgments varies a lot. The first goal in this thesis is
+correlation to human judgments varies a lot. The first goal of this thesis is
 therefore to conduct a large-scale comparison of available automatic metrics in
 the terms of correlation with human judgments. For this purpose, we have
 organized Metrics Shared Task within Workshop on Statistical Machine
@@ -102,18 +102,28 @@ advantages from both manual and automatic evaluations. Recently, there actually
 emerged such methods on the boundary of manual and automatic evaluation. These
 methods usually require a large manual annotation effort at the beginning to
 create a database and then they use the collected database in an automatic way
-during evaluation. We describe some of these methods in Related Work and
-propose a similar method. The goal here is to design a method which could be
-used as an effective and simple-for-annotators manual evaluation and in the
-same time the database collected during the annotation could be used later to
-evaluate new unseen segments. 
-
+during evaluation.  The second goal of this thesis is to propose a method which
+could be used to manually evaluate a set of systems and the database collected
+during this manual evaluation could be later reused to automatically evaluate
+new, unseen systems and to tune a system. This goal includes, besides proposing
+the method, also developing an annotation application, conducting a real
+evaluation experiment and experiment with reusing the collected database. 
 
 \section{Outline}
 
-\XXX{Rozhodnout se nejdriv o poradi kapitol.}
+The outline of the thesis is following: In Chapter \ref{chapter:segranks} we
+propose the manual evaluation method and report the annotation experiment. We
+explore the possibility of reusing the collected database to evaluate new
+systems and to tune a system in Chapter \ref{chapter:experiments}. The Automatic
+metrics are are described, compared and evaluated in the terms of correlation
+with human judgments in Chapter \ref{metrics}. Related work is summarized in
+Chapter \ref{chapter:related}. You can find a documentation of the annotation
+application and the tools for metrics evaluation in Chapter
+\ref{chapter:implementation}. We conclude our work in Chapter
+\ref{chapter:conclusion}.
 
-\XXX{\parcite{bojar2012cestina}}
+
+\XXX{Kde citovat \parcite{bojar2012cestina}}
 
 
 
