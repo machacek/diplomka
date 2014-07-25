@@ -1,10 +1,84 @@
 \chapter{Related Work}
 \label{chapter:related}
 
-\XXX{Tady bude reserse metod pro evaluaci MT. Popsat pouzivane zpusoby automaticke, rucni a poloautomaticke evaluace }
+This chapter surveys related work on the boundary of automatic and manual
+evaluation. At the end, we also report related work to the automatic metric
+evaluation.
 
+\section{Feasibility of Human Evaluation in MERT}
 
-\XXX{Citovat MERT: Feasibility of Human in the loop}
-\XXX{Citovat a popsat Scratching the surface of possible translations}
-\XXX{Citovat An Evaluation Tool for Machine Translation: Fast Evaluation for MT Research}
+The work of \perscite{human-in-the-loop} was the main inspiration for our
+\metoda{SegRanks} method. They develop a new metric called \metric{Rypt} to use
+it primarily in the MERT method. This metric takes human judgments into
+account, but requires manual labour only at the beginning to build a database
+that can be reused later to evaluate unseen candidates. The core idea is to
+extract segments from source parsed tree and then using an alignment produced
+by a decoder project these source side segments to segments in n-best list
+candidates.  The target side segments are then evaluated by humans. The authors
+however do not specify whether this extraction and human evaluation is done in
+each MERT iteration.
 
+From this paper, we adopted mainly the short segment candidates extraction
+process. The annotation process, scoring the candidates and conducted
+experiments are, however, quite different to our work. The main difference is
+that they extract the short segments for evaluation directly from a n-best
+list, while we extract them from the evaluated systems' translations and hope
+that they will cover also the n-best list. The difference in the annotating
+short segments is that annotators in the paper of \perscite{human-in-the-loop}
+do not rank candidate segments relatively to each other, but they use absolute
+labels \texttt{YES}, \texttt{NO} and \texttt{NOT SURE} to judge whether a
+candidate segment is an acceptable translation. The next difference is in the
+scoring, while we compute \metoda{Ratio of wins (ignoring ties)}, they compute
+the proportion of short segments labeled \texttt{YES}.  We decided to do these
+changes in our method to have the annotation more similar to the official WMT
+human evaluation.
+
+Despite the \metric{Rypt} metric is designed to be used in the MERT method,
+\perscite{human-in-the-loop} actually have not done any experiment with MERT
+for a lack of resources. Only a pilot study is reported in the paper. They
+tried the method only on a relatively small sample of sentences from n-best
+list produced with allredy tuned weights. The reason why we could afford to do
+the experiment with MERT with comparable resources is that we do not extract
+candidate segments from the whole n-best list.
+
+\section{Extrapolating Score from Similar Sentences}
+
+\perscite{niessen2000evaluation} have developed a tool for manual evaluation.
+Annotators select for each evaluated sentence a rank from an absolute point
+scale. Each evaluated sentence is then stored to a database with its rank. The
+authors use their tool for everyday evaluating of new variants of their system
+which often translate differently only a small percentage of a development test
+set. Identically translated sentences are therefore not evaluated again and are
+automatically assigned a rank from the database. Only the new translations are
+evaluated by humans and stored into the database with their rank.
+
+When the database is large enough, there is an option to evaluate new
+translations automatically by extrapolating ranks of candidates from the
+database.  For an evaluated candidate sentence, the rank of the closest
+sentence by edit distance is assigned. If there is more sentences in the
+database with equal edit distance, the average rank is used. This is similar to
+the matching the closest segment which we do in Section
+\ref{match:editdistance}.
+
+The authors present a few statistics related to their database, such as an
+average of absolute differences between the real score and the extrapolated
+score computed using the method similar to our \metoda{leave-one-out} trick.
+However, they do not show how good the extrapolated scores are and if they also
+do not suffer from overestimation. One of their collected database contains
+42.9 candidate translations per a source sentence on average. This is much
+higher than in our database (the maximum number of candidates for one source
+segment is 10), so we could speculate that their space of candidates is much
+more dense and therefore may not be so affected by the overestimation.
+
+\section{Scratching the surface of possible translations}
+
+The work by \perscite{bojar2013scratching} is quite different to the previous
+two works. Their longterm goal is to improve automatic evaluation by
+introducing as many reference translations as possible. Any metric that can
+compare a candidate to multiple references can be then used for evaluation. The
+idea is that if we have a huge set of references, then there will be higher chance that
+either the evaluated candidate will be in the reference set, or there will be a
+reference very similar to the candidate. In both of the cases, an automatic metric 
+will predict the quality much more accurately. 
+
+For 
