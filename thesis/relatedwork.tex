@@ -14,11 +14,21 @@ account, but requires manual labour only at the beginning to build a database
 that can be reused later to evaluate unseen candidates. The core idea is to
 extract segments from source parsed tree and then using an alignment produced
 by a decoder project these source side segments to segments in n-best list
-candidates.  The target side segments are then evaluated by humans. The authors
-however do not specify whether this extraction and human evaluation is done in
-each MERT iteration.
+candidates.  The target side segments are then evaluated by humans and stored
+to a database, which is used later when scoring n-best list. The authors claim
+that this evaluation is done only once before the first iteration of MERT,
+however they do not specify how new, unseen segments from n-best lists produced
+in later MERT iterations would be evaluated.
 
-From this paper, we adopted mainly the short segment candidates extraction
+Despite the \metric{Rypt} metric is designed to be used in the MERT method,
+\perscite{human-in-the-loop} actually have not done any experiment with MERT
+for a lack of resources. Only a pilot study is reported in the paper. They
+tried the method only on a relatively small sample of sentences from n-best
+list produced with allredy tuned weights. The reason why we could afford to do
+the experiment with MERT with comparable resources is that we do not extract
+candidate segments from the whole n-best list.
+
+From their paper, we adopted mainly the short segment candidate extraction
 process. The annotation process, scoring the candidates and conducted
 experiments are, however, quite different to our work. The main difference is
 that they extract the short segments for evaluation directly from a n-best
@@ -32,14 +42,6 @@ scoring, while we compute \metoda{Ratio of wins (ignoring ties)}, they compute
 the proportion of short segments labeled \texttt{YES}.  We decided to do these
 changes in our method to have the annotation more similar to the official WMT
 human evaluation.
-
-Despite the \metric{Rypt} metric is designed to be used in the MERT method,
-\perscite{human-in-the-loop} actually have not done any experiment with MERT
-for a lack of resources. Only a pilot study is reported in the paper. They
-tried the method only on a relatively small sample of sentences from n-best
-list produced with allredy tuned weights. The reason why we could afford to do
-the experiment with MERT with comparable resources is that we do not extract
-candidate segments from the whole n-best list.
 
 \section{Extrapolating Score from Similar Sentences}
 
@@ -74,11 +76,40 @@ more dense and therefore may not be so affected by the overestimation.
 
 The work by \perscite{bojar2013scratching} is quite different to the previous
 two works. Their longterm goal is to improve automatic evaluation by
-introducing as many reference translations as possible. Any metric that can
+significantly enlarging the set of reference translations. Any metric that can
 compare a candidate to multiple references can be then used for evaluation. The
-idea is that if we have a huge set of references, then there will be higher chance that
-either the evaluated candidate will be in the reference set, or there will be a
-reference very similar to the candidate. In both of the cases, an automatic metric 
-will predict the quality much more accurately. 
+idea is that if we have a very large set of references, then there will be higher
+chance that either the evaluated candidate will be in the reference set, or
+there will be a reference very similar to the candidate. In both of the cases,
+an automatic metric will predict the quality much more accurately. 
 
-For 
+To systematically construct the very large set of reference translations,
+\perscite{bojar2013scratching} propose compact representation in which
+annotators create many translations of smaller units, called bubbles, and
+specify conditions under which the translated bubbles can combine together to
+create the whole reference translation. All possible combinations are generated
+and added to the set of reference translations. A single annotator could for a
+given source sentence produce hundreds of thousands reference translations
+using this method in two hours of work. 
+
+The authors show that BLEU computed on a test set of 50 sentences with all the
+produced references achieves better correlation with human judgments than BLEU
+computed on a test set of 3003 sentences with single reference translation. It
+would be interesting to experiment with many references when tuning a system
+using MERT method.
+
+\subsection{Metaevaluation}
+
+Metrics Shared Task (also sometimes called Evaluation Task) is held annually
+within Workshop on Statistical Machine Translation starting by
+\perscite{wmt08}. Until the year 2012, the tasks' results used to be reported
+in the main overview paper.  In the years 2013 and 2014, it was organized by
+\perscite{machacek:2013} and \perscite{machacek:2014} and reported in dedicated
+papers. 
+
+Besides the shared task within WMT, there were also MetricsMATR evaluation
+campaign in years
+2008\footnote{\url{http://www.itl.nist.gov/iad/mig/tests/metricsmatr/2008/}}
+and
+2010\footnote{The task was joint with the WMT task this year, \url{http://www.nist.gov/itl/iad/mig/metricsmatr10.cfm}}.
+
