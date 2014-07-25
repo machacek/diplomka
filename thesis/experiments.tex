@@ -9,8 +9,7 @@ annotations.
 
 In the first experiment, we would like to show that the proposed method can be
 used to produce overall ranking of the annotated systems which will be very
-similar to the official human evaluation in WMT with much less human effort
-\XXX{dolozit, pokud je to vubec pravda a pokud to vubec pujde}.
+similar to the official human evaluation in WMT.
 
 The obtained database contains a list of annotations for each extracted source
 segment from each source sentence. The list can be empty (not all of the
@@ -196,8 +195,7 @@ judgements, system A gets one win and system B gets one loss. However, when
 computing the ratio of wins on the segment-level system A gets for instance two
 wins and one loss, system B one win and two losses. It should be clear now that
 computing expected wins on the sentence-level judgements is coarser while our
-method is more fine-grained.  \XXX{Co z toho vlastne plyne? Je to dobre, nebo
-spatne?}
+method is more fine-grained.
 
 The overall rankings of the systems obtained by both of the methods are very
 similar. However, there are two changes when comparing to the sentence-level
@@ -221,13 +219,13 @@ The basic formula for Kendall's $\tau$ is:
 
 \noindent where $Concordant$ is the set of pairwise combination where both sets
 of pairwise rankings agrees with each other and $Discordant$ is the set of
-pairwise combination where the sets do not agree in pairwise ranking.
-\XXX{mozna vyhodit predchozi vetu}  We will discuss the Kendall's $\tau$ in
-more detail in chapter \ref{metrics}. Here, we computed $|Concordant|$ as the
-number of pairwise segment-level judgments which agrees with the corresponding
-sentence-level judgment. Similarly, $|Discordant|$ is the number of those which
-do not agree with the corresponding sentence-level judgment. In this section,
-we do not consider any tied pairwise comparisons.
+pairwise combination where the sets do not agree in pairwise ranking.  We will
+discuss the Kendall's $\tau$ in more detail in chapter \ref{metrics}. Here, we
+computed $|Concordant|$ as the number of pairwise segment-level judgments which
+agrees with the corresponding sentence-level judgment. Similarly,
+$|Discordant|$ is the number of those which do not agree with the corresponding
+sentence-level judgment. In this section, we do not consider any tied pairwise
+comparisons.
 
 \begin{table}
   \begin{center}
@@ -1067,8 +1065,6 @@ the source segment is decreasing with the edit distance. For example, for the
 segments whose edit distance to the closest segment is 17, only 10 percent of
 the closest segments is equally ranked, which is very poor. 
 
-\XXX{Zkontrolovat, popripade lepe vysvetlit predchozi dva odstavce}
-
 
 \begin{table}
   \centering
@@ -1614,16 +1610,16 @@ used the tuned systems to translate the test set (newstest2012) and then we
 evaluated these translations automatically and manually. For the automatic
 evaluation we used metrics \metric{BLEU} \parcite{Papineni02bleu:a} and
 \metric{CDER} \parcite{Leusch06cder:efficient}. We have also conducted a small
-scale manual evaluation. For each evaluated system, we randomly sampled
-\XXX{100} sentences which were translated differently by the baseline and by
-the evaluated system. \XXX{Two} annotators then compared the sampled
-sentences with the corresponding translations produced by the baseline system.
-Their task was to choose which sentence is better or whether they are of the
-same quality. We report how many of the sampled sentences were better and
-better-or-equal than the corresponding baseline translation.
-
-You can see that none of the metric variants outperformed the baseline system
-tuned solely to \metric{BLEU} in the automatic evaluation.
+scale manual evaluation. For each evaluated system, we randomly sampled 100
+sentences which were translated differently\footnote{58.6 \% of all test set
+    sentences were translated differently to the baseline by
+    \metric{SegRanksBLEU}, 62.4 \% by \metric{PenalizeUnknown} and 83.4 \% by
+\metric{ExactMatch}} to the baseline and by the evaluated system. Then we
+compared manually the sampled sentences with the corresponding translations
+produced by the baseline system.  The task was to choose which sentence is
+better or whether they are of the same quality. We report how many of the
+sampled sentences were better and how many of them were worse than the
+corresponding baseline translation.
 
 \begin{table}
   \centering
@@ -1633,25 +1629,57 @@ tuned solely to \metric{BLEU} in the automatic evaluation.
     & \textbf{iter-} & \multicolumn{2}{|c|}{\textbf{Evaluation}} & \multicolumn{2}{|c|}{\textbf{Evaluation}} \\
     \textbf{Tunable metric} & \textbf{ations} & \textbf{BLEU} & \textbf{CDER}  & \textbf{Better} & \textbf{Worse} \\
     \hline
-    \metric{BLEU} (baseline) & 11 & 0.1782 & 0.3855 & --- & --- \\
-    \metric{ExactMatch}      & 20 & 0.1637 & 0.3674 & \XXX{} & \XXX{} \\
-    \metric{PenalizeUnknown} &  8 & 0.1772 & 0.3850 & \XXX{} & \XXX{} \\
-    \metric{SegRanksBLEU}    &  8 & 0.1753 & 0.3835 & \XXX{} & \XXX{} \\
+    \metric{BLEU} (baseline) & 11 & \textbf{0.1782} & \textbf{0.3855} & --- & --- \\
+    \metric{ExactMatch}      & 20 & 0.1637 & 0.3674 & 22 \% & 38 \% \\
+    \metric{PenalizeUnknown} &  8 & 0.1772 & 0.3850 & \textbf{34 \%} & \textbf{25 \%} \\
+    \metric{SegRanksBLEU}    &  8 & 0.1753 & 0.3835 & 29 \% & 49 \% \\
     \hline
   \end{tabular}
 
   \caption[Results of systems tuned on SegRanks based metrics]{Results of
-    systems which were optimized to a SegRanks based metric. The items in the
-    first column specify the metric which was used when tuning the system on
-    the development test.  The columns BLEU and CDER contain just scores of
-    these metrics computed on the test set translated with the tuned weights.
-  The last two columns contain percentages of better and better-or-equal
-sentences compared to the baseline in the manual evaluation.}
+      systems which were optimized to a SegRanks based metric. The items in the
+      first column specify the metric which was used when tuning the system on
+      the development test.  The columns BLEU and CDER contain just scores of
+  these metrics computed on the test set translated with the tuned weights.
+  The last two columns contain percentages of better and worse sentences
+  compared to the baseline system in the manual evaluation.}
 
   \label{mert:results}
 \end{table}
 
-\XXX{Okomentovat vysledky, az budou vsechny a hlavne az bude lidske hodnoceni}
+You can see that none of the metric variants outperformed the baseline system
+tuned solely to \metric{BLEU} in the automatic evaluation. This was expected,
+since the best performing system according to \metric{BLEU} should be the one
+which was tuned by \metric{BLEU}. However, you can see that the system tuned by
+\metric{PenalizeUnknown} has both the \metric{BLEU} and \metric{CDER} scores
+only a little bit lower. 
+
+In the manual evaluation, the only system which translated more better
+sentences than worse sentences compared to the baseline system is the system
+tuned to \metric{PenalizeUnknown}.  This means that forcing the system to
+produce known and evaluated segments when translating development set helps to
+chose better weights. This, however, also means that we discouraged the tuned
+system to produce unknown and maybe better translations. The best hypothetical
+translation according to the optimized metric which the tuned system can
+produce during MERT consists of the best ranked segments from the database.
+However, there certainly exist better translations. 
+
+We should say here, that this experiment should be performed more precisely to
+obtain reliable results. The problem with MERT is that it is not
+deterministic in two aspects: a) MERT method can converge to only a local
+optimum, this depends on the point it started. b) The used implementation of
+Powell's algorithm optimize the metric value along the axis and also along
+random lines. Two MERT runs with different random seed can therefore find
+different weights. The fact that system tuned to \metric{PenalizeUnknown} was
+better than baseline could be therefore caused only by a chance. To do it more
+precisely, we would have to run the MERT process more times starting at
+different points and with different random seeds (but with the same starting
+conditions for each optimized metric). However, we did not do that this way,
+because we would have to manually evaluate each of the MERT runs a we did not
+have enough resources for that.
+
+
+
 
 
 \begin{figure}
@@ -1676,10 +1704,5 @@ objective function also indirectly optimizes the hit rate. The hit rate in
 value 0.5. It is good that the final value is quite high so the
 \metric{ExactMatch} is computed on a nonnegligible amount of data. However, it
 takes much more iterations for \metric{ExactMatch} to get to the value of 0.5 that
-it takes for \metric{PenalizeUnknown} to get to the value of 0.7. \XXX{Tady to jeste
-shrnout po manualni evaluaci}.
+it takes for \metric{PenalizeUnknown} to get to the value of 0.7. 
 
-
-
-
-\XXX{Je otaka, zda jsme se podle Penalize Unknown nedostali k puvodnimu systemu}
