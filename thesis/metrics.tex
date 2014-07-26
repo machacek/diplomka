@@ -24,43 +24,43 @@ Machine Translation\footnote{\url{http://www.statmt.org/wmt13}}, starting with
 \perscite{wmt14-overview-paper}. In WMT13, we took over the organization of the
 task \parcite{machacek:2013} and continued to do that also in WMT14
 \parcite{machacek:2014}. In this chapter, we present the results of WMT14
-metrics shared task with some additional informations and comments.
+metrics shared task with some additional information and comments.
 
-In this task, we asked metrics developers to score the outputs of WMT14 Shared
+In this task, we asked metric developers to score the outputs of WMT14 Shared
 Translation Task \parcite{wmt14-overview-paper}. We have collected the computed
-metrics' scores and use them to evaluate quality of the metrics.  There are
+metrics' scores and use them to evaluate the quality of the metrics.  There are
 actually two subtasks: a system level task and a segment level task.
 
 \begin{itemize}
 
     \item \textbf{System Level.} In the system level subtask, participants
         compute one score for the whole test set, as translated by each of the
-        systems. We then measure the correlation of those scores with systems'
+        systems. We then measure the correlation of those scores with the systems'
         official human scores.  The goal of metrics in this subtask is to give
-        an overall ranking of systems as close as possible to the official
+        an overall ranking of the systems as close as possible to the official
         ranking according to human scores in each direction.
     
     \item \textbf{Segment Level.} In this subtask, participants compute one
         score for each sentence of each system's translation. We then measure
         the correlation of these scores with pairwise human judgements. The
         goal of metrics in this subtask is to compare two candidate segments in
-        the same way as humans would do.
+        the same way as humans would.
 
 \end{itemize}
 
 In the previous years, a lot of metrics performed very well in the system level
 task. In some of the translation directions, they predicted the overall ranking
-of systems almost perfectly. However, there is still a space for metrics to
-improove.  In contrast to the system level task, the segment level task is much
-more diffcult. The correlations in previous years were very low. It is
+of systems almost perfectly. However, there is still space for metrics to
+improve.  In contrast to the system level task, the segment level task is much
+more difficult. The correlations in previous years were very low. It is
 therefore very interesting to see whether metrics perform better this year.
 
 The systems' outputs, human judgements and evaluated metrics are summarized in
 Section \ref{section:data}. In Section \ref{section:metrics:description}, we
-describe the participated metrics in more detail. The quality of the metrics
-in terms of system level correlation is reported in Section \ref{system-level}.
-Segment level correlation with a detailed discussion and a slight change in the
-calculation compared to the previous year is reported in Section
+describe the participated metrics in more detail. The quality of the metrics in
+terms of system level correlation is reported in Section \ref{system-level}.
+The Segment level correlation with a detailed discussion and a slight change in
+the calculation compared to the previous year is reported in Section
 \ref{segment-level}.
 
 \section{Data}
@@ -78,11 +78,11 @@ paper \parcite{wmt14-overview-paper}.
 \subsection{Manual MT Quality Judgements}
 
 During the WMT14 Translation Task, a large scale manual annotation was conducted
-to compare the systems. We used these collected human judgements for the evalution
+to compare the systems. We used these collected human judgements for the evaluation
 of
 the automatic metrics. 
 
-The participants in the manual annotation were asked to evaluate system outputs
+The participants in the manual annotation were asked to evaluate the system outputs
 by ranking translated sentences relative to each other. For each source segment
 that was included in the procedure, the annotator was shown the outputs of five
 systems to which he or she was supposed to assign ranks. Ties were allowed.
@@ -143,9 +143,9 @@ metrics as baselines:
 
 \item \textbf{Moses Scorer.} The metrics \metric{TER} \parcite{Snover06astudy},
     \metric{WER}, \metric{PER} and \metric{CDER} \parcite{Leusch06cder:efficient}
-    were computed using the Moses scorer which is used in Moses model
+    were computed using the Moses scorer which is used in the Moses model
     optimization. To tokenize the sentences we used the standard tokenizer
-    script as available in Moses toolkit.
+    script as available in the Moses toolkit.
 
 
 \end{itemize}
@@ -157,7 +157,7 @@ We have normalized all metrics' scores such that better translations get higher 
 
 In this section, we present short descriptions of some interesting metrics which
 participated in the shared task.  Please see the cited papers for more details
-about the metrics. Please note that the description of the \metric{BLEU} metric
+about the metrics. Note that the description of the \metric{BLEU} metric
 has been already presented in Subsection \ref{enhancing:bleu}.
 
 \subsection{AMBER}
@@ -192,7 +192,7 @@ measures and $score$ is given by:
 \noindent where $AvgP$ is a geometric average of n-gram precisions (this is the
 same as in \metric{BLEU}), $Fmean$ is the F-measure computed on the average
 n-gram precision and average n-gram recall (averages are computed across $n \in
-\{1, \ldots, N\}$). And $AvgF$ is an average (across $n \in \{1, \ldots, N\}$)
+\{1, \ldots, N\}$) and $AvgF$ is an average (across $n \in \{1, \ldots, N\}$)
 of F-measures computed on n-gram precision and n-gram recall for given $n$.
 
 This is the basic computation but the authors propose many more enhancements,
@@ -209,7 +209,7 @@ preserved in \metric{AMBER}.
 
 \subsection{BEER}
 
-This metric is proposed by \perscite{wmt14-metric-beer}. Its abbreviation
+This metric is proposed by \perscite{wmt14-metric-beer}. The abbreviation
 stands for ``BEtter Evaluation as Ranking''. Their metric model can employ
 various features which measure the similarity of candidate and reference
 translations from various aspects.  Individual features are then combined using
@@ -229,9 +229,9 @@ permutations. One of the ordering features is Kendall's $tau$ distance to
 monotone permutation. Other 5 ordering features are based on permutation trees
 introduced by \perscite{zhang2007factorization}.
 
-They tune the feature weights to get best correlation with human sentence level
+They tune the feature weights to get the best correlation with human sentence level
 judgments. Let $h_{good}$ and $h_{bad}$ be two hypothesis translations of a source
-sentence with reference translation $r$ and let $h_{good}$ be ranked better than
+sentence with reference translation $r$ and, let $h_{good}$ be ranked better than
 $h_{bad}$ by human judgments.  Given that the metric's model is linear, one can
 derive:
 
@@ -245,10 +245,10 @@ Using the last equation, a binary classification problem can be formulated.  For
 each human pairwise comparison we have one positive training instance with the
 feature vector $\vect{\phi}(h_{good},r) - \vect{\phi}(h_{bad},r)$ and one
 negative training instance with the feature vector $\vect{\phi}(h_{bad},r) -
-\vect{\phi}(h_{good},r)$. A regression is than used to train the
+\vect{\phi}(h_{good},r)$. A regression is then used to train the
 weight vector $\vect{w}$.
 
-Please note, that once the weight vector is trained, there is no need to
+Please note that once the weight vector is trained, there is no need to
 classify a pair of hypothesis when evaluating. A score of a single evaluated hypothesis $h$
 is computed as $\vect{w} \cdot \vect{\phi}(h,r)$.
 
@@ -256,23 +256,23 @@ is computed as $\vect{w} \cdot \vect{\phi}(h,r)$.
 
 \subsection{BLEU-NRC}
 
-Original \metric{BLEU} is not very suitable for evaluating single sentences. It
-can easily happen that for a higher values of $n$, no n-gram from the candidate
-does not match the reference translation. The precision is then zero and since
+The original \metric{BLEU} is not very suitable for evaluating single sentences. It
+can easily happen that for higher values of $n$, no n-gram from the candidate
+matches the reference translation. The precision is then zero and since
 the \metric{BLEU} score is computed as the geometric average, it is also zero.
-A lot of sentence therefore gets zero scores even they can be meaningful. There
+A lot of sentences therefore get zero scores and even they can be meaningful. There
 is also a problem with very short sentences for which the precisions of higher
 $n$ values could be undefined. To compute \metric{BLEU} on sentence level, one
 has to smooth the precision values.
 
-Let $m_n$ be the clipped count of n-grams occurring in the both reference and
-candidate translations and let $l_n$ be the total count of n-grams in the
-candidate. In original \metric{BLEU}, the precision is computed as $p_n = m_n /
+Let $m_n$ be the clipped count of n-grams occurring in both the reference and
+candidate translations, and let $l_n$ be the total count of n-grams in the
+candidate. In the original \metric{BLEU}, the precision is computed as $p_n = m_n /
 l_n$. When smoothing, a modified clipped count $m_n'$ is computed and then the
 precision is computed as $p_n = m_n' / l_n$. 
 
 \perscite{wmt14-metric-bleunrc} compare various smoothing methods and choose
-the method with correlates best with sentence level judgments. Their best
+the method which correlates best with sentence level judgments. Their best
 performing smoothing method is a combination of two methods. They compute first
 modified counts $m_n'$ and based on them, they compute second modified counts
 $m_n''$.
@@ -282,9 +282,9 @@ The first modified counts are computed using the following algorithm:
     $N$} \If{$m_n = 0$} \Let{$invcnt$}{$invcnt \cdot \frac{K}{\ln(\len(c))}$}
     \Let{$m_n'$}{$1 / invcnt$} \Else \Let{$m_n'$}{$m_n$} \EndIf \EndFor
 \end{algorithmic} where $K$ is set empirically (they use $K = 5$). The
-assignment in the line 4 means that for shorter sentences, the smoothed clipped
+assignment in line 4 means that for shorter sentences, the smoothed clipped
 counts are smaller. The motivation for this is the fact that the denominator in
-the precision computation is smaller for shorter sentences and therefor the
+the precision computation is smaller for shorter sentences and therefore the
 numerator should be also smaller so that precisions for shorter sentences are
 not inflated. However, we think that this allows to game the metric by
 producing very long sentences with no n-gram matched: if $\len{c} > e^K$, than
@@ -293,7 +293,7 @@ therefore increase. For each positive real number, there exists a sentence
 length which would ensure the metric score to be higher than the given number.
 We, however, do not consider this as a serious problem.
 
-The second smoothing technique used on top of the first method is inspired by
+The second smoothing technique is used on top of the first method, and is inspired by
 the intuition that matched counts for similar values of $n$ should be similar.
 This method therefore computes the modified matched counts as an average of
 neighbouring clipped counts. The authors define $m_0'' = m_1' + 1$ and
@@ -307,10 +307,10 @@ calculate $m_n''$ for $n > 0$ as follows:
     }
 \end{equation*}
 
-Finally, the n-gram precisions and BLEU score are computed from the modified
+Finally, the n-gram precisions and the BLEU score are computed from the modified
 clipped counts $m_n''$.
 
-For completeness, we also report how the \metric{BLEU} metric is smoothed in
+For completeness we also report how the \metric{BLEU} metric is smoothed in
 the Moses MERT implementations since it is used for computing a baseline metric
 \metric{sentBLEU} in the segment-level results. To both the numerator and denominator
 in the precision computation, a one is added:
@@ -338,7 +338,7 @@ distance is normalized by the length of the reference $r$:
 
 \noindent where $E(c,r)$ denotes a set of all sequences of edit operations
 which transform the candidate $c$ to the reference $r$, and $D(e)$, $S(e)$,
-$I(e)$ denote number of deletions, substitutions and insertions of tokens
+$I(e)$ denote the number of deletions, substitutions and insertions of tokens
 respectively in the sequence $s$.
 
 The minimal sequence can be easily computed using a dynamic programing algorithm.
@@ -357,8 +357,8 @@ in Figure \ref{wer-grid}.
 \subsection{CDER}
 
 The abbreviation of this metric stands for ``Cover Disjoint Error Rate'' and it
-is developed by \perscite{Leusch06cder:efficient}. This metric is similar to
-\metric{WER} in that it is also an edit distance based metric. In addition the
+was developed by \perscite{Leusch06cder:efficient}. This metric is similar to
+\metric{WER} in that it is also an edit distance based metric. In addition to the
 insertions, substitutions and deletions, \metric{CDER} also allows long jumps.
 The long jump is an operation in which we move in an alignment grid to any
 position in the candidate (we can get to any position in an actual row of the
@@ -376,7 +376,7 @@ penalized so harshly. The \metric{CDER} is computed as follows:
 
 \noindent where $E(c,r)$ denotes a set of all sequences of edit operations
 which transform the candidate $c$ to the reference $r$, and $D(e)$, $S(e)$,
-$I(e)$, $LJ(e)$ denote number of deletions, substitutions, insertions and long
+$I(e)$, $LJ(e)$ denote the number of deletions, substitutions, insertions and long
 jumps respectively in the sequence $s$. You can see an example of an alignment grid with
 long jumps in Figure \ref{cder-grid}.
 
@@ -391,11 +391,11 @@ long jumps in Figure \ref{cder-grid}.
 
 \subsection{DiscoTK}
 
-\metric{DiscoTK} metric family is developed by \perscite{wmt14-metric-discotk}.
-Its abbreviation stands for ``Discourse Tree Kernel''. The basic princip is
+\metric{DiscoTK} metric family was developed by \perscite{wmt14-metric-discotk}.
+Its abbreviation stands for ``Discourse Tree Kernel''. The basic principle is
 that both reference and candidate translations are parsed to discourse parse
 trees which are then compared using convolution tree kernels. There are 5
-different discourse tree representations, all of them are compared and
+different discourse tree representations; all of them are compared and
 normalized kernels scores are then averaged with uniform weights to get the
 \metric{DiscoTK-light} score.  Please see the paper for more details.
 
@@ -410,7 +410,7 @@ measures in total are then averaged with uniform weights to get
 
 \subsection{LAYERED}
 
-\metric{LAYERED} is developed by \perscite{wmt14-metric-layered}. Its name
+\metric{LAYERED} was developed by \perscite{wmt14-metric-layered}. Its name
 comes from combining metrics on various linguistic layers:
 
 \begin{itemize}
@@ -425,19 +425,19 @@ comes from combining metrics on various linguistic layers:
         are constructed from source-candidate and source-reference alignments.
         The first two metrics are designed by \perscite{birch2011reordering}.
 
-        The first metric is Hamming Score (HAMMING) which is a normalized
+        The first metric is Hamming Score (HAMMING), which is a normalized
         Hamming distance defined as the number of disagreements between two
         permutations: $\left| \left\{ i \in \{1 \ldots n\} \mid \pi(i) \ne
         \sigma(i) \right\} \right|$. 
 
-        The second metric is Kendall's $\tau$ distance (\metric{KTD}) which
+        The second metric is Kendall's $\tau$ distance (\metric{KTD}), which
         measures the minimum number of transpositions of two adjacent symbols
         necessary to transform one permutation into another.
         
         The last metric
-        is Spearman rank correlation coefficient (\metric{SPEARMAN}) which
-        measures how much is the permutation between the candidate and the
-        reference monotone. (We also use Spearman rank correlation coefficient
+        is Spearman rank correlation coefficient (\metric{SPEARMAN}), which
+        measures how much the permutation between the candidate and the
+        reference is monotone. (We also use Spearman rank correlation coefficient
         for the metrics evaluation. You can find the exact definition later in
         this chapter).
 
@@ -446,7 +446,7 @@ comes from combining metrics on various linguistic layers:
         candidate and reference parse trees and then average them to get a
         single score.\footnote{A question is why the authors do not use
             F-measure which is usually used to combine precision and recall.
-        They even do not use the terms precision and recall and instead they
+        They do not even use the terms precision and recall and instead
     define the concepts of precision and recall using a textual entailment
 concept.}  The first metric (\metric{SHALLOW}) uses the Stanford dependency
 parser \parcite{Marneffe06generatingtyped} to generate the dependencies. The
@@ -455,7 +455,7 @@ construct the dependencies.
 
 \end{itemize}
 
-All the metrics from all layers are then linearly combined (using tuned weights)
+All the metrics from all the layers are then linearly combined (using tuned weights)
 to get a final \metric{LAYERED} score: 
 
 \begin{eqnarray*}
@@ -486,7 +486,7 @@ reference using the following matchers:
 \end{itemize}
 
 Since there could be more possible alignments, the final alignment is then
-resolved as the largest subset of all matches which meet the following
+resolved as the largest subset of all matches which meets the following
 criteria:
 
 \begin{enumerate}
@@ -495,8 +495,8 @@ criteria:
     \item The number of chunks is minimal (chunk is a contiguous sequence of
         candidate words which is monotonically mapped to a contiguous
         sequence of reference words).
-    \item An alignment with less total sum of absolute distances between positions
-        of aligned words is preferred. 
+    \item An alignment with a smaller total sum of absolute distances between
+        the positions of aligned words is preferred. 
 \end{enumerate}
 
 The \metric{METEOR} for an aligned sentence is then computed as follows. Let
@@ -549,17 +549,17 @@ Using the computed precision and recall, a F mean is computed:
 
 \noindent where $ch$ is the number of chunks (as defined above) and $m$ is the
 total number of matched words. All the parameters $\alpha$, $\beta$, $\gamma$,
-$\delta$ and $w_1 \ldots w_n$ are tuned to maximize correlation with human
+$\delta$ and $w_1 \ldots w_n$ are tuned to maximize the correlation with human
 judgments.
 
-Some of the \metric{Meteor} components needs language specific resources.
+Some of the \metric{Meteor} components need language specific resources.
 While some of the resources are limited to one or a few languages, other
 resources can be easily trained from bilingual or monolingual data. For
 example, the list of function words consists of all words with relative
 frequency above a certain treshold. Paraphrase tables are constructed with a
 simple method from a phrase table. The weights are tuned for each language
-direction independently, however, developers of \metric{Meteor} have also tuned
-an universal set of weights which can be used for any language direction. This
+direction independently, however developers of \metric{Meteor} have also tuned
+a universal set of weights which can be used for any language direction. This
 is the case, for example, for directions from Russian and Hindi (The results
 for these directions are also very poor).
 
@@ -575,7 +575,7 @@ for these directions are also very poor).
 \label{system-level}
 
 When evaluating metrics on the system level, we would like to reward metrics
-which predicts the ordering of the systems as similar as possible to the
+which predict the ordering of the systems as similar as possible to the
 ordering given by the human scores.
 
 While the Spearman's $\rho$ correlation coefficient was used traditionally as
@@ -593,8 +593,8 @@ direction:
     r = \frac{\sum ^n _{i=1}(H_i - \bar{H})(M_i - \bar{M})}{\sqrt{\sum ^n _{i=1}(H_i - \bar{H})^2} \sqrt{\sum ^n _{i=1}(M_i - \bar{M})^2}} 
 \end{equation}
 
-\noindent where $H$ is the vector of human scores of all systems translating in
-the given direction, $M$ is the vector of the corresponding scores as predicted
+\noindent where $H$ is the vector of human scores of all the systems translating in
+the given direction and $M$ is the vector of the corresponding scores as predicted
 by the given metric. $\bar{H}$ and $\bar{M}$ are their means respectively.
 
 The Pearson's $r$ ranges from -1 to 1. A value of 1 implies that a linear
@@ -602,30 +602,27 @@ equation describes the relationship between the human scores and the metric
 scores and the metric score increases as the human score increases. A value of
 -1 also implies a linear relationship but this time the metric score decreases
 as the human score decreases. A value of 0 implies that there is no
-relationship between the human scores and metric scores.
+relationship between the human scores and the metric scores.
 
-Since we have normalized all metrics such that better translations get higher
+Since we have normalized all metrics such that better translations get a higher
 score, we consider metrics with values of Pearson's $r$ closer to 1 as better. 
 
 For the sake of completeness and for the possibility to compare the results to
-previous years, we also compute and report Spearman's rank correlation
-coefficient in the tables. This metaevaluation metric measures how much the
-human score and the metric score are mononotonically related.  This measure
-does not consider the absolute differences between the values so the
-relationship between the two variables is not penalized for not being linear.
-To compute Spearman's $\rho$, we must first transform the variables to ranks.
-If there are some equal values, we assign to them an average of corresponding
-ranks. Once we have the ranks, we can compute Spearman's $\rho$ as the Pearson
-correlation coefficient between the rankings. Since there are no tied scores,
-we use the following simplified formula:
-\begin{equation*}
-\rho = 1 - \frac{6 \sum{d_i^2}}{n(n^2 -1)}
-\end{equation*}
-where $d_i$ is the difference between the human rank and metric's rank for
-system $i$ and $n$ is number of the systems. The possible values of $\rho$
-range between 1 and -1. A value of 1 implies that the metric scores give the
-same ranking of the systems as the official human scores. A value of -1 implies
-that the metric scores give a reversed ranking.
+previous years, we also report Spearman's rank correlation coefficient in the
+tables. This metaevaluation metric measures how much the human score and the
+metric score are mononotonically related.  This measure does not consider the
+absolute differences between the values so the relationship between the two
+variables is not penalized for not being linear.  To compute Spearman's $\rho$,
+we must first transform the variables to ranks.  If there are some equal
+values, we assign to them an average of corresponding ranks. Once we have the
+ranks, we can compute Spearman's $\rho$ as the Pearson correlation coefficient
+between the rankings. Since there are no tied scores, we use the following
+simplified formula: \begin{equation*} \rho = 1 - \frac{6 \sum{d_i^2}}{n(n^2
+-1)} \end{equation*} where $d_i$ is the difference between the human rank and
+metric's rank for system $i$ and $n$ is number of the systems. The possible
+values of $\rho$ range between 1 and -1. A value of 1 implies that the metric
+scores give the same ranking of the systems as the official human scores. A
+value of -1 implies that the metric scores give a reversed ranking.
 
 The reported empirical confidence intervals of system level correlations were
 obtained through bootstrap resampling of 1000 samples (confidence level of
@@ -679,7 +676,7 @@ You can find the system-level correlations for translations into English in
 Table \ref{system-level-corrs-toEn} and for translations out of English in
 Table \ref{system-level-corrs-outEn}. Each row in the tables contains
 correlations of a metric in each of the examined translation directions. The
-metrics are sorted by average Pearson correlation coefficient across
+metrics are sorted by average Pearson correlation coefficient across the
 translation directions. The best results in each direction are in bold.
 
 As in previous years, a lot of metrics outperformed \metric{BLEU} in system
@@ -693,16 +690,16 @@ best metric in Hindi-to-English direction.  Metrics \metric{REDSys} and
 Czech-to-English directions respectively but they perform very poorly in other
 directions. 
 
-Except \metric{Meteor}, none of the participants took part in the last year
-metrics task.  We can therefore compare current and last year results only for
-\metric{Meteor} and baseline metrics.  \metric{Meteor}, the last year winner,
-performs generally well in some directions but it horribly suffers when
+Except \metric{Meteor}, none of the participants took part in the last year's
+metrics task.  We can therefore compare current and last year's results only for
+\metric{Meteor} and baseline metrics.  \metric{Meteor}, last year's winner,
+performs generally well in some directions but it suffers horribly when
 evaluating translations from non-Latin script (Russian and especially Hindi).
 For the baseline metrics the results are quite similar across the years. In
 both years \metric{BLEU} performs best among baseline metrics, closely followed
 by \metric{CDER}. \metric{NIST} is in the middle of the list in both
 years. The remaining baseline metrics \metric{TER}, \metric{WER}
-and \metric{PER} perform much worse.
+and \metric{PER} perform significantly worse.
 
 The results into German are markedly lower and have broader confidence
 intervals than the results in other directions. This could be explained by a
@@ -726,7 +723,7 @@ Compared to the last year results, the order of metrics participating in both
 years is quite similar: \metric{NIST} and \metric{CDER} performed very well
 both years, followed by \metric{BLEU}. The metrics \metric{TER} and \metric{WER}
 are again at the end of the list. An interesting change is that
-\metric{PER} perform much better this year.
+\metric{PER} performs much better this year.
 
 
 \begin{sidewaystable*}
@@ -860,10 +857,10 @@ For an example of Kendall's $\tau$ computation, let us have the following compar
 
 In the original Kendall's $\tau$, comparisons
 with human or metric ties are considered neither concordant nor discordant.
-However in the past, Metrics Tasks (\cite{callisonburch:wmt12} and
+However in the previous Metrics Tasks (\cite{callisonburch:wmt12} and
 earlier), comparisons with human ties were considered as discordant.
 To easily specify which pairs are counted as concordant and which as discordant, we
-have developed the following tabular notation. This is for example the WMT12
+have developed the following tabular notation. This is, for example, the WMT12
 method:
 
 \begin{center}
@@ -944,7 +941,7 @@ excluded them like the human ties. We will denote this method as WMT13:
 
 \noindent It turned out, however, that it was not a good idea: metrics could
 game the scoring by avoiding hard cases and assigning lots of ties. A natural
-solution is to count the metrics ties also in denominator to avoid the problem.
+solution is to count the metrics ties also in the denominator to avoid the problem.
 We will denote this variant as WMT14:
 
 \begin{center}
@@ -965,7 +962,7 @@ variant does. Compared to WMT12 method, WMT14 does not penalize ties.
 %scores. In half of the originally tied cases it would get into   moved tied comparisons from
 %discordant pairs to concordant. 
 
-We were also considering to get human ties involved. The most natural variant would be the
+We also considered getting human ties involved. The most natural variant would be the
 following variant denoted as HTIES:
 
 \begin{center}
@@ -1148,14 +1145,14 @@ The final Kendall's $\tau$ results are shown in Table
 \ref{segment-level-correlations-toEn} for directions into English and in Table
 \ref{segment-level-correlations-fromEn} for directions out of English.  Each
 row in the tables contains correlations of a metric in given directions. The
-metrics are sorted by average correlation across translation directions.  The
+metrics are sorted by the average correlation across translation directions.  The
 highest correlation in each column is in bold. Table
 \ref{kendall-other-variants-toEn} and Table \ref{kendall-other-variants-fromEn}
 contain average Kendall's $\tau$ computed by other variants including the
 variant WMT13 used last year.  Metrics which did not compute scores in all
 directions are at the bottom of the tables. The possible values of $\tau$ range
 between -1 (a metric always predicted a different order than humans did) and 1
-(a metric always predicted the same order as humans). Metrics with a higher
+(a metric always predicted the same order as humans did). Metrics with a higher
 $\tau$ are better.
 
 We also computed empirical confidence intervals of Kendall's $\tau$ using bootstrap
@@ -1182,14 +1179,16 @@ metrics.
 
 The metric \metric{DiscoTK-light-kool} is worth mentioning.  It is deliberately
 designed to assign the same score for all systems for most of the segments.  It
-obtained scores very close to zero (i.e. totally uninformative) in WMT14
-variant.  In WMT13 thought it reached the highest score.
+obtained scores very close to zero (i.e. totally uninformative) in the WMT14
+variant.  In WMT13 thought, it reached the highest score.
 
 In directions out of English (Table~\ref{segment-level-correlations-fromEn}),
 the metric with highest correlation on average across all directions is
 \metric{Beer}, followed by \metric{Meteor}.
 
 \section{Overall Comparison of Automatic Metrics}
+
+\XXX{Tady tu sekci se teprve chystam predelat}
 
 In this paper, we summarized the results of the WMT14 Metrics Shared Task, which
 assesses the quality of
@@ -1209,7 +1208,7 @@ changes are towards a fairer evaluation and thus better in the long term.
 
 As in previous years, segment-level correlations are much lower than
 system-level ones, reaching at most Kendall's $\tau$ of 0.45 for the best
-performing metric in its best language pair. So there is quite some research
+performing metric in the best language pair. So, there is quite some research
 work to be done. We are happy to see that many new metrics emerged this year,
 which also underlines the importance of the Metrics Shared Task.
 
