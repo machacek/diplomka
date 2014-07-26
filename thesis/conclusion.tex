@@ -1,6 +1,29 @@
 \chapter{Conclusion}
 \label{chapter:conclusion}
 
-\XXX{Dodelat}
+In this thesis, we proposed a new method for manual evaluation, called
+\metoda{SegRanks}, in which annotators rank only a short segments (up to six
+words) of a translated sentence. The ranking of short segments is easier for
+annotators, since the they do not have to read and remember whole sentences at
+once. The most promising benefit of this method is that short segments are
+often translated identically.  We can take advantage of this in two ways:
+First, annotators are shown identical segments only once so that they do not
+have to rank them multiple times. (In our experiment, we reduced the number of
+segments to rank almost two times \XXX{overit, upresnit}). Second, the
+evaluated segments can be stored together with their ranks in a database, which
+can be used later to automatically evaluate unseen sentences or to tune a
+system's parameters. We also discussed disadvantages of this method. The most
+severe ones are that the extracted segments do not always cover the whole
+sentence and that the segments are evaluated without their sentence context.
+
+We developed an easy-to-use and modern annotation interface and conducted a
+manual evaluation experiment using the proposed method. We evaluated the
+systems which participated in the English-Czech direction in WMT Translation
+Task. The measured the inter- and intra-annotator kappa scores (the normalized
+versions of agreement) are higher than the corresponding values in the WMT
+manual evaluation.
+
+
+
 
 \section{Future Work}
