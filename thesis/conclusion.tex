@@ -2,16 +2,16 @@
 \label{chapter:conclusion}
 
 In this thesis, we proposed a new method for manual evaluation, called
-\metoda{SegRanks}, in which annotators rank only a short segments (up to six
-words) of a translated sentence. The ranking of short segments is easier for
-annotators, since the they do not have to read and remember whole sentences at
-once. The most promising benefit of this method is that short segments are
-often translated identically.  We can take advantage of this in two ways:
-First, annotators are shown identical segments only once so that they do not
-have to rank them multiple times. (In our experiment, we reduced the number of
-segments to rank almost two times \XXX{overit, upresnit}). Second, the
-evaluated segments can be stored together with their ranks in a database, which
-can be used later to automatically evaluate unseen sentences or to tune a
+\metoda{SegRanks}, in which annotators rank short segments (up to six words) of
+a translated sentence relatively to each other. The ranking of short segments
+is easier for annotators, since the they do not have to read and remember whole
+sentences at once. The most promising benefit of this method is that short
+segments are often translated identically.  We can take advantage of this in
+two ways: First, annotators are shown identical segments only once so that they
+do not have to rank them multiple times. (In our experiment, we reduced the
+number of segments to rank almost two times \XXX{overit, upresnit}). Second,
+the evaluated segments can be stored together with their ranks in a database,
+which can be used later to automatically evaluate unseen sentences or to tune a
 system's parameters. We also discussed disadvantages of this method. The most
 severe ones are that the extracted segments do not always cover the whole
 sentence and that the segments are evaluated without their sentence context.
@@ -19,11 +19,58 @@ sentence and that the segments are evaluated without their sentence context.
 We developed an easy-to-use and modern annotation interface and conducted a
 manual evaluation experiment using the proposed method. We evaluated the
 systems which participated in the English-Czech direction in WMT Translation
-Task. The measured the inter- and intra-annotator kappa scores (the normalized
-versions of agreement) are higher than the corresponding values in the WMT
-manual evaluation.
+Task. The measured the inter- and intra-annotator $\kappa$ scores (the
+normalized agreement) are higher than the corresponding values in the WMT
+manual evaluation, which means that our evaluation method is more robust.
 
+To get a final score for each system's translation, we compute how often the
+segments of the system were ranked better than other segments (in the context
+of pairwise comparisons).  The results of evaluated systems are quite similar
+to the results obtained by the official WMT judgments. However, our method is
+not able to correctly distinguish some systems with very similar quality. The
+Pearson correlation coefficient between the \metoda{SegRanks} scores and the
+official human scores is 0.978, which is lower than correlation of some of the
+best performing automatic metrics (\metric{NIST}, \metric{CDER},
+\metric{ELEXR}). We manually analyzed sentences which were highly ranked in the
+short segment judgments but lowly ranked in the official WMT judgment to
+explain the difference. In most of these sentences, there was a badly
+translated part which was, however, not covered with evaluated short segments.
+The uncovered part often contained a predicate which has significant impact on
+the translation quality. 
 
+To explore the possibility of reusing the collected database to evaluate unseen
+translations, we have performed several experiments. In the first one, we
+evaluated unseen translations using only the ranks of the segments which were
+in the database.  This, however, did not work as expected, because the obtained
+scores of unseen systems were significantly overestimated. During a manual
+analysis, we verified that the evaluated systems are more likely to agree on
+better translations than on worse translations. Although this method cannot be
+used for evaluating unseen translations, we found out that errors in machine
+translation are unique.
+
+To avoid evaluating unseen translations only on not representative subset of
+short segments, we proposed another method. In this method, we evaluated unseen
+translations on all the extracted segments. To approximate a rank of an unseen
+segment, we took the rank of the closest segment by edit distance. This method
+didn't work as well.  The approximated rank was predicted correctly using the
+closest segment only in 20.6 \% cases.  In 51.2 \% of the cases, the predicted
+rank was better than the original rank. The scores were overestimated again.
+The important observation here is that segments are closer to better segments
+than to equally good or worse segments. This is somehow consistent with the
+previous finding that errors in machine translation are unique.
+
+In another experiment, we extracted the best ranked segments from the collected
+database and considered them as good translations. We used them as additional
+reference translations for \metric{BLEU}. However, it did not perform better
+than original \metric{BLEU} with single reference. 
+
+In the last experiment with the collected database, we tried to use the
+database in tuning a machine translation system using the MERT method.  We
+proposed several variants of \metoda{SegRanks} based metrics adapted for the
+MERT tuning. The tuned systems were evaluated by humans against the baseline
+system tuned by \metric{BLEU}. The only variant which tuned the system better
+than baseline was the variant which considers unseen segments as bad and
+therefore pushes the system to produce known and already evaluated segments.
 
 
 \section{Future Work}
