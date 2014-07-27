@@ -65,12 +65,38 @@ reference translations for \metric{BLEU}. However, it did not perform better
 than original \metric{BLEU} with single reference. 
 
 In the last experiment with the collected database, we tried to use the
-database in tuning a machine translation system using the MERT method.  We
+database to tune a machine translation system using the MERT method.  We
 proposed several variants of \metoda{SegRanks} based metrics adapted for the
 MERT tuning. The tuned systems were evaluated by humans against the baseline
 system tuned by \metric{BLEU}. The only variant which tuned the system better
-than baseline was the variant which considers unseen segments as bad and
-therefore pushes the system to produce known and already evaluated segments.
+than baseline was the variant which considered unseen segments as bad and
+therefore pushed the system to produce known and already evaluated segments.
+
+\XXX{Nejake zaverecne shrnuti shrnuti}
+
+In the second part of this thesis, we summarized the results of the WMT14
+Metrics Shared Task, which assessed the quality of various automatic machine
+translation metrics. Judgements collected in the WMT14 human evaluation served
+as the golden truth and we checked how well the metrics predicted the
+judgements at the level of individual sentences (sentence-level task) as well
+as at the level of the whole test set (system-level task).
+
+In the system-level task, we discussed differences between Spearman's rank
+correlation coefficient and Pearson correlation coefficient and decided to
+chose Pearson coefficient instead of Spearman's rank coefficient as being
+fairer. In the segment-level task, we introduced a new notation which exactly
+specifies details on Kendall's $\tau$ computation. We also discussed several
+variants of Kendall's $\tau$ used in the past and proposed and used a new
+variant which does not suffer shortcomings of other variants.
+
+As in previous years, segment-level correlations are much lower than
+system-level ones, reaching at most Kendall's $\tau$ of 0.45 for the best
+performing metric in the best language pair. So, there is quite some research
+work to be done. We are happy to see that many new metrics emerged this year,
+which also underlines the importance of the Metrics Shared Task.
+
+\XXX{Dodelat}
+
 
 
 \section{Future Work}
