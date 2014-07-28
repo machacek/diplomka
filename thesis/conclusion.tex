@@ -1,6 +1,8 @@
 \chapter{Conclusion}
 \label{chapter:conclusion}
 
+\section{Manual and Semiautomatic Evaluation}
+
 In this thesis, we proposed a new method for manual evaluation, called
 \metoda{SegRanks}, in which annotators rank short segments (up to six words) of
 a translated sentence relatively to each other. The ranking of short segments
@@ -72,7 +74,16 @@ system tuned by \metric{BLEU}. The only variant which tuned the system better
 than baseline was the variant which considered unseen segments as bad and
 therefore pushed the system to produce known and already evaluated segments.
 
-\XXX{Nejake zaverecne shrnuti shrnuti}
+Although most of the proposed methods exploiting the collected database do not
+work, we tried to identify and analyze root causes of the failures. The main
+cause seems to be the fact that errors in machine translation are unique and
+that segments produced by more than one system are likely to be of better
+quality. This is also related with the fact that translations are more likely
+to be closer to better translations than to equally good or worse translations.
+Maybe, if we had a more dense database (much more than 10 evaluated systems),
+these phenomena would not influence results so much.
+
+\section{Automatic Evaluation}
 
 In the second part of this thesis, we summarized the results of the WMT14
 Metrics Shared Task, which assessed the quality of various automatic machine
@@ -87,16 +98,50 @@ chose Pearson coefficient instead of Spearman's rank coefficient as being
 fairer. In the segment-level task, we introduced a new notation which exactly
 specifies details on Kendall's $\tau$ computation. We also discussed several
 variants of Kendall's $\tau$ used in the past and proposed and used a new
-variant which does not suffer shortcomings of other variants.
+variant which does not suffer from shortcomings of other variants.
 
-As in previous years, segment-level correlations are much lower than
-system-level ones, reaching at most Kendall's $\tau$ of 0.45 for the best
-performing metric in the best language pair. So, there is quite some research
-work to be done. We are happy to see that many new metrics emerged this year,
-which also underlines the importance of the Metrics Shared Task.
+Although segment-level correlations are significantly higher than they were in
+previous years, they are still much lower than system-level ones. Kendall's
+$\tau$ reaches at most 0.45 for the best performing metric in the best language
+pair. So, there is quite some research work to be done.
 
-\XXX{Dodelat}
+On the system level, the best performing metrics on average in directions into
+English are \metric{DiscoTK-party-tuned}, \metric{LAYERED} and
+\metric{UPC-STOUT}. The best performing metrics in directions out of English
+are \metric{NIST}, \metric{CDER} and \metric{AMBER}. On the sentence level, the
+best performing metrics in directions into English are
+\metric{DiscoTK-party-tuned}, \metric{BEER} and \metric{REDcombSent}. The best
+performing metrics in directions out of English are \metric{BEER},
+\metric{Meteor} and \metric{AMBER}.  Generally, most of the best performing
+metrics combine other metrics or they employ a lot of features on different
+linguistic layers.
 
-
+We have implemented scripts for metrics evaluation and published them in a
+package together with human judgments. Anyone can therefore reproduce the
+results and use it to evaluate his or her metric on the WMT14 data.
 
 \section{Future Work}
+
+The \metoda{SegRanks} method could by improved in several ways to possibly
+avoid its shortcomings. Short segments should be extracted in a way that they
+cover either all words in a sentence or the most important parts, for example
+predicates. To avoid data sparseness, we should evaluate more systems or
+extract segments from an n-best list directly in the case of tuning. An
+application of machine learning techniques to predict quality of unseen short
+segments should be also examined.
+
+For the evaluation of automatic metrics, the basic principle of the metrics
+task will very probably not change. We will also try not to change any
+metaevaluation measures again (like we did in WMT13 and WMT14), so that
+participants can rely on fixed rules and that results can be more comparable
+across years. We expect that new metrics will emerge to be examined in the
+task. There are two possible enhancements of the task we think of. First,
+automatic metrics should be also evaluated in terms of tuning a system's
+parameters.  There was already Tunable Metrics Task organized at WMT11 and we
+should consider it again.  Second, the confidence intervals are now computed by
+bootstrapping only the human judgments. It would be better if we could
+bootstrap new test sets and compute a metric score for each sampled test set.
+This would, however, require participants to compute their metric score for
+each of the sampled test sets.
+
+

@@ -361,10 +361,10 @@ was developed by \perscite{Leusch06cder:efficient}. This metric is similar to
 \metric{WER} in that it is also an edit distance based metric. In addition to the
 insertions, substitutions and deletions, \metric{CDER} also allows long jumps.
 The long jump is an operation in which we move in an alignment grid to any
-position in the candidate (we can get to any position in an actual row of the
+position in the candidate (we can get to any position in the current row of the
 alignment grid for a unit price). This simulates movements of blocks (longer
 sequences of tokens) and it is motivated by that block movements should not be
-penalized so harshly. The \metric{CDER} is computed as follows:
+penalized so harsh. The \metric{CDER} is computed as follows:
 
 \begin{equation*}
     CDER(c,r) = \frac{
@@ -560,8 +560,8 @@ frequency above a certain treshold. Paraphrase tables are constructed with a
 simple method from a phrase table. The weights are tuned for each language
 direction independently, however developers of \metric{Meteor} have also tuned
 a universal set of weights which can be used for any language direction. This
-is the case, for example, for directions from Russian and Hindi (The results
-for these directions are also very poor).
+is the case, for example, for directions from Russian and Hindi. The results
+for these directions are also very poor.
 
 %\subsection{NIST}
 %\subsection{Parmesan}
@@ -660,8 +660,8 @@ range of scores.
 
 You can see an example situation in Figure \ref{tree-align}. There is a cluster
 of very similar systems in upper right corner. In this cluster, some systems
-are not ranked correctly by a metric. For instance, the swap of the uedin-wmt14
-and onlineB systems is not penalized so harshly in the Pearson score. However
+are not ranked correctly by the metric. For instance, the swap of the uedin-wmt14
+and onlineB systems is not penalized so harsh in the Pearson score. However
 in Spearman score, it is penalized just the same as a swap of very distant
 systems would be penalized, for instance commercial1 and CU-TectoMT.
 
@@ -680,7 +680,7 @@ metrics are sorted by average Pearson correlation coefficient across the
 translation directions. The best results in each direction are in bold.
 
 As in previous years, a lot of metrics outperformed \metric{BLEU} in system
-level correlation. In into-English directions, metric
+level correlation. In into-English directions, the metric
 \metric{DiscoTK-party-tuned} has the highest correlation in two language
 directions and it is also the best correlated metric on average according to both
 Pearson and Spearman's coefficients. The second best correlated metric on
@@ -692,7 +692,7 @@ directions.
 
 Except \metric{Meteor}, none of the participants took part in the last year's
 metrics task.  We can therefore compare current and last year's results only for
-\metric{Meteor} and baseline metrics.  \metric{Meteor}, last year's winner,
+\metric{Meteor} and baseline metrics.  \metric{Meteor}, the winner last year,
 performs generally well in some directions but it suffers horribly when
 evaluating translations from non-Latin script (Russian and especially Hindi).
 For the baseline metrics the results are quite similar across the years. In
@@ -815,7 +815,7 @@ are again at the end of the list. An interesting change is that
 \label{segment-level}
 
 We measure the quality of metrics' segment-level scores using Kendall's $\tau$
-rank correlation coefficient. In this type of evaluation, a metric is expected
+rank correlation coefficient. In this type of evaluation, the metric is expected
 to predict the result of the manual pairwise comparison of two systems. Note
 that the golden truth is obtained from a compact annotation of five systems at
 once, while an experiment with text-to-speech evaluation techniques by
@@ -825,7 +825,7 @@ comparison is likely to lead to more stable results.
 In the past, slightly different variations of
 Kendall's $\tau$ computation were used in the Metrics Tasks. Also some of the
 participants have noticed a problem with ties in the WMT13 method. Therefore, we
-discuss several possible variants in detail in this paper.
+discuss several possible variants in detail in this thesis.
 
 \subsection{Notation for Kendall's $\tau{}$ computation}
 
@@ -1180,7 +1180,7 @@ metrics.
 The metric \metric{DiscoTK-light-kool} is worth mentioning.  It is deliberately
 designed to assign the same score for all systems for most of the segments.  It
 obtained scores very close to zero (i.e. totally uninformative) in the WMT14
-variant.  In WMT13 thought, it reached the highest score.
+variant.  In WMT13 though, it reached the highest score.
 
 In directions out of English (Table~\ref{segment-level-correlations-fromEn}),
 the metric with highest correlation on average across all directions is
