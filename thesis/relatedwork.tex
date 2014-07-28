@@ -24,14 +24,14 @@ Despite the \metric{Rypt} metric is designed to be used in the MERT method,
 \perscite{human-in-the-loop} actually have not done any experiment with MERT
 for a lack of resources. Only a pilot study is reported in the paper. They
 tried the method only on a relatively small sample of sentences from n-best
-list produced with allredy tuned weights. The reason why we could afford to do
+list produced with already tuned weights. The reason why we could afford to do
 the experiment with MERT with comparable resources is that we do not extract
 candidate segments from the whole n-best list.
 
 From their paper, we adopted mainly the short segment candidate extraction
 process. The annotation process, scoring the candidates and conducted
 experiments are, however, quite different to our work. The main difference is
-that they extract the short segments for evaluation directly from a n-best
+that they extract the short segments for evaluation directly from an n-best
 list, while we extract them from the evaluated systems' translations and hope
 that they will cover also the n-best list. The difference in the annotating
 short segments is that annotators in the paper of \perscite{human-in-the-loop}
@@ -50,7 +50,9 @@ Annotators select for each evaluated sentence a rank from an absolute point
 scale. Each evaluated sentence is then stored to a database with its rank. The
 authors use their tool for everyday evaluating of new variants of their system
 which often translate differently only a small percentage of a development test
-set. Identically translated sentences are therefore not evaluated again and are
+set\footnote{This paper was actually published before the MERT method was
+introduced.  When it is used, it changes most of the translations.}.
+Identically translated sentences are therefore not evaluated again and are
 automatically assigned a rank from the database. Only the new translations are
 evaluated by humans and stored into the database with their rank.
 

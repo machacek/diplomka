@@ -43,7 +43,7 @@ to directly optimize an evaluation measure emerged.
 
 Unlike other applications of natural language processing, for instance speech
 recognition, the evaluation in machine translation is not easy at all. The main
-reason for that is that when translating an average sentence there is no single
+reason for that is that when translating an average sentence, there is no single
 correct solution, in fact there are hundreds of thousands correct translations
 \parcite{bojar2013scratching}.
 
@@ -59,7 +59,7 @@ campaigns started by \perscite{wmt-overview-2007}, annotators ranked
 translations relatively to each other.
 
 In the automatic evaluation, an output of a machine translation system is
-compared to a reference translation. However, Unlike other machine learning
+compared to a reference translation. However, unlike other machine learning
 problems, you cannot simply compute the proportion of translated sentences
 which match the reference translation. If a translated sentence is not
 identical to its reference counterpart it does not have to be a bad translation
@@ -78,13 +78,13 @@ in this thesis.
 
 \section{Motivation and Goals}
 
-Manual evaluation is of course considered as the only source of truth to which
+Manual evaluation is of course considered as the only source of truth which
 metrics try to approximate. However, it suffers from many disadvantages. Since
 it includes manual labour, it is very costly and slow. Moreover, manual
 evaluation is not reproducible; human judges have different criteria for
 comparing candidates and even an individual judge is not consistent with
 himself in time. Human evaluation is therefore most often used in shared
-evaluation campaigns and rarely used when you want to evaluate a new component
+evaluation campaigns and sometimes used when you want to evaluate a new component
 of your system. It is definitely not feasible to directly use human evaluation
 in an automatic method for tuning your model's parameters because these methods
 require to evaluate millions of sentences.
@@ -118,9 +118,9 @@ describe the manual evaluation method and report the annotation experiment we
 have conducted. We explore the possibility of reusing the collected database to
 evaluate new systems and to tune a system in Chapter \ref{chapter:experiments}.
 In this chapter, we also analyze the results in more detail and try to explain
-them.  The Automatic metrics are are described, compared and evaluated in the
+them.  The Automatic metrics are described, compared and evaluated in the
 terms of correlation with human judgments in Chapter \ref{metrics}. Related
-work is summarized in Chapter \ref{chapter:related}. You can find a
+work is summarized in Chapter \ref{chapter:related}. You can find the
 documentation of the annotation application and the tools for metrics
 evaluation in Chapter \ref{chapter:implementation}. We conclude our work in
 Chapter \ref{chapter:conclusion}.
