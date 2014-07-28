@@ -107,25 +107,23 @@ and that our method is worth exploration.
 
 \begin{itemize}
 
-  \item Annotators do not see the whole context of annotated short segments.
-    For instance, the rest of the sentence around a given short candidate segment
-    could require to have a noun in the segment in a particular grammatical
-    case. Because the annotators do not see this requirement, they cannot judge the
-    candidate segment properly.  To partially remedy this disadvantage we
-    give all extracted short segments to annotators to judge at once, so they
-    can at least imagine the context.
-
-  \item This is very similar to the previous disadvantage. A system could
-    translate shorter segments quite well but it can fail to combine them
-    properly when creating the whole sentence translation. For instance, a
-    system may fail to preserve the subject -- verb agreement, which is very
-    important in the Czech language.  In their paper,
+  \item A system could translate shorter segments quite well but it can fail to
+    combine them properly when creating the whole sentence translation. For
+    instance, a system may fail to preserve the subject -- verb agreement,
+    which is very important in the Czech language.  In their paper,
     \perscite{human-in-the-loop} suggest to go up the parse tree and extract
     also the longer segments which consist of already extracted shorter
     segments. However, if we use this approach the amount of annotation work
     would multiply several times. Furthermore, the longer segments are more
     difficult to rank and the chance that systems' candidates will be identical
     (so that we can merge them for annotation) is lower.
+
+  \item Annotators do not see the whole context of annotated short segments.
+    They are instructed to imagine any suitable context of the segment.
+    However, they can fail to imagine a suitable context even there exists one
+    and wrongly penalize the segment. To partially remedy this disadvantage we
+    give all extracted short segments to annotators to judge at once, so they
+    can at least imagine the context.
 
   \item Extracted short segments do not cover the whole sentence. For example
     in Figure \ref{tree-align}, the words `jsou' and `pak' are not part of any
@@ -303,37 +301,42 @@ sentences, which is more than 92 \% of the prepared English-Czech test set.
 
 \begin{table}
     \begin{center}
-        \begin{tabular}{lrrrrrrr}
-\textbf{ID} & \rotatebox{90}{\textbf{\#sentences}} & \rotatebox{90}{\textbf{\#segments}} & \textbf{time} & \rotatebox{90}{\textbf{reward/CZK}} & \rotatebox{90}{\textbf{annotatin-time/seconds}} & \rotatebox{90}{\textbf{kappa-intra}} & \rotatebox{90}{\textbf{kappa-inter}} \\
+        \begin{tabular}{|c|r|r|r|r|r|r|}
 \hline
-1 & 78 & 232 & 4:53:43 & 665 & 75 & 0.838 & 0.495 \\
-4 & 87 & 248 & 5:00:46 & 711 & 74 & 0.283 & 0.145 \\
-6 & 378 & 1160 & 16:53:13 & 3326 & 52 & 0.657 & 0.453 \\
-7 & 243 & 663 & 11:16:26 & 1901 & 62 & 0.763 & 0.417 \\
-8 & 6 & 20 & 0:21:06 & 57 & 63 \\
-9 & 12 & 50 & 0:45:58 & 143 & 55 & 0.686 \\
-10 & 98 & 274 & 5:04:45 & 785 & 66 & 0.673 & 0.320 \\
-12 & 3 & 7 & 0:15:03 & 20 & 129 & 0.281 \\
-13 & 424 & 1260 & 1 day, 2:26:14 & 3613 & 75 & 0.459 & 0.308 \\
-15 & 106 & 282 & 5:17:58 & 808 & 67 & 0.611 & 0.401 \\
-16 & 224 & 627 & 5:00:11 & 1797 & 28 & 0.655 & 0.614 \\
-17 & 26 & 74 & 2:40:44 & 212 & 130 & 0.734 & 0.269 \\
-18 & 83 & 234 & 7:02:10 & 670 & 111 & 0.676 & 0.385 \\
-19 & 15 & 50 & 1:31:52 & 143 & 110 \\
-21 & 483 & 1443 & 1 day, 13:44:37 & 4137 & 94 & 0.663 & 0.383 \\
-22 & 117 & 338 & 6:00:36 & 969 & 64 & 0.714 & 0.431 \\
-23 & 477 & 1371 & 22:07:35 & 3931 & 58 & 0.376 & 0.363 \\
+%\textbf{ID} & \rotatebox{90}{\textbf{\#sentences}} & \rotatebox{90}{\textbf{\#segments}} & \textbf{time} & \rotatebox{90}{\textbf{reward/CZK}} & \rotatebox{90}{\textbf{annotatin-time/seconds}} & \rotatebox{90}{\textbf{kappa-intra}} & \rotatebox{90}{\textbf{kappa-inter}} \\
+ID & $n_{sent}$ & $n_{seg}$ & $t$ & $\frac{t}{n_{seg}}$ & $\kappa_{intra}$ & $\kappa_{inter}$ \\
 \hline
-   & 2773 & 8333 & 6 days, 14:22:57 & 23895 & 68 & 0.593 & 0.397 \\
+1 & 78 & 232 & 4:53:43 &  75 & 0.838 & 0.495 \\
+4 & 87 & 248 & 5:00:46 &  74 & 0.283 & 0.145 \\
+6 & 378 & 1160 & 16:53:13 & 52 & 0.657 & 0.453 \\
+7 & 243 & 663 & 11:16:26 &  62 & 0.763 & 0.417 \\
+8 & 6 & 20 & 0:21:06 &  63 & & \\
+9 & 12 & 50 & 0:45:58 &  55 & 0.686 & \\
+10 & 98 & 274 & 5:04:45 &  66 & 0.673 & 0.320 \\
+12 & 3 & 7 & 0:15:03 &  129 & 0.281 & \\
+13 & 424 & 1260 & 1 day, 2:26:14 &  75 & 0.459 & 0.308 \\
+15 & 106 & 282 & 5:17:58 &  67 & 0.611 & 0.401 \\
+16 & 224 & 627 & 5:00:11 &  28 & 0.655 & 0.614 \\
+17 & 26 & 74 & 2:40:44 &  130 & 0.734 & 0.269 \\
+18 & 83 & 234 & 7:02:10 &  111 & 0.676 & 0.385 \\
+19 & 15 & 50 & 1:31:52 &  110 & & \\
+21 & 483 & 1443 & 1 day, 13:44:37 &  94 & 0.663 & 0.383 \\
+22 & 117 & 338 & 6:00:36 &  64 & 0.714 & 0.431 \\
+23 & 477 & 1371 & 22:07:35 &  58 & 0.376 & 0.363 \\
+\hline
+Total & 2773 & 8333 & 6 days, 14:22:57 &  68 & 0.593 & 0.397 \\
+\hline
         \end{tabular}
     \end{center}
 
-    \caption[A list of annotators and their statistics]{The list of
-        annotators and their statistics. The annotators are anonymized using
-        their ID. The table contains the number of sentences annotated, the
-        number of segments ranked, the time spend annotating, the reward in
-    CZK, the average time in seconds spent on one segment annotation and
-intra-annotator and inter-annotator agreements. }
+    \caption[A list of annotators and their statistics]{The list of annotators
+      and their statistics. The annotators are anonymized using their ID. The
+      table contains the number of annotated sentences $n_{sent}$, the number
+      of annotated source segments $n_{seg}$ (this is not the number of ranked
+      segment candidates), the time spent annotating $t$, the average time in
+      seconds spent annotating one source segment $\frac{t}{n_{seg}}$, the
+      normalized intra-annotator agreement $\kappa_{intra}$ and the normalized
+      inter-annotator agreement $\kappa_{inter}$. }
 
     \label{big-table}
 \end{table}
