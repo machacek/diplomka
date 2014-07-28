@@ -12,7 +12,7 @@
 % (BLEU, NIST, WER, PER, TER and CDER) as baselines. The collected scores were
 % evaluated in terms of system level correlation (how well each metric's scores
 % correlate with WMT14 official manual ranking of systems) and in terms of
-% segment level correlation (how often a metric agrees with humans in comparing
+% sentence level correlation (how often a metric agrees with humans in comparing
 % two translations of a particular sentence).
 
 Automatic machine translation metrics play a very important role in the
@@ -29,37 +29,37 @@ metrics shared task with some additional information and comments.
 In this task, we asked metric developers to score the outputs of WMT14 Shared
 Translation Task \parcite{wmt14-overview-paper}. We have collected the computed
 metrics' scores and use them to evaluate the quality of the metrics.  There are
-actually two subtasks: a system level task and a segment level task.
+actually two subtasks: a system-level task and a sentence-level task.
 
 \begin{itemize}
 
-    \item \textbf{System Level.} In the system level subtask, participants
-        compute one score for the whole test set, as translated by each of the
-        systems. We then measure the correlation of those scores with the systems'
-        official human scores.  The goal of metrics in this subtask is to give
-        an overall ranking of the systems as close as possible to the official
-        ranking according to human scores in each direction.
+    \item \textbf{System-level task.} In this subtask, participants compute one
+      score for the whole test set, as translated by each of the systems. We
+      then measure the correlation of those scores with the systems' official
+      human scores.  The goal of metrics in this subtask is to give an overall
+      ranking of the systems as close as possible to the official ranking
+      according to human scores in each direction.
     
-    \item \textbf{Segment Level.} In this subtask, participants compute one
-        score for each sentence of each system's translation. We then measure
-        the correlation of these scores with pairwise human judgements. The
-        goal of metrics in this subtask is to compare two candidate segments in
-        the same way as humans would.
+    \item \textbf{Sentence-level task.} In this subtask, participants compute
+      one score for each sentence of each system's translation. We then measure
+      the correlation of these scores with pairwise human judgements. The goal
+      of metrics in this subtask is to compare two candidate sentences in the
+      same way as humans would.
 
 \end{itemize}
 
-In the previous years, a lot of metrics performed very well in the system level
+In the previous years, a lot of metrics performed very well in the system-level
 task. In some of the translation directions, they predicted the overall ranking
 of systems almost perfectly. However, there is still space for metrics to
-improve.  In contrast to the system level task, the segment level task is much
+improve.  In contrast to the system-level task, the sentence-level task is much
 more difficult. The correlations in previous years were very low. It is
 therefore very interesting to see whether metrics perform better this year.
 
 The systems' outputs, human judgements and evaluated metrics are summarized in
 Section \ref{section:data}. In Section \ref{section:metrics:description}, we
 describe the participated metrics in more detail. The quality of the metrics in
-terms of system level correlation is reported in Section \ref{system-level}.
-The Segment level correlation with a detailed discussion and a slight change in
+terms of system-level correlation is reported in Section \ref{system-level}.
+The sentence-level correlations with a detailed discussion and a slight change in
 the calculation compared to the previous year is reported in Section
 \ref{segment-level}.
 
@@ -77,13 +77,12 @@ paper \parcite{wmt14-overview-paper}.
 
 \subsection{Manual MT Quality Judgements}
 
-During the WMT14 Translation Task, a large scale manual annotation was conducted
-to compare the systems. We used these collected human judgements for the evaluation
-of
-the automatic metrics. 
+During the WMT14 Translation Task, a large scale manual annotation was
+conducted to compare the systems. We used these collected human judgements for
+the evaluation of the automatic metrics. 
 
 The participants in the manual annotation were asked to evaluate the system outputs
-by ranking translated sentences relative to each other. For each source segment
+by ranking translated sentences relative to each other. For each source sentence
 that was included in the procedure, the annotator was shown the outputs of five
 systems to which he or she was supposed to assign ranks. Ties were allowed.
 
@@ -229,7 +228,7 @@ permutations. One of the ordering features is Kendall's $tau$ distance to
 monotone permutation. Other 5 ordering features are based on permutation trees
 introduced by \perscite{zhang2007factorization}.
 
-They tune the feature weights to get the best correlation with human sentence level
+They tune the feature weights to get the best correlation with human sentence-level
 judgments. Let $h_{good}$ and $h_{bad}$ be two hypothesis translations of a source
 sentence with reference translation $r$ and, let $h_{good}$ be ranked better than
 $h_{bad}$ by human judgments.  Given that the metric's model is linear, one can
@@ -272,7 +271,7 @@ l_n$. When smoothing, a modified clipped count $m_n'$ is computed and then the
 precision is computed as $p_n = m_n' / l_n$. 
 
 \perscite{wmt14-metric-bleunrc} compare various smoothing methods and choose
-the method which correlates best with sentence level judgments. Their best
+the method which correlates best with sentence-level judgments. Their best
 performing smoothing method is a combination of two methods. They compute first
 modified counts $m_n'$ and based on them, they compute second modified counts
 $m_n''$.
@@ -312,7 +311,7 @@ clipped counts $m_n''$.
 
 For completeness we also report how the \metric{BLEU} metric is smoothed in
 the Moses MERT implementations since it is used for computing a baseline metric
-\metric{sentBLEU} in the segment-level results. To both the numerator and denominator
+\metric{sentBLEU} in the sentence-level results. To both the numerator and denominator
 in the precision computation, a one is added:
 \begin{equation*}
     p_n = \frac{
@@ -467,7 +466,7 @@ to get a final \metric{LAYERED} score:
 
 \metric{Meteor} \parcite{wmt14-metric-meteor} evaluates candidate translations
 in two phases. In the first phase, it aligns a candidate translation to a
-reference translation. In the second phase, a sentence level similarity score
+reference translation. In the second phase, a sentence-level similarity score
 is computed using the constructed alignment. 
 
 When aligning the candidate and the reference translations, the words
@@ -624,7 +623,7 @@ values of $\rho$ range between 1 and -1. A value of 1 implies that the metric
 scores give the same ranking of the systems as the official human scores. A
 value of -1 implies that the metric scores give a reversed ranking.
 
-The reported empirical confidence intervals of system level correlations were
+The reported empirical confidence intervals of system-level correlations were
 obtained through bootstrap resampling of 1000 samples (confidence level of
 95\,\%).
 
@@ -811,10 +810,10 @@ are again at the end of the list. An interesting change is that
 \end{sidewaystable*}
 \afterpage{\clearpage}
 
-\section{Segment-Level Metric Analysis}
+\section{Sentence-Level Metric Analysis}
 \label{segment-level}
 
-We measure the quality of metrics' segment-level scores using Kendall's $\tau$
+We measure the quality of metrics' sentence-level scores using Kendall's $\tau$
 rank correlation coefficient. In this type of evaluation, the metric is expected
 to predict the result of the manual pairwise comparison of two systems. Note
 that the golden truth is obtained from a compact annotation of five systems at
@@ -1020,8 +1019,8 @@ however, we are also reporting average scores computed by other variants.
     \end{tabular}
   \end{center}
 
-  \caption[Segment-level correlations when translating into
-  English]{Segment-level Kendall's $\tau$ correlations of automatic evaluation
+  \caption[Sentence-level correlations when translating into
+  English]{Sentence-level Kendall's $\tau$ correlations of automatic evaluation
       metrics and the official WMT human judgements when translating into
       English.
   }
@@ -1054,8 +1053,8 @@ however, we are also reporting average scores computed by other variants.
     \end{tabular}
   \end{center}
 
-  \caption[Segment-level correlations when translating out of
-  English]{Segment-level Kendall's $\tau$ correlations of automatic evaluation
+  \caption[Sentence-level correlations when translating out of
+  English]{Sentence-level Kendall's $\tau$ correlations of automatic evaluation
       metrics and the official WMT human judgements when translating out of
       English.
  }
@@ -1093,7 +1092,7 @@ however, we are also reporting average scores computed by other variants.
 
   
   \caption[Averages of other variants of Kendall's $\tau$ in directions into English ] { This table
-    contains average segment-level Kendall's $\tau$ computed by other variants
+    contains average sentence-level Kendall's $\tau$ computed by other variants
     in directions into English. The average correlation of WMT14 variant is
     repeated in the first column. The symbol ``$\wr$'' indicates where the
   averages of other variants are out of sequence compared to the WMT14
@@ -1127,7 +1126,7 @@ variant.}
   \end{center}
 
   \caption[Averages of other variants of Kendall's $\tau$ in directions out of English] { This table
-    contains average segment-level Kendall's $\tau$ computed by other variants
+    contains average sentence-level Kendall's $\tau$ computed by other variants
     in directions out of English. The average correlation of WMT14 variant is
     repeated in the first column. The symbol ``$\wr$'' indicates where the
   averages of other variants are out of sequence compared to the WMT14
@@ -1165,8 +1164,8 @@ have generated 1000 new sets and report the average of the upper and lower
 
 
 In directions into English (Table~\ref{segment-level-correlations-toEn}), the
-strongest correlated segment-level metric on average is
-\metric{DiscoTK-party-tuned} followed by \metric{BEER}. Unlike the system level
+strongest correlated sentence-level metric on average is
+\metric{DiscoTK-party-tuned} followed by \metric{BEER}. Unlike the system-level
 correlation, the results are much more stable here.
 \metric{DiscoTK-party-tuned} has the highest correlation in 4 of 5 language
 directions. Generally, the ranking of metrics is almost the same in each
@@ -1178,7 +1177,7 @@ quite well unlike \metric{sentBLEU} which was outperformed by most of the
 metrics. 
 
 The metric \metric{DiscoTK-light-kool} is worth mentioning.  It is deliberately
-designed to assign the same score for all systems for most of the segments.  It
+designed to assign the same score for all systems for most of the sentences.  It
 obtained scores very close to zero (i.e. totally uninformative) in the WMT14
 variant.  In WMT13 though, it reached the highest score.
 
@@ -1198,16 +1197,16 @@ judgements collected in WMT14 serve as the golden truth and we check how well
 the metrics predict the judgements at the level of individual sentences as well
 as at the level of the whole test set (system-level).
 
-This year, neither the system-level nor the segment-level scores are directly
+This year, neither the system-level nor the sentence-level scores are directly
 comparable to the previous years. The system-level scores are affected by the
 change of the underlying interpretation of the collected judgements in the main
 translation task evaluation as well as
 our choice of Pearson coefficient instead of Spearman's rank correlation. The
-segment-level scores are affected by the different handling of ties this year.
+sentence-level scores are affected by the different handling of ties this year.
 Despite somewhat sacrificing the year-to-year comparability, we believe all
 changes are towards a fairer evaluation and thus better in the long term.
 
-As in previous years, segment-level correlations are much lower than
+As in previous years, sentence-level correlations are much lower than
 system-level ones, reaching at most Kendall's $\tau$ of 0.45 for the best
 performing metric in the best language pair. So, there is quite some research
 work to be done. We are happy to see that many new metrics emerged this year,
