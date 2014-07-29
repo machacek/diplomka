@@ -1,5 +1,6 @@
 \appendix
-\chapter{WMT14 Metrics Task Package Documentation}
+\chapter{WMT14 Metrics Task Package User Documentation}
+\label{metrics-documentation}
 
 \noindent
 The \texttt{wmt14-metrics-task} directory located in the attached CD-ROM
@@ -53,7 +54,8 @@ The scripts in this package have the following requirements:
 \end{itemize}
 
 
-\chapter{SegRanks Application Documentation}
+\chapter[SegRanks Application User Documentation]{SegRanks Application \\ User Documentation}
+\label{segranks-documentation}
 
 The \texttt{segranks} directory located in the attached CD-ROM contains
 \textit{SegRanks}, the annotation application which is used for ranking short
@@ -94,11 +96,11 @@ However, the list of annotation project will be empty. You need to create
 a project and upload extracted segments. This is described in Section \ref{creating-project}.
 
 The application is also ready to be deployed to Heroku cloud. To do that, you
-need in essence to create a Heroku application, initialize a Git repository
-with \textit{SegRanks}, add Heroku as a remote and push your commits there.
-It will automatically install all the dependencies. The application is
-configured to automatically set the database when deployed to Heroku. Please
-see Heroku documentation for more details.
+need in essence to create a new Heroku application, initialize a Git repository
+with \textit{SegRanks}, add Heroku as a remote and push your commits there.  It
+will automatically install all the dependencies. The application is configured
+to automatically set the database when deployed to Heroku. Please see Heroku
+documentation for more details.
 
 \section{Creating a New Annotation Project}
 \label{creating-project}
@@ -131,9 +133,9 @@ Annotating in the application is very easy. Before you start, you need to be
 registered and signed in. To start annotating, select an annotation project you
 want to work on. You will be then shown annotation instructions and an
 annotated sentence.  For each annotated segment, drag and drop segment
-candidates into the ranks.  When all the segment candidates are placed in the
-ranks, the submit button is enabled and you can submit your annotation to
-server. A new sentence to annotate will be displayed. 
+candidates into the rank positions.  When all the segment candidates are placed
+in the rank positions, the submit button is enabled and you can submit your
+annotation to the server. A new sentence is displayed to be annotated. 
 
 \section{Printing Annotation Statistics}
 
@@ -159,7 +161,7 @@ $ ./manage.py export_project <project_id> <out_file> pickle
 \end{verbatim}
 
 \noindent Both formats store a dictionary indexed by tuples of sentence IDs and
-source segments. The values of this dictionary are list of rank dictionaries.
+source segments. The values of this dictionary are lists of rank dictionaries.
 The rank dictionary is indexed by candidate segments and its values are
 assigned ranks. The following listing is an example JSON output:
 
