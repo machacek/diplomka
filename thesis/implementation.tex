@@ -1,6 +1,66 @@
 \chapter{SegRanks Application Development Documentation}
 \label{chapter:implementation}
 
+\textit{SegRanks} is a Django web application which follows the standard
+Django's structure and guidelines. It uses Model-View-Controller (MVC) pattern,
+although in Django, views are called templates and controllers are called
+views. We will use the Django's terminology here.
+
+The model describes the representation of the data stored in the database.
+Views prepare the data that gets presented to the user and also process user
+requests and updates the data. Templates describe how the presented data will
+look.
+
+\section{Model}
+
+The Django's object-relational mapping (ORM) is used to access the data in the
+database. It allows to manipulate with data using an object interface. There
+is no need to write SQL queries manually, all manipulations with data objects are
+translated to SQL automatically on background. 
+
+The database model is implemented in \texttt{segranks/model.py} using the
+Django's model API. You can see the model illustrated in Figure \ref{model}.
+
+Annotation projects are stored in table \textit{RankProject}. Each project
+contains a number of sentences stored in table \textit{Sentence}, together with
+reference translations. 
+
+All extracted segments of a sentence are stored in table \textit{Segment}.
+This table has two important fields. The first is \textit{candidates\_str},
+which stores tab separated strings of all candidate translations of the
+segment.  Although this is not a normalized design, it makes a lot of things
+much simpler (all the candidates are ranked at once anyway).  The second field
+is \textit{segment\_indexes} which stores the indices of words of the segment
+in the source sentence.  This is used for highlighting the segment in the
+interface.
+
+Finally, each segment has zero or more annotations stored in
+\textit{Annotation} table. When an annotation is submitted to the server, a new
+row for each segment in the sentence is created in this table. The most
+important field in this table is \textit{ranks} which stores ranks of the
+segment candidates separated by tabs as a string. The reason for breaking the
+database normalization is the same as before. There are convenient getters and
+setters for these unnormalized data, so this is only an implementation detail,
+hidden from the rest of the application. The table also stores some metadata
+(who created the annotation, how long did it take, etc.).
+
+Because there were some changes of the database model during the development,
+we use \textit{South} to track the database changes and easily migrate the
+data.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=12cm]{img/model.pdf}
+    \end{center}
+
+    \caption{Database model}
+    \label{model}
+\end{figure}
+
+\section{Views}
+
+\section{Templates}
+
 
 
 
