@@ -791,8 +791,8 @@ substitutions of characters required to transform a given string to another:
 \noindent where $E(a,b)$ denotes a set of all sequences of edit operations
 which transform the string $a$ to the string $b$, and $D(e)$, $S(e)$, $I(e)$
 denote number of deletions, substitutions and insertions respectively in the
-sequence $s$. If more segments in the database have the minimal distance to the
-``unseen'' segment, we pick one of them randomly.
+sequence $s$. If more segments in the database have the same minimal distance to the
+``unseen'' segment, we compute the average of their ranks.
 
 
 \begin{table}
@@ -804,16 +804,16 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- uedin-uncnstr. &   0.598 \\
- cu-depfix           &   0.575 \\
+ uedin-uncnstr. &   0.592 \\
+ cu-depfix           &   0.576 \\
  onlineB                &   0.562 \\
  cu-bojar            &   0.558 \\
- cu-funky            &   0.554 \\
+ cu-funky            &   0.555 \\
  uedin-wmt14         &   0.548 \\
  onlineA                &   0.498 \\
  CU-TectoMT          &   0.446 \\
- commercial1         &   0.396 \\
- commercial2         &   0.346 \\
+ commercial1         &   0.397 \\
+ commercial2         &   0.347 \\
 \hline
 \end{tabular}
 }
@@ -823,16 +823,16 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- cu-depfix           &   0.564 \\
- onlineB                &   0.552 \\
- uedin-uncnstr. &   0.550 \\
- cu-bojar            &   0.547 \\
- cu-funky            &   0.544 \\
+ cu-depfix           &   0.566 \\
+ onlineB                &   0.553 \\
+ uedin-uncnstr. &   0.551 \\
+ cu-bojar            &   0.548 \\
+ cu-funky            &   0.545 \\
  uedin-wmt14         &   0.537 \\
- commercial1         &   0.502 \\
- onlineA                &   0.487 \\
- CU-TectoMT          &   0.435 \\
- commercial2         &   0.333 \\
+ commercial1         &   0.495 \\
+ onlineA                &   0.488 \\
+ CU-TectoMT          &   0.433 \\
+ commercial2         &   0.334 \\
 \hline
 \end{tabular}
 }
@@ -842,15 +842,15 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- cu-depfix           &   0.558 \\
- onlineB                &   0.548 \\
- uedin-uncnstr. &   0.545 \\
- cu-bojar            &   0.540 \\
- cu-funky            &   0.538 \\
- uedin-wmt14         &   0.532 \\
- commercial2         &   0.489 \\
+ cu-depfix           &   0.559 \\
+ onlineB                &   0.549 \\
+ uedin-uncnstr. &   0.546 \\
+ cu-bojar            &   0.541 \\
+ cu-funky            &   0.539 \\
+ uedin-wmt14         &   0.533 \\
+ commercial2         &   0.484 \\
  onlineA                &   0.483 \\
- CU-TectoMT          &   0.429 \\
+ CU-TectoMT          &   0.430 \\
  commercial1         &   0.379 \\
 \hline
 \end{tabular}
@@ -861,14 +861,14 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- cu-depfix           &   0.565 \\
- CU-TectoMT          &   0.563 \\
- onlineB                &   0.553 \\
- uedin-uncnstr. &   0.551 \\
+ cu-depfix           &   0.566 \\
+ CU-TectoMT          &   0.557 \\
+ onlineB                &   0.554 \\
+ uedin-uncnstr. &   0.552 \\
  cu-bojar            &   0.548 \\
- cu-funky            &   0.544 \\
+ cu-funky            &   0.545 \\
  uedin-wmt14         &   0.539 \\
- onlineA                &   0.488 \\
+ onlineA                &   0.489 \\
  commercial1         &   0.387 \\
  commercial2         &   0.337 \\
 \hline
@@ -880,16 +880,16 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- onlineB                &   0.621 \\
- cu-depfix           &   0.573 \\
+ onlineB                &   0.614 \\
+ cu-depfix           &   0.574 \\
  uedin-uncnstr. &   0.559 \\
  cu-bojar            &   0.556 \\
  cu-funky            &   0.552 \\
  uedin-wmt14         &   0.546 \\
  onlineA                &   0.496 \\
- CU-TectoMT          &   0.443 \\
+ CU-TectoMT          &   0.444 \\
  commercial1         &   0.395 \\
- commercial2         &   0.344 \\
+ commercial2         &   0.345 \\
 \hline
 \end{tabular}
 }
@@ -899,14 +899,14 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- onlineA                &   0.588 \\
+ onlineA                &   0.581 \\
  cu-depfix           &   0.570 \\
  onlineB                &   0.556 \\
- uedin-uncnstr. &   0.554 \\
- cu-bojar            &   0.552 \\
+ uedin-uncnstr. &   0.555 \\
+ cu-bojar            &   0.553 \\
  cu-funky            &   0.549 \\
- uedin-wmt14         &   0.541 \\
- CU-TectoMT          &   0.440 \\
+ uedin-wmt14         &   0.542 \\
+ CU-TectoMT          &   0.441 \\
  commercial1         &   0.391 \\
  commercial2         &   0.341 \\
 \hline
@@ -918,13 +918,13 @@ sequence $s$. If more segments in the database have the minimal distance to the
 \hline
  system                   &   score \\
 \hline
- cu-funky            &   0.600 \\
- cu-depfix           &   0.574 \\
+ cu-funky            &   0.597 \\
+ cu-depfix           &   0.575 \\
  onlineB                &   0.561 \\
  uedin-uncnstr. &   0.559 \\
  cu-bojar            &   0.557 \\
  uedin-wmt14         &   0.546 \\
- onlineA                &   0.496 \\
+ onlineA                &   0.497 \\
  CU-TectoMT          &   0.445 \\
  commercial1         &   0.396 \\
  commercial2         &   0.346 \\
