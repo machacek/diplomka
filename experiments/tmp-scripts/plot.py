@@ -25,42 +25,37 @@ args = parse_args()
 
 def main():
 
-    distances, d = pickle.load(args.database)
+    d = pickle.load(args.database)
+
     results = []
 
-    worse_array = []
-    equal_array = []
-    better_array = []
-    
+    worse_total = 0
+    equal_total = 0
+    better_total = 0
 
-    range_ = list(range(1, 18))
+    for system in sorted(d):
 
-    for distance in range_:
-        worse = d[1][distance]
-        equal = d[0][distance]
-        better = d[-1][distance]
+        worse = d[system][1]
+        equal = d[system][0]
+        better = d[system][-1]
+
+        worse_total += worse
+        equal_total += equal
+        better_total += better
 
         sum = float(worse + equal + better)
-        results.append((distance, distances[distance], worse/sum, equal/sum, better/sum))
-
-        worse_array.append(worse/sum)
-        equal_array.append(equal/sum)
-        better_array.append(better/sum)
+        results.append((system, 100*worse/sum, 100*equal/sum, 100*better/sum))
+        
+    sum = float(worse_total + equal_total + better_total)
+    results.append(("All", 100* worse_total/sum, 100* equal_total/sum, 100* better_total/sum))
 
     print(tabulate.tabulate(
         results,
-        headers=["Edit Distance", "Count", "Worse", "Equal", "Better"],
-        floatfmt=".3f",
-        tablefmt="simple",
+        headers=["System", "Worse", "Equal", "Better"],
+        floatfmt=".1f",
+        tablefmt="latex",
         ))
 
-    plt.plot(range_, equal_array, 'o-', label="Equal")
-    plt.plot(range_, better_array, 'o-', label="Better")
-    plt.plot(range_, worse_array, 'o-', label="Worse")
-    plt.ylabel("Relative frequency")
-    plt.xlabel("Edit distance")
-    plt.legend(loc=7)
-    plt.savefig('foo.pdf')
 
 if __name__ == '__main__':
     main()

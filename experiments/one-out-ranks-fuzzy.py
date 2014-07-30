@@ -32,7 +32,8 @@ def main():
 
         for annotations_list in annotations.values():
             for annotation in annotations_list:
-                for better, worse in annotation.better_worse_without_fuzzy(leaved_system):
+                rank_cmp, distance, comparisons = annotation.better_worse_without_fuzzy(leaved_system)
+                for better, worse in comparisons:
                     win[better] += 1
                     win_loose[better] += 1
                     win_loose[worse] += 1
@@ -46,6 +47,7 @@ def main():
             results.most_common(),
             headers=["system", "score"],
             floatfmt=".3f",
+            tablefmt="latex",
             ))
 
 
