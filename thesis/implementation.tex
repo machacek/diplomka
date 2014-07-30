@@ -59,8 +59,43 @@ data.
 
 \section{Views}
 
+Application URLs are mapped to individual views in file
+\texttt{segranks/views.py}. All views are implemented as classes in file
+\texttt{segranks/views.py}. There are three important views.
+
+The simplest one is \textit{ProjectListView}, which lists all available
+annotation projects. It is implemented as a subclass of Django's generic
+\textit{ListView} class and does not implement any method.
+
+\textit{AnnotateView} chooses a sentence to be annotated. This view is
+implemented as a subclass of generic \textit{DetailView} class which renders a
+single object. The only implemented method here is \textit{get\_object} which
+returns a \textit{Sentence} object to be rendered. This method ensures that
+annotators are sometimes shown already annotated sentences (for the computation
+of agreements). In most of the cases, it simply choose a random unannotated
+sentence.
+
+The last view is \textit{SubmitView}. This view processes annotated sentences
+submitted by annotators back to server. The ranks and other data are extracted
+from the POST data and \textit{Annotation} instances are created for each
+annotated segment. After that, the user is redirected to \textit{AnnotateView}
+to get a new sentence to annotate.
+
+There are also views which handle user registrations and logins, however these
+views are part of the \textit{django-registration} library.
+
 \section{Templates}
 
+All templates are located in directory \texttt{segranks/templates}. The
+\texttt{base.html} template contains all the elements which are common for all
+templates (HTML head with links to client scripts and cascade styles, common
+navigation bar) and other templates derive from it. Other templates contain
+HTML code specific to views which they render.
+
+The templates use \textit{Twitter Bootstrap} framework to easily build a simple
+and responsive user interface. We also use \textit{jQuery} for easy element
+selection and manipulation and for event handling. The drag-and-drop feature is
+implemented using \textit{jQuery UI Sortable} widget.
 
 
 
