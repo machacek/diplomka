@@ -49,33 +49,20 @@ judges to choose the better of the candidates.
 \end{algorithm}
 
 To avoid these disadvantages, we propose the following method. Instead of
-judging whole sentences, we extract shorter segments from candidates and give
-them to judges to rank them. In order to extract meaningful segments with the
-same meaning from all candidates, we do the following procedure: First, we
+judging whole sentences, we extract short segments\footnote{The term `segment'
+is sometimes used in the literature to refer a sentence. In this thesis, we
+will use the term `segment' for a phrase of few words. } from candidates and
+give them to judges to rank them. In order to extract meaningful segments with
+the same meaning from all candidates, we do the following procedure: First, we
 parse the source sentence and then recursively descend the parsed tree and find
-nodes which cover source segments of a given maximum length. This is described exactly
-in Algorithm \ref{segment:extraction}. Finally, we project these
+nodes which cover source segments of a given maximum length. This is described
+exactly in Algorithm \ref{segment:extraction}. Finally, we project these
 extracted source segments to their counterpart segments in all candidate
 sentences using an automatic alignment.  You can find the whole process
 illustrated in Figure \ref{tree-align}. This extraction method is inspired by
 \perscite{human-in-the-loop} and by the WMT07 manual evaluation
 \parcite{wmt-overview-2007}.
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=\textwidth]{img/tree-align.pdf}
-    \end{center}
-
-    \caption[An illustration of the candidate segments extraction process]{ An
-      illustration of candidate segments extraction process. For a given MT
-      system, two segments were extracted from this sentence. The
-      \pojem{maxLength} constant was set to the value 4 here, to illustrate that
-      not all of the words are always covered by the extracted segments.
-
-}
-
-    \label{tree-align}
-\end{figure}
 
 In the segment evaluation in \parcite{wmt-overview-2007}, these extracted
 segments are only highlighted and shown to judges together with the rest of the
@@ -97,9 +84,23 @@ would produce the same translation of a whole sentence. Because we do not show
 the sentence context to annotators, we can merge identical segment candidates
 into one, so the annotators have fewer candidate segments to rank. This also
 allows us to reuse already collected human judgements later to evaluate a new
-system which was not in the set of annotated systems (we present this
-experiment in Section \ref{evaluating-new-systems}) or to tune parameters
-of a system (we present this experiment in Section \ref{tuning-systems}).
+system which was not in the set of annotated systems or to tune parameters of a
+system.
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/tree-align.pdf}
+    \end{center}
+
+    \caption[An illustration of the candidate segments extraction process]{ An
+      illustration of candidate segments extraction process. For a given MT
+      system, two segments were extracted from this sentence. The
+      \pojem{maxLength} constant was set to the value 4 here, to illustrate that
+      not all of the words are always covered by the extracted segments.
+
+}
+    \label{tree-align}
+\end{figure}
 
 The following list summarizes disadvantages of this method, which we are aware
 of. However, we believe that the advantages still outweight the problems
@@ -120,7 +121,7 @@ and that our method is worth exploration.
 
   \item Annotators do not see the whole context of annotated short segments.
     They are instructed to imagine any suitable context of the segment.
-    However, they can fail to imagine a suitable context even there exists one
+    However, they can fail to imagine a suitable context even if there exists one
     and wrongly penalize the segment. To partially remedy this disadvantage we
     give all extracted short segments to annotators to judge at once, so they
     can at least imagine the context.
@@ -132,7 +133,7 @@ and that our method is worth exploration.
     segments to annotate.
 
   \item Some segment candidates are much more important to convey the meaning
-    of a sentence than others, and therefore should not have equal weight when
+    of a sentence than others, and therefore should not have equal weights when
     being interpreted. When an annotator ranks system A better than system B in
     two of three ranked segments, and system B better than system A in the
     third segment, it does not always mean that he would have ranked system A
@@ -186,7 +187,7 @@ listed in Table \ref{translation-task-participants}.
     \end{tabular}
   \end{center}
 
-  \caption[Machine translation systems which were used in the annotation experiment]{The
+  \caption[MT systems which were used in the annotation experiment]{The
   machine translation systems participating in the WMT14 translation task in
   English-Czech direction which were used in the annotation experiment}
   \label{translation-task-participants}
@@ -213,17 +214,17 @@ translations with 646,605 sentences taken from the Europarl parallel corpus
 parallel corpus \parcite{bojar:czeng}.  The concatenated parallel corpus was
 lowercased before the alignment computation. 
 
-We extracted short segments from the parsed source trees using the algorithm
-\ref{segment:extraction}. The constant \pojem{minLength} was set to the value 3
-to filter out very short segments which are hard to judge without context. This
-also helped reduce the number of extracted segments to be annotated. The
-constant \pojem{maxLength} was set to the value 6 so the extracted segments
-were not too long to judge and at the same time it was more likely that two
-candidate translations of a segment were equal and therefore there would be
-fewer items to rank (our aim was to make annotations as easy and fast as
-possible). We have experimented with various settings of these two constants
-and the final settings seemed to generate a reasonable number of meaningful
-segments.
+We extracted short segments from the parsed source trees using
+Algorithm~\ref{segment:extraction}. The constant \pojem{minLength} was set to
+the value 3 to filter out very short segments which are hard to judge without
+context. This also helped reduce the number of extracted segments to be
+annotated. The constant \pojem{maxLength} was set to the value 6 so the
+extracted segments were not too long to judge and at the same time it was more
+likely that two candidate translations of a segment were equal and therefore
+there would be fewer items to rank (our aim was to make annotations as easy and
+fast as possible). We have experimented with various settings of these two
+constants and the final settings seemed to generate a reasonable number of
+meaningful segments.
 
 From the 3003 source sentences, we have extracted 8485 segments of length 3 to
 6 tokens. That is approximately 2.83 segments per sentence on average. By
@@ -237,19 +238,30 @@ were inserted into the database to be ranked by annotators.
 
 \section{Ranking of Segments}
 
-We have developed a new annotation application for this annotation
-experiment.\footnote{It would be probably possible to customize and use an
-  existing annotation application, for example Appraise
+We have developed a new annotation application called \textit{SegRanks} for
+this annotation experiment.\footnote{It would be probably possible to customize
+  and use an existing annotation application, for example Appraise
   \parcite{mtmt12:appraise}.  However, since the ranking of short segments is
 quite specific it would require a lot of customization. We therefore decided to
 develop our own light-weight web application which would suit our needs
-perfectly and allow us to optimize the efficiency of annotation.} For
-implementation details of this application, please see Chapter
-\ref{implementation}.
+perfectly and allow us to optimize the efficiency of annotation.} Please see
+Appendix \ref{segranks-documentation} for the user documentation and Appendix
+\ref{chapter:implementation} for the development documentation.
 
 You can find an example screen shot of this application in Figure
 \ref{segranks-screenshot}. Annotation instructions were displayed on each
 annotation screen. This is the English translation of these instructions:
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/segranks-screenshot2.png}
+    \end{center}
+    \caption[A screenshot of the annotation application]{A screenshot of the
+    annotation application. Annotators rank the candidate segments by dragging
+and dropping them into the ranks.  Annotators see all annotated segments of a
+sentence on a single screen.}
+    \label{segranks-screenshot}
+\end{figure}
 
 \begin{quote}
 
@@ -284,20 +296,91 @@ responsive design, so it is displayed correctly on smaller screens, and the
 drag-and-drop works also on touch screens.  Annotators were therefore able to
 rank segments on a tablet.
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=\textwidth]{img/segranks-screenshot2.png}
-    \end{center}
-    \caption[A screen shot of the annotation application]{A screen shot of the
-    annotation application. Annotators rank the candidate segments by dragging
-and dropping them into the ranks.  Annotators see all annotated segments of a
-sentence on a single screen.}
-    \label{segranks-screenshot}
-\end{figure}
 
 The very annotation experiment was conducted during May/June 2014 and it lasted
 exactly one month. During this time, 17 annotators ranked segments of 2765
 sentences, which is more than 92 \% of the prepared English-Czech test set.
+
+
+\subsection{Annotator Agreements}
+
+To measure the reliability and robustness of the proposed annotation method, we have
+computed intra- and inter-annotator agreements. A reasonable degree of these
+agreements supports the suitability of this method for machine translation
+evaluation.
+
+We measured the agreements using Cohen's kappa coefficient ($\kappa$)
+\parcite{cohen1960}. Let $P(A)$ be the proportion of times the annotators agree
+and $P(E)$ be the proportion of time that they would agree by chance. Then the
+Cohen's $\kappa$ is computed using the following formula:
+
+\begin{equation*}
+    \kappa = \frac{P(A)-P(E)}{1-P(E)}
+\end{equation*}
+
+\noindent Simply put, $\kappa$ is the proportion of times the annotators agrees
+of all the times they would not agree by chance. Note that $\kappa$ is a
+normalized version of $P(A)$; it considers how difficult it is to agree without
+knowing anything about the task.  Values of $\kappa$ can be therefore compared
+in principle across various annotation experiments. The maximum value is 1
+which would mean that annotators always agree.  A value of zero would mean that
+annotators agree as often as they would by chance.
+
+In our case, $P(A)$ and $P(E)$ are computed in the context of pairwise comparisons.
+Approximately 5 \% of the annotated sentences were annotated twice by two
+different annotators (for the inter-annotator agreement).  Another 5 \% of the
+sentences were annotated twice by the same annotator (for the intra-annotator
+agreement). From all the segments of these double annotated sentences, we
+extracted pairwise comparisons of candidate segments. Then we computed $P(A)$
+as the proportion of pairwise comparisons in which annotations match.
+
+We computed the expected agreement by chance as 
+\begin{equation*}
+    P(E) = P(A>B)^2 + P(A=B)^2 + P(A<B)^2
+\end{equation*}
+
+\noindent where $P(A>B)$, $P(A=B)$ and $P(A<B)$ were computed empirically as
+the relative frequencies of cases where the two segments $A$, $B$ are ranked
+$>$, $=$, or $<$ respectively, across all annotations of the pair $A$, $B$,
+regardless the sentence or annotator. The value of $P(E)$ in our experiment is
+0.394, which means that the probability of the outcomes $A>B$, $A=B$ and $A<B$
+is not uniform.
+
+\begin{table}
+    \begin{center}
+        \begin{tabular}{r|cc}
+                                     & our method & \cite{wmt14-overview-paper} \\
+            \hline
+            intra-annotator $\kappa$ &  0.593     & 0.448    \\
+            inter-annotator $\kappa$ &  0.397     & 0.360     \\
+        \end{tabular}
+    \end{center}
+
+    \caption[Inter-annotator and intra-annotator $\kappa$ scores]{$\kappa$
+        scores measuring intra-annotator and inter-annotator agreements. We
+        also report corresponding $\kappa$ scores from official WMT translation
+        task for comparison.  Please see Table \ref{big-table} for the
+    annotator agreements computed for individual annotators}
+
+    \label{agreements}
+\end{table}
+
+The final values of inter-annotator and intra-annotator $\kappa$ can be found
+in Table \ref{agreements} You can also compare them to the corresponding $\kappa$ values
+from WMT14 translation task \parcite{wmt14-overview-paper}, which were computed similarly
+on the same testset.  The exact interpretation of the Kappa
+coefficient is difficult, but according to \cite{landis77}, 0 -- 0.2 is slight,
+0.2 -- 0.4 is fair, 0.4 -- 0.6 is moderate, 0.6 -- 0.8 is substantial and 0.8
+-- 1.0 is almost perfect.  You can see that we get both $\kappa$ scores better
+than those of WMT14. However, they are still quite low and we expected them
+to be higher, since the annotation task was designed to be much simpler than
+the ranking full segments in the official WMT human evaluation.
+
+We also computed the agreements $\kappa$ for individual annotators and report
+them in Table \ref{big-table}.  As you can see, these scores are varying a lot.
+Based on these scores, we could filter out unreliable annotators. However, we
+do not do that in order to maintain comparability to the WMT14 experiment.
+
 
 \begin{table}
     \begin{center}
@@ -339,87 +422,6 @@ Total & 2773 & 8333 & 6 days, 14:22:57 &  68 & 0.593 & 0.397 \\
       inter-annotator agreement $\kappa_{inter}$. }
 
     \label{big-table}
-\end{table}
-
-\subsection{Annotator Agreements}
-
-To measure the reliability and robustness of the proposed annotation method, we have
-computed intra- and inter-annotator agreements. A reasonable degree of these
-agreements supports the suitability of this method for machine translation
-evaluation.
-
-We measured the agreements using Cohen's kappa coefficient ($\kappa$)
-\parcite{cohen1960}. Let $P(A)$ be the proportion of times the annotators agree
-and $P(E)$ be the proportion of time that they would agree by chance. Then the
-Cohen's $\kappa$ is computed using the following formula:
-
-\begin{equation*}
-    \kappa = \frac{P(A)-P(E)}{1-P(E)}
-\end{equation*}
-
-\noindent Simply put, $\kappa$ is the proportion of times the annotators agrees
-of all the times they would not agree by chance. Note that $\kappa$ is a
-normalized version of $P(A)$; it considers how difficult it is to agree without
-knowing anything about the task.  Values of $\kappa$ can be therefore compared
-in principle across various annotation experiments. The maximum value is 1
-which would mean that annotators always agree.  A value of zero would mean that
-annotators agree as often as they would by chance.
-
-In our case, $P(A)$ and $P(E)$ are computed in the context of pairwise comparisons.
-Approximately 5 \% of the annotated sentences were annotated twice by two
-different annotators (for the inter-annotator agreement).  Another 5 \% of the
-sentences were annotated twice by the same annotator (for the intra-annotator
-agreement). From all the segments of these double annotated sentences, we
-extracted pairwise comparisons of candidate segments. Then we computed $P(A)$
-as the proportion of pairwise comparisons in which annotations match.
-
-Finally, we computed $P(E)$ as 
-
-\begin{equation*}
-    P(E) = P(A>B)^2 + P(A=B)^2 + P(A<B)^2
-\end{equation*}
-
-\noindent where $P(A>B)$, $P(A=B)$ and $P(A<B)$ were computed empirically as
-the relative frequencies of cases where the two segments $A$, $B$ are ranked
-$>$, $=$, or $<$ respectively, across all annotations of the pair $A$,$B$,
-regardless the sentence or annotator. The value of $P(E)$ in our experiment is
-0.394, which means that the probability of the outcomes $A>B$, $A=B$ and $A<B$
-is not uniform.
-
-The final values of inter-annotator and intra-annotator $\kappa$ can be found
-in Table \ref{agreements} together with the corresponding $\kappa$ values
-from WMT14 translation task.  \parcite{wmt14-overview-paper} computed similarly
-on the same testset for comparisons.  The exact interpretation of the Kappa
-coefficient is difficult, but according to \cite{landis77}, 0 -- 0.2 is slight,
-0.2 -- 0.4 is fair, 0.4 -- 0.6 is moderate, 0.6 -- 0.8 is substantial and 0.8
--- 1.0 is almost perfect.  You can see that we get both $\kappa$ scores better
-than those of WMT14. However, they are still quite low and we expected them
-to be higher, since the annotation task was designed to be much simpler than
-the ranking full segments in the official WMT human evaluation.
-
-We also computed the agreements $\kappa$ for individual annotators and report
-them in Table \ref{big-table}.  As you can see, these scores are varying a lot.
-Based on these scores, we could filter out unreliable annotators. However, we
-do not do that in order to maintain comparability to the WMT14 experiment.
-
-
-\begin{table}
-    \begin{center}
-        \begin{tabular}{r|cc}
-                                     & our method & \cite{wmt14-overview-paper} \\
-            \hline
-            intra-annotator $\kappa$ &  0.593     & 0.448    \\
-            inter-annotator $\kappa$ &  0.397     & 0.360     \\
-        \end{tabular}
-    \end{center}
-
-    \caption[Inter-annotator and intra-annotator $\kappa$ scores]{$\kappa$
-        scores measuring intra-annotator and inter-annotator agreements. We
-        also report corresponding $\kappa$ scores from official WMT translation
-        task for comparison.  Please see Table \ref{big-table} for the
-    annotator agreements computed for individual annotators}
-
-    \label{agreements}
 \end{table}
 
 

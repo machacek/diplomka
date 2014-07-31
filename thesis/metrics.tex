@@ -251,7 +251,14 @@ Please note that once the weight vector is trained, there is no need to
 classify a pair of hypothesis when evaluating. A score of a single evaluated hypothesis $h$
 is computed as $\vect{w} \cdot \vect{\phi}(h,r)$.
 
-
+There are two properties of this metric we really like. First, except for the
+lists of function words, the metric is language independent and requires almost
+no language resources. Therefore it participated in all the language
+directions.  Second, the weights training method is, unlike other methods, very
+elegant.  Most of the parametrized metrics we know about either do not tune
+parameters at all (\metric{UPC-STOUT} and \metric{UPC-IPA}), tune them manually
+(\metric{AMBER}, \metric{VERT*}) or use generic optimization techniques like
+hill climbing which does not have to find the optimum (\metric{METEOR}).
 
 \subsection{BLEU-NRC}
 
@@ -570,9 +577,9 @@ for these directions are also very poor.
 %\subsection{tBLEU}
 \subsection{UPC-STOUT and UPC-IPA}
 
-\parcite{wmt14-metric-upc} combine various metrics implemented in the
+\perscite{wmt14-metric-upc} combine various metrics implemented in the
 \textsc{Asiya} toolkit.\footnote{\url{http://nlp.lsi.upc.edu/asiya/}}. The set
-of metrics they use contains 6 lexical based metrics (\metric{WER},
+of the metrics they use contains 6 lexical based metrics (\metric{WER},
 \metric{PER}, \metric{TER}, \metric{METEOR-exact}, etc.), 2 shallow parsing
 based metrics, 5 constituency parsing based metrics, 5 dependency parsing based
 metrics, 4 semantic roles based metrics, 1 explicit-semantic metric, 3
@@ -596,7 +603,7 @@ two vectors:
 The first variant, \metric{UPC-STOUT}, is defined as the uniformly weighted
 linear interpolation of the best performing metrics (measured on previous years
 metrics data). The second variant, \metric{UPC-IPA} is a light version of
-\metric{UPC-STOUT}.  It considers only metrics which require no or little
+\metric{UPC-STOUT}.  It considers only the metrics which require no or little
 language resources.
 
 
@@ -657,13 +664,29 @@ The reported empirical confidence intervals of system-level correlations were
 obtained through bootstrap resampling of 1000 samples (confidence level of
 95\,\%).
 
-\subsection{Reasons for Pearson correlation coefficient}
+\subsection{Reasons for Pearson Correlation Coefficient}
+
+
+
 
 In the translation task, there are often similar systems with human scores very
 close to each other. It can therefore easily happen that even a good metric
 compares two similar systems differently from humans. We believe that the
 penalty incurred by the metric for such a swap should somehow reflect that the
 systems were hard to separate.
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=\textwidth]{img/pearson-motivation.pdf}
+    \end{center}
+
+    \caption[Motivation for Pearson: Metric vs. human scores scatterplot]{
+      Motivation for Pearson: Metric vs. human scores scatterplot
+}
+
+    \label{motivation-pearson}
+\end{figure}
+\afterpage{\clearpage}
 
 Since the Spearman's $\rho$ converts both human and metric scores to ranks and
 therefore disregards the absolute differences in the scores, it does exactly what
@@ -675,19 +698,8 @@ any of the metrics since overall, the systems are of a comparable quality and
 the metrics are likely to behave linearly in this small
 range of scores.
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=\textwidth]{img/pearson-motivation.pdf}
-    \end{center}
 
-    \caption[Motivation for Pearson: Metric vs. human scores scatterplot]{
-      Motivation for Pearson: Metric vs. human scores scatterplot
-}
-
-    \label{tree-align}
-\end{figure}
-
-You can see an example situation in Figure \ref{tree-align}. There is a cluster
+You can see an example situation in Figure \ref{motivation-pearson}. There is a cluster
 of very similar systems in upper right corner. In this cluster, some systems
 are not ranked correctly by the metric. For instance, the swap of the uedin-wmt14
 and onlineB systems is not penalized so harsh in the Pearson score. However
@@ -699,61 +711,8 @@ Moreover, the general agreement to adopt Pearson instead of Spearman's
 correlation coefficient was already apparent during the WMT12 workshop. This
 change just did not get through for WMT13.
 
+
 \subsection{Results}
-
-You can find the system-level correlations for translations into English in
-Table \ref{system-level-corrs-toEn} and for translations out of English in
-Table \ref{system-level-corrs-outEn}. Each row in the tables contains
-correlations of a metric in each of the examined translation directions. The
-metrics are sorted by average Pearson correlation coefficient across the
-translation directions. The best results in each direction are in bold.
-
-As in previous years, a lot of metrics outperformed \metric{BLEU} in system
-level correlation. In into-English directions, the metric
-\metric{DiscoTK-party-tuned} has the highest correlation in two language
-directions and it is also the best correlated metric on average according to both
-Pearson and Spearman's coefficients. The second best correlated metric on
-average (according to Pearson) is \metric{LAYERED} which is also the single
-best metric in Hindi-to-English direction.  Metrics \metric{REDSys} and
-\metric{REDSysSent} are quite unstable, they win in French-to-English and
-Czech-to-English directions respectively but they perform very poorly in other
-directions. 
-
-Except \metric{Meteor}, none of the participants took part in the last year's
-metrics task.  We can therefore compare current and last year's results only for
-\metric{Meteor} and baseline metrics.  \metric{Meteor}, the winner last year,
-performs generally well in some directions but it suffers horribly when
-evaluating translations from non-Latin script (Russian and especially Hindi).
-For the baseline metrics the results are quite similar across the years. In
-both years \metric{BLEU} performs best among baseline metrics, closely followed
-by \metric{CDER}. \metric{NIST} is in the middle of the list in both
-years. The remaining baseline metrics \metric{TER}, \metric{WER}
-and \metric{PER} perform significantly worse.
-
-The results into German are markedly lower and have broader confidence
-intervals than the results in other directions. This could be explained by a
-very
-high number (18) of participating systems of similar quality. 
-Both human judgements and automatic metrics are negatively affected by these
-circumstances. To preserve the reliability of overall metrics' performance
-across languages, we
-decided to exclude English-to-German
-direction from the average Pearson and Spearman's correlation coefficients.
-
-In other out-of-English directions, the best correlated metric on average according
-to Pearson coefficient is \metric{NIST}, even though it does not win in any
-single direction. \metric{CDER} is the second best according to Pearson
-and the best metric according to Spearman's. Again it does not win in any
-single direction. The metrics \metric{PER} and \metric{WER} are quite
-unstable.  Each of them wins in two directions but performs very badly in
-others.
-
-Compared to the last year results, the order of metrics participating in both
-years is quite similar: \metric{NIST} and \metric{CDER} performed very well
-both years, followed by \metric{BLEU}. The metrics \metric{TER} and \metric{WER}
-are again at the end of the list. An interesting change is that
-\metric{PER} performs much better this year.
-
 
 \begin{sidewaystable*}
   %\small
@@ -770,7 +729,7 @@ are again at the end of the list. An interesting change is that
         \metric{VERTa-W}             & $.959 \pm .011$        & $.867 \pm .029$        & $.920 \pm .011$        & $.934 \pm .050$        & $.848 \pm .024$        & $.906 \pm .025$        & $.868 \pm .045$        \\
         \metric{VERTa-EQ}            & $.959 \pm .011$        & $.854 \pm .031$        & $.927 \pm .010$        & $.938 \pm .048$        & $.842 \pm .024$        & $.904 \pm .025$        & $.857 \pm .046$        \\
         \metric{tBLEU}               & $.952 \pm .012$        & $.832 \pm .034$        & $.954 \pm .007$        & $.957 \pm .040$        & $.803 \pm .027$        & $.900 \pm .024$        & $.841 \pm .056$        \\
-        \metric{BLEU\_NRC}           & $.953 \pm .012$        & $.823 \pm .035$        & $.959 \pm .007$        & $.946 \pm .044$        & $.787 \pm .028$        & $.894 \pm .025$        & \oosmark{$.855 \pm .056$}        \\
+        \metric{BLEU-NRC}           & $.953 \pm .012$        & $.823 \pm .035$        & $.959 \pm .007$        & $.946 \pm .044$        & $.787 \pm .028$        & $.894 \pm .025$        & \oosmark{$.855 \pm .056$}        \\
         \metric{BLEU}                & $.952 \pm .012$        & $.832 \pm .034$        & $.956 \pm .007$        & $.909 \pm .054$        & $.789 \pm .027$        & $.888 \pm .027$        & $.833 \pm .058$        \\
         \metric{UPC-IPA}             & $.966 \pm .010$        & $.895 \pm .027$        & $.914 \pm .010$        & $.824 \pm .073$        & $.812 \pm .026$        & $.882 \pm .029$        & \oosmark{$.858 \pm .044$}        \\
         \metric{CDER}                & $.954 \pm .012$        & $.823 \pm .034$        & $.826 \pm .016$        & $.965 \pm .035$        & $.802 \pm .027$        & $.874 \pm .025$        & $.807 \pm .050$        \\
@@ -816,7 +775,7 @@ are again at the end of the list. An interesting change is that
         \metric{PER}        & $.936 \pm .023$        & $.931 \pm .011$        & \best{.988 $\pm$ .005} & \best{.941 $\pm$ .011} & $.949 \pm .013$        & $.190 \pm .047$        & \oosmark{$.823 \pm .037$}        \\
         \metric{APAC}       & $.950 \pm .020$        & $.940 \pm .011$        & $.973 \pm .008$        & $.929 \pm .012$        & $.948 \pm .013$        & $.346 \pm .044$        & $.799 \pm .041$        \\
         \metric{tBLEU}      & $.932 \pm .023$        & $.968 \pm .008$        & $.973 \pm .008$        & $.912 \pm .013$        & $.946 \pm .013$        & $.239 \pm .046$        & \oosmark{$.805 \pm .039$}        \\
-        \metric{BLEU\_NRC}  & $.933 \pm .022$        & $.971 \pm .007$        & $.974 \pm .008$        & $.901 \pm .014$        & $.945 \pm .013$        & $.205 \pm .046$        & \oosmark{$.809 \pm .039$}        \\
+        \metric{BLEU-NRC}  & $.933 \pm .022$        & $.971 \pm .007$        & $.974 \pm .008$        & $.901 \pm .014$        & $.945 \pm .013$        & $.205 \pm .046$        & \oosmark{$.809 \pm .039$}        \\
         \metric{ELEXR}      & $.885 \pm .029$        & $.962 \pm .009$        & $.979 \pm .007$        & $.938 \pm .011$        & $.941 \pm .014$        & $.260 \pm .044$        & $.768 \pm .036$        \\
         \metric{TER}        & $.954 \pm .019$        & $.829 \pm .017$        & $.978 \pm .007$        & $.931 \pm .012$        & $.923 \pm .014$        & $.324 \pm .045$        & $.745 \pm .035$        \\
         \metric{WER}        & \best{.960 $\pm$ .018} & $.516 \pm .026$        & $.976 \pm .007$        & $.932 \pm .011$        & $.846 \pm .016$        & \best{.357 $\pm$ .045} & $.696 \pm .037$        \\
@@ -840,6 +799,75 @@ are again at the end of the list. An interesting change is that
 \end{sidewaystable*}
 \afterpage{\clearpage}
 
+You can find the system-level correlations for translations into English in
+Table \ref{system-level-corrs-toEn} and for translations out of English in
+Table \ref{system-level-corrs-outEn}. Each row in the tables contains
+correlations of a metric in each of the examined translation directions. The
+metrics are sorted by average Pearson correlation coefficient across the
+translation directions. The best results in each direction are in bold.
+
+\subsubsection{Into-English Results Analysis}
+
+As in previous years, a lot of metrics outperformed \metric{BLEU} in system
+level correlation. In into-English directions, the metric
+\metric{DiscoTK-party-tuned} has the highest correlation in two language
+directions and it is also the best correlated metric on average according to both
+Pearson and Spearman's coefficients. The second best correlated metric on
+average (according to Pearson) is \metric{LAYERED} which is also the single
+best metric in Hindi-to-English direction.  Metrics \metric{REDSys} and
+\metric{REDSysSent} are quite unstable, they win in French-to-English and
+Czech-to-English directions respectively but they perform very poorly in other
+directions. 
+
+You can see that the metrics which combine many features or many metrics on
+different linguistic layers perform generally much better than other metrics
+(the first six metrics in directions into English are of this type).  Most of
+the lexical based metrics (\metric{NIST}, \metric{TER}, \metric{WER},
+\metric{PER}) perform very poorly. However, \metric{DiscoTK-light} which
+combines only parsing based metrics also performs very poorly. This suggest
+that a good metric has to combine features on various linguistic layers.  The
+tuning of parameters is very important as you can see in the case of metrics
+\metric{DiscoTK-party-tuned} and \metric{DiscoTK-party}.
+
+Except \metric{Meteor}, none of the participants took part in the last year's
+metrics task.  We can therefore compare current and last year's results only for
+\metric{Meteor} and baseline metrics.  \metric{Meteor}, the winner last year,
+performs generally well in some directions but it suffers horribly when
+evaluating translations from non-Latin script (Russian and especially Hindi).
+For the baseline metrics the results are quite similar across the years. In
+both years \metric{BLEU} performs best among baseline metrics, closely followed
+by \metric{CDER}. \metric{NIST} is in the middle of the list in both
+years. The remaining baseline metrics \metric{TER}, \metric{WER}
+and \metric{PER} perform significantly worse.
+
+\subsubsection{Out-of-English Results Analysis}
+
+The results into German are markedly lower and have broader confidence
+intervals than the results in other directions. This could be explained by a
+very
+high number (18) of participating systems of similar quality. 
+Both human judgements and automatic metrics are negatively affected by these
+circumstances. To preserve the reliability of overall metrics' performance
+across languages, we
+decided to exclude English-to-German
+direction from the average Pearson and Spearman's correlation coefficients.
+
+In other out-of-English directions, the best correlated metric on average according
+to Pearson coefficient is \metric{NIST}, even though it does not win in any
+single direction. \metric{CDER} is the second best according to Pearson
+and the best metric according to Spearman's. Again it does not win in any
+single direction. The metrics \metric{PER} and \metric{WER} are quite
+unstable.  Each of them wins in two directions but performs very badly in
+others.
+
+Compared to the last year results, the order of metrics participating in both
+years is quite similar: \metric{NIST} and \metric{CDER} performed very well
+both years, followed by \metric{BLEU}. The metrics \metric{TER} and \metric{WER}
+are again at the end of the list. An interesting change is that
+\metric{PER} performs much better this year.
+
+
+
 \section{Sentence-Level Metric Analysis}
 \label{segment-level}
 
@@ -856,7 +884,7 @@ Kendall's $\tau$ computation were used in the Metrics Tasks. Also some of the
 participants have noticed a problem with ties in the WMT13 method. Therefore, we
 discuss several possible variants in detail in this thesis.
 
-\subsection{Notation for Kendall's $\tau{}$ computation}
+\subsection{Notation for Kendall's $\tau{}$ Computation}
 
 The basic formula for Kendall's $\tau$ is:
 
@@ -953,7 +981,7 @@ For an example of WMT12 computation, let us have the following comparisons:
   \tau = \frac{2-1}{2+1} = \frac{1}{3}
 \end{equation*}
 
-\subsection{Discussion on Kendall's $\tau{}$ computation}
+\subsection{Discussion on Kendall's $\tau{}$ Computation}
 
 In 2013, we thought that metric ties should not be penalized and we decided to
 excluded them like the human ties. We will denote this method as WMT13:
@@ -1018,7 +1046,7 @@ We have decided to use WMT14 variant as the main evaluation measure this year,
 however, we are also reporting average scores computed by other variants.
 
 
-\subsection{Kendall's $\tau$ results}
+\subsection{Kendall's $\tau$ Results}
 
 \begin{sidewaystable*}[t]
   \begin{center}
@@ -1040,7 +1068,7 @@ however, we are also reporting average scores computed by other variants.
         \metric{VERTa-EQ}            & $.407 \pm .013$        & $.315 \pm .014$        & $.384 \pm .013$        & $.263 \pm .015$        & $.312 \pm .011$        & $.336 \pm .013$        \\
         \metric{DiscoTK-party}       & $.395 \pm .013$        & $.334 \pm .014$        & $.362 \pm .013$        & $.264 \pm .016$        & $.305 \pm .011$        & $.332 \pm .013$        \\
         \metric{AMBER}               & $.367 \pm .013$        & $.313 \pm .014$        & $.362 \pm .013$        & $.246 \pm .016$        & $.294 \pm .011$        & $.316 \pm .013$        \\
-        \metric{BLEU\_NRC}           & $.382 \pm .013$        & $.272 \pm .014$        & $.322 \pm .014$        & $.226 \pm .016$        & $.269 \pm .011$        & $.294 \pm .013$        \\
+        \metric{BLEU-NRC}           & $.382 \pm .013$        & $.272 \pm .014$        & $.322 \pm .014$        & $.226 \pm .016$        & $.269 \pm .011$        & $.294 \pm .013$        \\
         \metric{sentBLEU}            & $.378 \pm .013$        & $.271 \pm .014$        & $.300 \pm .013$        & $.213 \pm .016$        & $.263 \pm .011$        & $.285 \pm .013$        \\
         \metric{APAC}                & $.364 \pm .012$        & $.271 \pm .014$        & $.288 \pm .014$        & $.198 \pm .016$        & $.276 \pm .011$        & $.279 \pm .013$        \\
         \metric{DiscoTK-light}       & $.311 \pm .014$        & $.224 \pm .015$        & $.238 \pm .013$        & $.187 \pm .016$        & $.209 \pm .011$        & $.234 \pm .014$        \\
@@ -1069,7 +1097,7 @@ however, we are also reporting average scores computed by other variants.
         \metric{BEER}           & $.292 \pm .012$        & \best{.268 $\pm$ .009} & $.250 \pm .013$        & \best{.344 $\pm$ .009} & \best{.440 $\pm$ .013} & \best{.319 $\pm$ .011} \\
         \metric{Meteor}         & $.280 \pm .012$        & $.238 \pm .009$        & $.264 \pm .012$        & $.318 \pm .009$        & $.427 \pm .012$        & $.306 \pm .011$        \\
         \metric{AMBER}          & $.264 \pm .012$        & $.227 \pm .009$        & \best{.286 $\pm$ .012} & $.302 \pm .009$        & $.397 \pm .013$        & $.295 \pm .011$        \\
-        \metric{BLEU\_NRC}      & $.261 \pm .012$        & $.202 \pm .009$        & $.234 \pm .013$        & $.297 \pm .009$        & $.391 \pm .012$        & $.277 \pm .011$        \\
+        \metric{BLEU-NRC}      & $.261 \pm .012$        & $.202 \pm .009$        & $.234 \pm .013$        & $.297 \pm .009$        & $.391 \pm .012$        & $.277 \pm .011$        \\
         \metric{APAC}           & $.253 \pm .012$        & $.210 \pm .008$        & $.203 \pm .012$        & $.292 \pm .009$        & $.388 \pm .013$        & $.269 \pm .011$        \\
         \metric{sentBLEU}       & $.256 \pm .012$        & $.191 \pm .009$        & $.227 \pm .012$        & $.290 \pm .009$        & $.381 \pm .013$        & $.269 \pm .011$        \\
         \hline
@@ -1111,7 +1139,7 @@ however, we are also reporting average scores computed by other variants.
         \metric{VERTa-EQ}            & $.336 \pm .013$        & \oosmark{$.323 \pm .013$}        & $.341 \pm .013$        & $.302 \pm .011$        \\
         \metric{DiscoTK-party}       & $.332 \pm .013$        & \oosmark{$.332 \pm .013$}        & $.332 \pm .013$        & $.263 \pm .011$        \\
         \metric{AMBER}               & $.316 \pm .013$        & $.302 \pm .013$        & $.321 \pm .014$        & \oosmark{$.286 \pm .011$}        \\
-        \metric{BLEU\_NRC}           & $.294 \pm .013$        & $.267 \pm .014$        & $.303 \pm .014$        & $.271 \pm .011$        \\
+        \metric{BLEU-NRC}           & $.294 \pm .013$        & $.267 \pm .014$        & $.303 \pm .014$        & $.271 \pm .011$        \\
         \metric{sentBLEU}            & $.285 \pm .013$        & $.258 \pm .014$        & $.293 \pm .014$        & $.264 \pm .011$        \\
         \metric{APAC}                & $.279 \pm .013$        & $.243 \pm .014$        & $.290 \pm .014$        & $.261 \pm .011$        \\
         \metric{DiscoTK-light}       & $.234 \pm .014$        & $.234 \pm .014$        & $.234 \pm .014$        & $.184 \pm .011$        \\
@@ -1141,7 +1169,7 @@ variant.}
         \metric{BEER}           & \best{.319 $\pm$ .011} & \best{.314 $\pm$ .011} & \best{.320 $\pm$ .011} & $.272 \pm .009$        \\
         \metric{Meteor}         & $.306 \pm .011$        & $.283 \pm .011$        & $.313 \pm .011$        & \oosmark{\best{.273 $\pm$ .008}} \\
         \metric{AMBER}          & $.295 \pm .011$        & $.269 \pm .011$        & $.303 \pm .011$        & $.266 \pm .009$        \\
-        \metric{BLEU\_NRC}      & $.277 \pm .011$        & $.235 \pm .011$        & $.289 \pm .011$        & $.256 \pm .009$        \\
+        \metric{BLEU-NRC}      & $.277 \pm .011$        & $.235 \pm .011$        & $.289 \pm .011$        & $.256 \pm .009$        \\
         \metric{APAC}           & $.269 \pm .011$        & $.217 \pm .011$        & $.285 \pm .011$        & $.252 \pm .008$        \\
         \metric{sentBLEU}       & $.269 \pm .011$        & \oosmark{$.232 \pm .011$}        & $.280 \pm .011$        & $.246 \pm .009$        \\
         \hline
@@ -1188,10 +1216,8 @@ We also computed empirical confidence intervals of Kendall's $\tau$ using bootst
 resampling. We varied the ``golden truth'' by sampling from human judgments. We
 have generated 1000 new sets and report the average of the upper and lower
 2.5\,\% empirical bound, which corresponds to the 95\,\% confidence interval.
-%XXX Matousi, je tenhle popis srozumitelny?
 
-
-
+\subsubsection{Analysis}
 
 In directions into English (Table~\ref{segment-level-correlations-toEn}), the
 strongest correlated sentence-level metric on average is
@@ -1215,11 +1241,20 @@ In directions out of English (Table~\ref{segment-level-correlations-fromEn}),
 the metric with highest correlation on average across all directions is
 \metric{Beer}, followed by \metric{Meteor}.
 
-\section{Overall Comparison of Automatic Metrics}
-
-\XXX{Tady tu sekci se teprve chystam predelat}
+The trends in the sentence level are quite similar to the trends in the system
+level. The metrics which combine features on various linguistic layers are much
+better than metrics which do not. The metrics which tune their weights
+(\metric{DiscoTK-party-tuned}, \metric{BEER}, \metric{RED*} and
+\metric{Meteor}) are significantly better better than metrics which do not
+(\metric{UPC-*}, \metric{VERTa-*}). An interesting contrast is between the
+\metric{DiscoTK-party-tuned} and \metric{DiscoTK-party} metrics, which differ
+only in the tuning. It shows that the tuning is very important. Comparing \metric{DiscoTK-party}
+to \metric{DiscoTK-light} shows that discourse tree based metrics are not very useful in MT evaluation.
 
 \begin{comment}
+
+\section{Overall Comparison of Automatic Metrics}
+
 In this paper, we summarized the results of the WMT14 Metrics Shared Task, which
 assesses the quality of
 various automatic machine translation metrics. As in previous years, human

@@ -20,45 +20,58 @@ are evaluated without their sentence context.
 We developed an easy-to-use and modern annotation interface and conducted a
 manual evaluation experiment using the proposed method. We evaluated the
 systems which participated in the English-Czech direction in WMT Translation
-Task. The measured the inter- and intra-annotator $\kappa$ scores (the
-normalized agreement) are higher than the corresponding values in the WMT
+Task. The measured inter- and intra-annotator $\kappa$ scores (the
+normalized agreements) are higher than the corresponding values in the WMT
 manual evaluation, which means that our evaluation method is more robust.
 
-To get a final score for each system's translation, we compute how often the
+To get a final score for each system's translation, we computed how often the
 segments of the system were ranked better than other segments (in the context
-of pairwise comparisons).  The results of evaluated systems are quite similar
-to the results obtained by the official WMT judgments. However, our method is
-not able to correctly distinguish some systems with very similar quality. The
-Pearson correlation coefficient between the \metoda{SegRanks} scores and the
-official human scores is 0.978, which is lower than correlation of some of the
-best performing automatic metrics (\metric{NIST}, \metric{CDER},
-\metric{ELEXR}). We manually analyzed sentences which were ranked high in the
-short segment judgments but ranked low in the official WMT judgment to explain
-the difference. In most of these sentences, there was a badly translated part
-which was, however, not covered with evaluated short segments.  The uncovered
-part often contained the predicate which has a significant impact on the
-translation quality. 
+of the pairwise comparisons). The results of the evaluated systems are quite
+similar to the results obtained by the official WMT judgments. However, our
+method is not able to correctly distinguish some systems with very similar
+quality.
+\begin{comment}
+The Pearson correlation coefficient between the short segments scores
+and the official human scores is 0.978, which is lower than correlations of
+some of the best performing automatic metrics (\metric{NIST}, \metric{CDER},
+\metric{ELEXR}).
+\end{comment}
+We manually analyzed the sentences which were ranked high in
+the short segment judgments but ranked low in the official WMT judgments to
+explain the difference. In most of these sentences, there was a badly
+translated part which was, however, not covered with the evaluated short
+segments.  The uncovered parts often contained verbs which have a significant
+impact on the translation quality. 
 
 To explore the possibility of reusing the collected database to evaluate unseen
 translations, we have performed several experiments. In the first one, we
 evaluated unseen translations using only the ranks of the segments which were
 in the database.  This, however, did not work as expected, because the obtained
-scores of unseen systems were significantly overestimated. During a manual
-analysis, we verified that the evaluated systems are more likely to agree on
-better translations than on worse translations. Although this method cannot be
+scores of unseen systems were significantly overestimated. During the manual
+analysis, we identified that the evaluated systems are more likely to agree on
+better translations than on worse translations.
+
+\begin{comment}
+Although this method cannot be
 used for evaluating unseen translations, we found out that errors in machine
 translation are unique.
+\end{comment}
 
-To avoid evaluating unseen translations only on not representative subset of
+To avoid evaluating unseen translations only on a not-representative subset of
 short segments, we proposed another method. In this method, we evaluated unseen
-translations on all the extracted segments. To approximate a rank of an unseen
-segment, we took the rank of the closest segment by edit distance. This method
-didn't work as well.  The approximated rank was predicted correctly using the
-closest segment only in 20.6 \% cases.  In 51.2 \% of the cases, the predicted
-rank was better than the original rank. The scores were overestimated again.
-The important observation here is that segments are closer to better segments
-than to equally good or worse segments. This is somehow consistent with the
-previous finding that errors in machine translation are unique.
+translations on all the extracted segments. To approximate the rank of an
+unseen segment, we took the rank of the closest segment by edit distance. This
+method, however, didn't work as well.  The approximated rank was predicted
+correctly using the closest segment only in 19.7 \% cases.  In 51.9 \% of the
+cases, the predicted rank was better than the original rank. The final scores
+of the unseen systems were thus overestimated again.
+
+\begin{comment}
+The important observation here is that the candidates are closer to the
+better candidates than to the equally good or worse candidates. This is somehow
+consistent with the previous finding that errors in machine translation are
+unique.
+\end{comment}
 
 In another experiment, we extracted the best ranked segments from the collected
 database and considered them as good translations. We used them as additional
@@ -69,38 +82,40 @@ In the last experiment with the collected database, we tried to use the
 database to tune a machine translation system using the MERT method.  We
 proposed several variants of \metoda{SegRanks} based metrics adapted for the
 MERT tuning. The tuned systems were evaluated by humans against the baseline
-system tuned by \metric{BLEU}. The only variant which tuned the system better
-than baseline was the variant which considered unseen segments as bad and
-therefore pushed the system to produce known and already evaluated segments.
+system tuned by \metric{BLEU}.  We were able to improve the tuning of the
+system using a technique which considered unseen segments as bad and therefore
+pushed the system to produce known and already evaluated segments.
 
-Although most of the proposed methods exploiting the collected database do not
+Although most of the proposed methods exploiting the collected database did not
 work, we tried to identify and analyze root causes of the failures. The main
 cause seems to be the fact that errors in machine translation are unique and
 that segments produced by more than one system are likely to be of better
 quality. This is also related with the fact that translations are more likely
 to be closer to better translations than to equally good or worse translations.
-Maybe, if we had a more dense database (much more than 10 evaluated systems),
-these phenomena would not influence results so much.
+Maybe, if we had a more dense database (many more than 10 evaluated systems),
+these phenomena would not influence results so adversely.
 
 \section{Automatic Evaluation}
 
 In the second part of this thesis, we summarized the results of the WMT14
-Metrics Shared Task, which assessed the quality of various automatic machine
-translation metrics. Judgements collected in the WMT14 human evaluation served
-as the golden truth and we checked how well the metrics predicted the
-judgements at the level of individual sentences (sentence-level task) as well
-as at the level of the whole test set (system-level task).
+Metrics Shared Task which we ran. The shared task assesses the quality of
+various automatic machine translation metrics. Judgements collected in the
+WMT14 human evaluation served as the golden truth and we checked how well the
+metrics predicted the judgements at the level of individual sentences
+(sentence-level task) as well as at the level of the whole test set
+(system-level task).
 
 In the system-level task, we discussed differences between Spearman's rank
 correlation coefficient and Pearson correlation coefficient and decided to
-chose Pearson coefficient instead of Spearman's rank coefficient as being
+choose Pearson coefficient instead of Spearman's rank coefficient as being
 fairer. In the sentence-level task, we introduced a new notation which exactly
-specifies details on Kendall's $\tau$ computation. We also discussed several
-variants of Kendall's $\tau$ used in the past and proposed and used a new
-variant which does not suffer from shortcomings of other variants.
+specifies the details on Kendall's $\tau$ computation. We also discussed
+several variants of Kendall's $\tau$ used in the past and proposed and used a
+new variant which does not suffer from shortcomings of other variants.
 
+\begin{comment}
 Although sentence-level correlations are significantly higher than they were in
-previous years, they are still much lower than system-level ones. Kendall's
+the previous years, they are still much lower than system-level ones. Kendall's
 $\tau$ reaches at most 0.45 for the best performing metric in the best language
 pair. So, there is quite some research work to be done.
 
@@ -111,21 +126,26 @@ are \metric{NIST}, \metric{CDER} and \metric{AMBER}. On the sentence level, the
 best performing metrics in directions into English are
 \metric{DiscoTK-party-tuned}, \metric{BEER} and \metric{REDcombSent}. The best
 performing metrics in directions out of English are \metric{BEER},
-\metric{Meteor} and \metric{AMBER}.  Generally, most of the best performing
-metrics combine other metrics or they employ a lot of features on different
-linguistic layers.
+\metric{Meteor} and \metric{AMBER}.
+\end{comment}
+
+We observed two general trends: First, the metrics which employ features on various
+linguistic layers are better than other metrics. Second, the metrics which tune
+their parameters or weights are also better than other metrics.
 
 We have implemented scripts for metrics evaluation and published them in a
-package together with human judgments. Anyone can therefore reproduce the
-results and use it to evaluate his or her metric on the WMT14 data.
+package together with human
+judgments\footnote{\url{http://www.statmt.org/wmt14/wmt14-metrics-task.tar.gz}}.
+Anyone can therefore reproduce the results and use it to evaluate his or her
+metric on the WMT14 data.
 
 \section{Future Work}
 
-The \metoda{SegRanks} method could by improved in several ways to possibly
+The \metoda{SegRanks} method could be improved in several ways to hopefully
 avoid its shortcomings. Short segments should be extracted in a way that they
 cover either all words in a sentence or the most important parts, for example
 predicates. To avoid data sparseness, we should evaluate more systems or
-extract segments from an n-best list directly in the case of tuning. An
+extract segments from the n-best list directly in the case of tuning. An
 application of machine learning techniques to predict quality of unseen short
 segments should be also examined.
 

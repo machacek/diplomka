@@ -297,7 +297,7 @@ comparisons.
 
   \end{center}
 
-  \caption[Correlations between the segment-level judgments and sentence-level
+  \caption[Correlations of the segment-level and the sentence-level
   judgments]{Kendall's $\tau$ correlations between the segment-level and
     sentence-level judgments. For a given system we computed the correlation on
     all pairwise comparisons including the given system. Table
@@ -438,7 +438,7 @@ sentence-level judgments are a much more severe problem.
 
 Machine translation systems often translate a given short source segment
 identically.  This was one of our main motivations for ranking translations of
-short segments.  As you saw in the previous chapter, evaluating the annotated
+short segments.  As you saw in the previous section, evaluating the annotated
 systems using the short segments annotations works reasonably well (despite
 there are some shortcomings as described above).  It would be very useful if we
 could use the database of annotations to evaluate also unseen systems. The more
@@ -474,7 +474,6 @@ standard cross validation.
            commercial2         &   0.329 \\
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[commercial1, hits: 0.28]{
@@ -494,7 +493,6 @@ standard cross validation.
            commercial2         &   0.346 \\
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[commercial2, hits: 0.28]{
@@ -514,7 +512,6 @@ standard cross validation.
            commercial1         &   0.386 \\
           \hline
          \end{tabular}
-      \label{}
     }
     
     \subfloat[CU-TectoMT, hits: 0.45]{
@@ -535,7 +532,6 @@ standard cross validation.
 
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[onlineB, hits: 0.52]{
@@ -555,7 +551,6 @@ standard cross validation.
            commercial2         &   0.320 \\
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[onlineA, hits: 0.47]{
@@ -575,7 +570,6 @@ standard cross validation.
            commercial2         &   0.318 \\
           \hline
          \end{tabular}
-      \label{}
     }
     
     \subfloat[cu-funky, hits: 0.74]{
@@ -595,7 +589,6 @@ standard cross validation.
            commercial2         &   0.331 \\
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[cu-bojar, hits: 0.88]{
@@ -615,7 +608,6 @@ standard cross validation.
            commercial2         &   0.346 \\
           \hline
          \end{tabular}
-      \label{}
     }
     \,
     \subfloat[cu-depfix, hits: 0.93]{
@@ -635,7 +627,6 @@ standard cross validation.
            commercial2         &   0.345 \\
           \hline
          \end{tabular}
-      \label{}
     }
 
     \caption[Results of evaluating unseen systems by exact matching]{The
@@ -997,13 +988,11 @@ translation is a point  in a high-dimensional space and candidate translations
 are points around the good translation. Now, let's have a few points around the
 good translation representing the translations in the database. When we get a
 new point it is quite likely in this high-dimensional space that the closest
-point is the good translation. You can see an illustration of this situation in
-two dimensions in Figure \ref{translation-space-illustration}. \XXX{Neni to
-uz moc velke fantazirovani?} If we do not have enough candidates in the
-database it is quite likely that for a given unseen candidate the closest
-candidate is the good translation and not any other candidate translation of
-similar quality. \XXX{V tomto odstavce zamenit good translation za better
-translation, zmenit obrazek?}
+point will be the good translation. You can see an illustration of this
+situation in two dimensions in Figure \ref{translation-space-illustration}. If
+we do not have enough candidates in the database it is quite likely that for a
+given unseen candidate the closest candidate is the good translation and not
+any other candidate translation of similar quality.
 
 \begin{figure}
     \begin{center}
@@ -1035,39 +1024,12 @@ counts with respect to the edit distance to the closest segment plotted in Figur
         \includegraphics[width=14cm]{img/absolute-counts-per-distance.pdf}
     \end{center}
 
-    \caption[Absolute counts of matched segments with respect to the edit distance]
+    \caption[Counts of matched segments with respect to the edit distance]
     {Absolute counts of segments with respect to the edit distance to the closest
     segment}
 
     \label{absolute-counts-per-distance}
 \end{figure}
-
-
-To support the above statement (that the closest segment to an unseen candidate
-is more likely to be of better quality) we have performed the following
-analysis: For each left-out system we computed how often the closest segment
-has better, equal or worse rank than the ``unseen'' segment (We can actually do
-that, because we know the true rank of the segment removed from the database).
-We computed these relative frequencies only on the missed segments (the closest
-segment was not the same segment). You can see this analysis performed for the
-individual systems in Table \ref{edit-distance-matching-analysis}.  In total,
-more than a half of the closest segments have a better rank than the original
-segments and only 20.6 \% of the segments have the same rank. This is very poor
-because it means that our approximation method which ranks unseen translations
-has the accuracy of only 20.6 \%. This accuracy does not differ much for
-individual systems but there is an expected trend of similar systems (cu-bojar,
-cu-depfix) having this accuracy slightly higher. 
-
-You can also see how these relative frequencies vary with the change of the edit
-distance in Figure \ref{better-worse-equal-with-edit-distance}.  As you can
-see, the relative number of closest systems which are ranked better grows quite
-significantly with the edit distance. The relative number of the worse segments
-is quite stable (around 0.3) and does not change significantly with the edit
-distance. The relative number of closest segments which are equally ranked as
-the source segment is decreasing with the edit distance. For example, for the
-segments whose edit distance to the closest segment is 17, only 10 percent of
-the closest segments is equally ranked, which is very poor. 
-
 
 \begin{table}
 \centering
@@ -1091,9 +1053,9 @@ the closest segments is equally ranked, which is very poor.
 \end{tabular}
 
 
-\caption[Comparisons of unseen and the closest systems]{Comparisons of unseen
-and the closest system. This table shows how often the closest segment in the
-database was worse, equally good or better than the original ``unseen''
+\caption[Comparisons of the unseen and the closest segments]{Comparisons of the unseen
+and the closest segments' ranks. This table shows how often the rank of the closest segment in the
+database was worse, equal or better than the original rank of the ``unseen''
 segment. These relative frequencies were computed only on the missed segments
 (which weren't already in the database).}
 
@@ -1105,13 +1067,41 @@ segment. These relative frequencies were computed only on the missed segments
         \includegraphics[width=14cm]{img/per-distance.pdf}
     \end{center}
 
-    \caption[Comparisons of unseen and the closest systems with respect to the
-    edit distance]{Comparisons of ranks of the unseen and the closest segments
-        with respect to the edit distance. The results in this figure are
-        computed on all of the systems.}
+    \caption[Comparisons of the unseen and the closest segments]{Comparisons of
+      the unseen and the closest segments' ranks with respect to the edit
+  distance. The results in this figure are computed on all of the systems.}
 
     \label{better-worse-equal-with-edit-distance}
 \end{figure}
+
+
+To support the above statement (that the closest segment to an unseen candidate
+is more likely to be of better quality) we have performed the following
+analysis: For each left-out system we computed how often the closest segment
+has better, equal or worse rank than the ``unseen'' segment (We can actually do
+that, because we know the true rank of the segment removed from the database).
+We computed these relative frequencies only on the missed segments (the closest
+segment was not the same segment). You can see this analysis performed for the
+individual systems in Table \ref{edit-distance-matching-analysis}.  In total,
+more than a half of the closest segments have a better rank than the original
+segments and only 20.6 \% of the segments have the same rank. This is very poor
+because it means that our approximation method which ranks unseen translations
+has the accuracy of only 20.6 \%. This accuracy does not differ much for
+individual systems but there is an expected trend of similar systems (cu-bojar,
+cu-depfix) having this accuracy slightly higher. 
+
+
+You can also see how these relative frequencies vary with the change of the edit
+distance in Figure \ref{better-worse-equal-with-edit-distance}.  As you can
+see, the relative number of closest systems which are ranked better grows quite
+significantly with the edit distance. The relative number of the worse segments
+is quite stable (around 0.3) and does not change significantly with the edit
+distance. The relative number of closest segments which are equally ranked as
+the source segment is decreasing with the edit distance. For example, for the
+segments whose edit distance to the closest segment is 17, only 10 percent of
+the closest segments is equally ranked, which is very poor. 
+
+
 
 
 
@@ -1156,7 +1146,7 @@ results and the main cause of this failure seems to be that the systems tend to
 agree on better translations and their translations tend to be more similar to
 better translations in the database so we cannot predict their rank accurately. 
 
-\subsection{Enhancing reference translation with good candidates from the database}
+\subsection{Enhancing Reference Translation}
 \label{enhancing:bleu}
 
 Following the conclusions from the previous two subsections, it seems that
@@ -1220,7 +1210,7 @@ introduce the metric and then we are going to customize it for our experiment.
 
   \end{center}
 
-  \caption[Overall system ranking according to \metric{SegRanksBLEU} and
+  \caption[Overall ranking according to \metric{SegRanksBLEU} and
   \metric{BLEU} scores]{Overall system ranking according to
   \metric{SegRanksBLEU} and \metric{BLEU} scores. Please see Chapter
   \ref{metrics} for the details of computation of the reported correlations.}
@@ -1425,7 +1415,7 @@ optimization problem:
 \end{equation}
 
 When we apply the line equation \ref{eq:line} in the argmax operator which
-choses the best translation in the equation \ref{eq:sentence-translation}, we
+chooses the best translation in the equation \ref{eq:sentence-translation}, we
 get the following.
 
 \begin{eqnarray}
@@ -1544,10 +1534,10 @@ task, but we use their system in the state it was before the tuning to tune it o
 
 We used the implementation of MERT which is distributed with Moses
 toolkit\footnote{\url{http://www.statmt.org/moses/}}. It is implemented in C++
-and new metrics are created by subclassing the base \pojem{Scorer} class. Since
+and new metrics are created by subclassing the base \textit{Scorer} class. Since
 the annotated database is stored in Python data structures and since a
 development in Python is much easier and faster, we have implemented new
-\pojem{PythonScorer} which is a universal wrapper around an arbitrary Python
+\textit{PythonScorer} which is a universal wrapper around an arbitrary Python
 scorer class, implemented using the Python C API.
 
 
@@ -1669,8 +1659,8 @@ However, there certainly exist better translations.
 
 We should say here, that this experiment should be performed more precisely to
 obtain reliable results. The problem with MERT is that it is not
-deterministic in two aspects: a) MERT method can converge to only a local
-optimum, this depends on the point it started. b) The used implementation of
+deterministic in two aspects: First, MERT method can converge to only a local
+optimum, this depends on the point it started. Second, the used implementation of
 Powell's algorithm optimize the metric value along the axis and also along
 random lines. Two MERT runs with different random seed can therefore find
 different weights. The fact that system tuned to \metric{PenalizeUnknown} was

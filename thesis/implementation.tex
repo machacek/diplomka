@@ -18,6 +18,15 @@ database. It allows to manipulate with data using an object interface. There
 is no need to write SQL queries manually, all manipulations with data objects are
 translated to SQL automatically on background. 
 
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=12cm]{img/model.pdf}
+    \end{center}
+
+    \caption{Database model}
+    \label{model}
+\end{figure}
+
 The database model is implemented in \texttt{segranks/model.py} using the
 Django's model API. You can see the model illustrated in Figure \ref{model}.
 
@@ -48,19 +57,11 @@ Because there were some changes of the database model during the development,
 we use \textit{South} to track the database changes and easily migrate the
 data.
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=12cm]{img/model.pdf}
-    \end{center}
-
-    \caption{Database model}
-    \label{model}
-\end{figure}
 
 \section{Views}
 
 Application URLs are mapped to individual views in file
-\texttt{segranks/views.py}. All views are implemented as classes in file
+\texttt{segranks/urls.py}. All views are implemented as classes in file
 \texttt{segranks/views.py}. There are three important views.
 
 The simplest one is \textit{ProjectListView}, which lists all available
