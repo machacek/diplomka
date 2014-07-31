@@ -323,6 +323,15 @@ in the precision computation, a one is added:
 
 \subsection{WER}
 
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=10cm]{img/wer-grid.pdf}
+    \end{center}
+
+    \caption{An example of WER alignment grid}
+    \label{wer-grid}
+\end{figure}
+
 Word Error Rate metric is based on an edit distance. It is similar to the Levenshtein
 distance but the edit operations work with tokens instead of characters and the edit
 distance is normalized by the length of the reference $r$:
@@ -344,14 +353,6 @@ The minimal sequence can be easily computed using a dynamic programing algorithm
 This computation can be visualized with an alignment grid which you can see
 in Figure \ref{wer-grid}.
 
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=10cm]{img/wer-grid.pdf}
-    \end{center}
-
-    \caption{An example of WER alignment grid}
-    \label{wer-grid}
-\end{figure}
 
 \subsection{CDER}
 
@@ -567,8 +568,37 @@ for these directions are also very poor.
 %\subsection{PER}
 %\subsection{RED}
 %\subsection{tBLEU}
-\subsection{UPC}
-\subsection{VERTa}
+\subsection{UPC-STOUT and UPC-IPA}
+
+\parcite{wmt14-metric-upc} combine various metrics implemented in the
+\textsc{Asiya} toolkit.\footnote{\url{http://nlp.lsi.upc.edu/asiya/}}. The set
+of metrics they use contains 6 lexical based metrics (\metric{WER},
+\metric{PER}, \metric{TER}, \metric{METEOR-exact}, etc.), 2 shallow parsing
+based metrics, 5 constituency parsing based metrics, 5 dependency parsing based
+metrics, 4 semantic roles based metrics, 1 explicit-semantic metric, 3
+alignment metrics and 5 source-based metrics.
+
+One of the interesting metrics is the explicit-semantic metric ESA. It requires
+large collection of Wikipedia articles $W$. For both the candidate and
+reference translations, the cosine similarity (borrowed from the field of
+Information Retrieval) between the translation and each Wikipedia article is
+computed:
+\begin{eqnarray*}
+  \vect{r} & = & \left(\simi(r,w); \forall w \in W  \right)\\
+  \vect{c} & = & \left(\simi(c,w); \forall w \in W  \right)\\
+\end{eqnarray*}
+The ESA score is then computed as the cosine similarity of these
+two vectors:
+\begin{equation*}
+  ESA = \simi(\vect{r}, \vect{c})
+\end{equation*}
+
+The first variant, \metric{UPC-STOUT}, is defined as the uniformly weighted
+linear interpolation of the best performing metrics (measured on previous years
+metrics data). The second variant, \metric{UPC-IPA} is a light version of
+\metric{UPC-STOUT}.  It considers only metrics which require no or little
+language resources.
+
 
 \section{System-Level Metric Analysis}
 \label{system-level}
