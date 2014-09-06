@@ -120,7 +120,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{WMT Official Evaluation}
+\begin{frame}{WMT Official Evaluation Method}
     \begin{itemize}
         \item Judges rank whole sentences relatively to each other
         \item Difficult and slow for long sentences
@@ -131,7 +131,7 @@
 \end{frame}
 
     
-\begin{frame}{SegRanks - The Proposed Method}
+\begin{frame}{SegRanks - Proposed Method}
     \begin{itemize}
         \item Split sentences into shorter segments
         \item Merge identical candidate segments produced by different systems
@@ -154,18 +154,13 @@
     %\end{center}
 %\end{frame}
 
-\begin{frame}{Annotator Agreements}
+\begin{frame}{Experiments 1/3}
     \begin{itemize}
+        \item A large evaluation experiment on EN-CS WMT14 data conducted
+        \item The overall ranking of MT systems obtained by this method is very similar
+            to the official WMT system ranking
         \item To estimate robustness of the annotation method, I measured annotator agreements
-        \item The agreements are normalized using Coehn's $\kappa$
     \end{itemize}
-%        \begin{cvarblock}[5cm]{Coehn's $\kappa$}
-%        \begin{center}
-%            \begin{equation*}
-%                \kappa = \frac{P(A) - P(E)}{1 - P(E)} 
-%            \end{equation*}
-%        \end{center}
-%        \end{cvarblock}
     \begin{cvarblock}[8cm]{Annotator Agreements}
     \begin{center}
         \begin{tabular}{r|cc}
@@ -178,16 +173,32 @@
     \end{cvarblock}
 \end{frame}
 
+\begin{frame}{Experiments 2/3}
+    \begin{itemize}
+        \item I tried to reuse the collected annotations to evaluate new, unseen sentences in several experiments
+        \item 
+        \item 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Experiments 3/3}
+    \begin{itemize}
+        \item I tried to reuse the collected annotations to evaluate new, unseen sentences in several experiments
+        \item 
+        \item 
+    \end{itemize}
+\end{frame}
     
 \begin{frame}{Metrics Task in a Nutshell}
     \vspace{-0.5em}
     \begin{center}
-    \includegraphics<2>[width=10cm]{metrics-task-diagram-1.png}
-    \includegraphics<3>[width=10cm]{metrics-task-diagram-2.png}
-    \includegraphics<4>[width=10cm]{metrics-task-diagram-3.png}
-    \includegraphics<5>[width=10cm]{metrics-task-diagram-4.png}
-    \includegraphics<6>[width=10cm]{metrics-task-diagram-5.png}
-    \includegraphics<7>[width=10cm]{metrics-task-diagram-6.png}
+%    \includegraphics<2>[width=10cm]{metrics-task-diagram-1.png}
+%    \includegraphics<3>[width=10cm]{metrics-task-diagram-2.png}
+%    \includegraphics<4>[width=10cm]{metrics-task-diagram-3.png}
+%    \includegraphics<5>[width=10cm]{metrics-task-diagram-4.png}
+%    \includegraphics<6>[width=10cm]{metrics-task-diagram-5.png}
+%    \includegraphics<7>[width=10cm]{metrics-task-diagram-6.png}
+    \includegraphics[width=10cm]{metrics-task-diagram-6.png}
    \end{center}
 \end{frame}
 
@@ -196,7 +207,7 @@
     \begin{columns}[T]
         \begin{column}{8cm}
           \begin{itemize}
-            \item System level
+              \item \textbf{System level}
             \begin{itemize}
 
               \item Participants compute one score for the whole test set, as
@@ -212,12 +223,12 @@
           \end{center}
       \end{column}
   \end{columns}
-  \pause
-  \vspace{1em}
+  %\pause
+  \vspace{0.5em}
   \begin{columns}
       \begin{column}{8cm}
           \begin{itemize}
-            \item Sentence level
+              \item \textbf{Sentence level}
             \begin{itemize}
               \item Participants compute one score for each sentence of
                   each system's translation
