@@ -157,15 +157,15 @@
 \begin{frame}{Annotator Agreements}
     \begin{itemize}
         \item To estimate robustness of the annotation method, I measured annotator agreements
-        \item The agreements were normalized using Coehn's $\kappa$
+        \item The agreements are normalized using Coehn's $\kappa$
     \end{itemize}
-        \begin{cvarblock}[5cm]{Coehn's $\kappa$}
-        \begin{center}
-            \begin{equation*}
-                \kappa = \frac{P(A) - P(E)}{1 - P(E)} 
-            \end{equation*}
-        \end{center}
-        \end{cvarblock}
+%        \begin{cvarblock}[5cm]{Coehn's $\kappa$}
+%        \begin{center}
+%            \begin{equation*}
+%                \kappa = \frac{P(A) - P(E)}{1 - P(E)} 
+%            \end{equation*}
+%        \end{center}
+%        \end{cvarblock}
     \begin{cvarblock}[8cm]{Annotator Agreements}
     \begin{center}
         \begin{tabular}{r|cc}
@@ -201,8 +201,8 @@
 
               \item Participants compute one score for the whole test set, as
                   translated by each of the systems
-              \item The correlation of these scores with systems'
-                  official human scores was measured
+              \item Pearson correlation coefficient between these scores and
+                  official human scores is computed
             \end{itemize}
           \end{itemize}
       \end{column}
@@ -217,12 +217,12 @@
   \begin{columns}
       \begin{column}{8cm}
           \begin{itemize}
-            \item Segment level
+            \item Sentence level
             \begin{itemize}
               \item Participants compute one score for each sentence of
                   each system's translation
-              \item The correlation of these scores with pairwise
-                  human judgements was measured 
+              \item Kendall's $\tau$ correlation coefficient of pairwise comparisons given
+                  by humans and the metric is computed
             \end{itemize}
           \end{itemize}
       \end{column}
@@ -240,81 +240,64 @@
         \begin{itemize}
             \item Most of them are described in the thesis
         \end{itemize}
+        \vspace{0.5em}
+        \item Introduced and discussed several changes towards fairer metaevaluation
+        \begin{itemize}
+            \item Changed correlation measure in the system level task
+            \item Metric ties considered neither concordant nor discordant in the sentence level
+        \end{itemize}
+        \vspace{0.5em}
+
+        \item Scripts published together with human judgments
+        \begin{itemize}
+            \item Anyone can reproduce the results and use it to evaluate new metrics
+        \end{itemize}
+        \vspace{0.5em}
+        \item Chef's tips for metric developers:
+        \begin{itemize}
+            \item Use features from various linguistic layers
+            \item Tune parameters of your metric
+        \end{itemize}
+          \hfill\raisebox{0pt}[0pt][0pt]{\includegraphics[width=2cm]{chef_says_okay.png}}
     \end{itemize}
 \end{frame}
 
 
-\def\hi#1{\textbf{\textcolor{blue}{#1}}}
-
-\begin{frame}{System-Level Correlations into English}
-  \vspace{-0.5em}
-  \begin{center}
-  \footnotesize
-    \begin{tabular}{r|cccccc}
-\textbf{From} & \textbf{fr} & \textbf{de} & \textbf{hi} & \textbf{cs} & \textbf{ru} & \textbf{Avg} \\
-\hline
-
- \metric{DiscoTK-party-tuned} & \rangeA{.98}        & \best{\rangeB{.94}} & \rangeA{.96}        & \rangeA{.97}        & \best{\rangeC{.87}} & \best{\rangeB{.94}}\\
- \metric{LAYERED}             & \rangeA{.97}        & \rangeC{.89}        & \best{\rangeA{.98}} & \rangeB{.94}        & \rangeC{.85}        & \rangeB{.93}      \\
- \metric{DiscoTK-party}       & \rangeA{.97}        & \rangeB{.92}        & \rangeC{.86}        & \rangeA{.98}        & \rangeC{.86}        & \rangeB{.92}       \\
- \metric{UPC-STOUT}           & \rangeA{.97}        & \rangeB{.91}        & \rangeC{.90}        & \rangeB{.95}        & \rangeD{.84}        & \rangeB{.91}       \\
- \metric{VERTa-W}             & \rangeA{.96}        & \rangeC{.87}        & \rangeB{.92}        & \rangeB{.93}        & \rangeD{.85}        & \rangeB{.91}       \\
- \metric{VERTa-EQ}            & \rangeA{.96}        & \rangeC{.85}        & \rangeB{.93}        & \rangeB{.94}        & \rangeD{.84}        & \rangeB{.90}       \\
- \metric{tBLEU}               & \rangeA{.95}        & \rangeD{.83}        & \rangeA{.95}        & \rangeA{.96}        & \rangeD{.80}        & \rangeC{.90}       \\
- \metric{BLEU-NRC}            & \rangeA{.95}        & \rangeD{.82}        & \rangeA{.96}        & \rangeB{.95}        & \rangeE{.79}        & \rangeC{.89}       \\
- \baseline{BLEU}                & \rangeA{.95}        & \rangeD{.83}        & \rangeA{.96}        & \rangeB{.91}        & \rangeE{.79}        & \rangeC{.89}       \\
- \metric{UPC-IPA}             & \rangeA{.97}        & \rangeC{.89}        & \rangeB{.91}        & \rangeD{.82}        & \rangeD{.81}        & \rangeC{.88}       \\
- \baseline{CDER}                & \rangeA{.95}        & \rangeD{.82}        & \rangeD{.83}        & \rangeA{.97}        & \rangeD{.80}        & \rangeC{.87}       \\
- \metric{APAC}                & \rangeA{.96}        & \rangeD{.82}        & \rangeE{.79}        & \rangeA{.98}        & \rangeD{.82}        & \rangeC{.87}       \\
- \metric{REDSys}              & \best{\rangeA{.98}} & \rangeC{.90}        & \rangeF{.68}        & \rangeA{.99}        & \rangeD{.81}        & \rangeC{.87}       \\
- \metric{REDSysSent}          & \rangeA{.98}        & \rangeB{.91}        & \rangeF{.64}        & \best{\rangeA{.99}} & \rangeD{.81}        & \rangeC{.87}       \\
- \baseline{NIST}                & \rangeA{.96}        & \rangeD{.81}        & \rangeE{.78}        & \rangeA{.98}        & \rangeD{.80}        & \rangeC{.87}       \\
- \metric{DiscoTK-light}       & \rangeA{.96}        & \rangeB{.93}        & \rangeF{.56}        & \rangeA{.95}        & \rangeE{.79}        & \rangeD{.84}       \\
- \metric{Meteor}              & \rangeA{.98}        & \rangeB{.93}        & \rangeF{.46}        & \rangeA{.98}        & \rangeD{.81}        & \rangeD{.83}       \\
- %\metric{TER}                 & \rangeA{.95}        & \rangeE{.77}        & \rangeF{.62}        & \rangeA{.98}        & \rangeD{.81}        & \rangeD{.83}      \\
- \baseline{WER}                 & \rangeA{.95}        & \rangeE{.76}        & \rangeF{.61}        & \rangeA{.97}        & \rangeD{.81}        & \rangeD{.82}       \\
- \metric{AMBER}               & \rangeB{.95}        & \rangeB{.91}        & \rangeF{.51}        & \rangeF{.74}        & \rangeE{.80}        & \rangeE{.78}       \\
- %\metric{PER}                 & \rangeB{.95}        & \rangeC{.87}        & \rangeF{.41}        & \rangeC{.88}        & \rangeE{.80}        & \rangeE{.78}      \\
- \metric{ELEXR}               & \rangeA{.97}        & \rangeC{.86}        & \rangeF{.54}        & \rangeB{.94}        & \rangeF{-.40}       & \rangeF{.58}       \\
-% XXX Metriky TER a PER jsou schovany, nevadi?
-
-    \end{tabular}
-  \end{center}
-\end{frame}
-
-\def\hash{\ensuremath{\bigstar}}
-
-
-\begin{frame}{Overall Summary}
-
-  \begin{itemize}
-  \item Metrics task still interesting! (12 teams took part.)
-  \item (But the results are hard to interpret.)
-  \item System-level correlations in the 0.8 -- 1.0 range
-  \item Segment-level still poor: around 0.4
-  \end{itemize}
-  
-  \pause
-  
-  Chef's tips for evaluation:
-  \hfill\raisebox{0pt}[0pt][0pt]{\includegraphics[width=2cm]{chef_says_okay.png}}
-  % rict, ze to je black art and rather a matter of taste than a justified claim; or a random list of things worth trying out
-
-  
-  \begin{itemize}
-    \item System-level
-    \begin{itemize}
-        \item into English: \metric{DiscoTK-party-tuned}, \metric{LAYERED}, \metric{UPC-STOUT}
-        \item out of English: \baseline{NIST}, \baseline{CDER}, \metric{AMBER}
-    \end{itemize}
-    \item Segment-level
-    \begin{itemize}
-        \item into English: \metric{DiscoTK-party-tuned}, \metric{BEER}, \metric{REDcombSent}
-        \item out of English: \metric{BEER}, \metric{Meteor}, \metric{AMBER}
-    \end{itemize}
-  \end{itemize}
-  
-\end{frame}
-
+%\def\hi#1{\textbf{\textcolor{blue}{#1}}}
+%\begin{frame}{System-Level Correlations into English}
+%  \vspace{-0.5em}
+%  \begin{center}
+%  \footnotesize
+%    \begin{tabular}{r|cccccc}
+%\textbf{From} & \textbf{fr} & \textbf{de} & \textbf{hi} & \textbf{cs} & \textbf{ru} & \textbf{Avg} \\
+%\hline
+%
+% \metric{DiscoTK-party-tuned} & \rangeA{.98}        & \best{\rangeB{.94}} & \rangeA{.96}        & \rangeA{.97}        & \best{\rangeC{.87}} & \best{\rangeB{.94}}\\
+% \metric{LAYERED}             & \rangeA{.97}        & \rangeC{.89}        & \best{\rangeA{.98}} & \rangeB{.94}        & \rangeC{.85}        & \rangeB{.93}      \\
+% \metric{DiscoTK-party}       & \rangeA{.97}        & \rangeB{.92}        & \rangeC{.86}        & \rangeA{.98}        & \rangeC{.86}        & \rangeB{.92}       \\
+% \metric{UPC-STOUT}           & \rangeA{.97}        & \rangeB{.91}        & \rangeC{.90}        & \rangeB{.95}        & \rangeD{.84}        & \rangeB{.91}       \\
+% \metric{VERTa-W}             & \rangeA{.96}        & \rangeC{.87}        & \rangeB{.92}        & \rangeB{.93}        & \rangeD{.85}        & \rangeB{.91}       \\
+% \metric{VERTa-EQ}            & \rangeA{.96}        & \rangeC{.85}        & \rangeB{.93}        & \rangeB{.94}        & \rangeD{.84}        & \rangeB{.90}       \\
+% \metric{tBLEU}               & \rangeA{.95}        & \rangeD{.83}        & \rangeA{.95}        & \rangeA{.96}        & \rangeD{.80}        & \rangeC{.90}       \\
+% \metric{BLEU-NRC}            & \rangeA{.95}        & \rangeD{.82}        & \rangeA{.96}        & \rangeB{.95}        & \rangeE{.79}        & \rangeC{.89}       \\
+% \baseline{BLEU}                & \rangeA{.95}        & \rangeD{.83}        & \rangeA{.96}        & \rangeB{.91}        & \rangeE{.79}        & \rangeC{.89}       \\
+% \metric{UPC-IPA}             & \rangeA{.97}        & \rangeC{.89}        & \rangeB{.91}        & \rangeD{.82}        & \rangeD{.81}        & \rangeC{.88}       \\
+% \baseline{CDER}                & \rangeA{.95}        & \rangeD{.82}        & \rangeD{.83}        & \rangeA{.97}        & \rangeD{.80}        & \rangeC{.87}       \\
+% \metric{APAC}                & \rangeA{.96}        & \rangeD{.82}        & \rangeE{.79}        & \rangeA{.98}        & \rangeD{.82}        & \rangeC{.87}       \\
+% \metric{REDSys}              & \best{\rangeA{.98}} & \rangeC{.90}        & \rangeF{.68}        & \rangeA{.99}        & \rangeD{.81}        & \rangeC{.87}       \\
+% \metric{REDSysSent}          & \rangeA{.98}        & \rangeB{.91}        & \rangeF{.64}        & \best{\rangeA{.99}} & \rangeD{.81}        & \rangeC{.87}       \\
+% \baseline{NIST}                & \rangeA{.96}        & \rangeD{.81}        & \rangeE{.78}        & \rangeA{.98}        & \rangeD{.80}        & \rangeC{.87}       \\
+% \metric{DiscoTK-light}       & \rangeA{.96}        & \rangeB{.93}        & \rangeF{.56}        & \rangeA{.95}        & \rangeE{.79}        & \rangeD{.84}       \\
+% \metric{Meteor}              & \rangeA{.98}        & \rangeB{.93}        & \rangeF{.46}        & \rangeA{.98}        & \rangeD{.81}        & \rangeD{.83}       \\
+% %\metric{TER}                 & \rangeA{.95}        & \rangeE{.77}        & \rangeF{.62}        & \rangeA{.98}        & \rangeD{.81}        & \rangeD{.83}      \\
+% \baseline{WER}                 & \rangeA{.95}        & \rangeE{.76}        & \rangeF{.61}        & \rangeA{.97}        & \rangeD{.81}        & \rangeD{.82}       \\
+% \metric{AMBER}               & \rangeB{.95}        & \rangeB{.91}        & \rangeF{.51}        & \rangeF{.74}        & \rangeE{.80}        & \rangeE{.78}       \\
+% %\metric{PER}                 & \rangeB{.95}        & \rangeC{.87}        & \rangeF{.41}        & \rangeC{.88}        & \rangeE{.80}        & \rangeE{.78}      \\
+% \metric{ELEXR}               & \rangeA{.97}        & \rangeC{.86}        & \rangeF{.54}        & \rangeB{.94}        & \rangeF{-.40}       & \rangeF{.58}       \\
+%% XXX Metriky TER a PER jsou schovany, nevadi?
+%
+%    \end{tabular}
+%  \end{center}
+%\end{frame}
 
 \end{document}
