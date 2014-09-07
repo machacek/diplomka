@@ -1,5 +1,6 @@
 \documentclass{beamer}
 
+\usepackage[czech]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[normalem]{ulem}
 \usepackage{mathtools}
@@ -60,10 +61,10 @@
 
 \beamertemplatenavigationsymbolsempty
 
-\title{Measures of Machine Translation Quality}
-\subtitle{Diploma Thesis}
+\title{Měření kvality strojového překladu}
+\subtitle{Diplomová práce}
 \author{Matouš Macháček}
-\institute[CUNI]{Charles University in Prague}
+\institute[UK]{Univerzita Karlova v Praze}
 \date{2014}
 % \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
 % \logo{\pgfuseimage{university-logo}}
@@ -74,58 +75,58 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{MT Evaluation}
+\begin{frame}{Evaluace strojového překladu}
     \begin{itemize}
-        \item MT Evaluation is very important
+        \item Evaluace strojového překladu je velmi důležitá
         \begin{itemize}
-            \item You have to measure improvement of your system
+            \item Při vývoji systému strojového překladu je potřeba měřit zlepšní
         \end{itemize}
         \vspace{0.5em}
-        \item Very difficult task
+        \item Na rozdíl od jiných úloh NLP je to velmi obtížné
         \begin{itemize}
-            \item Not possible to match a candidate to the single correct translation
-            \item Hundreds of thousands of correct translations of an average sentence
+            \item V úloze rozpoznání řeči máme obvykle jediný správý přepis věty
+            \item Správných překladů dané věty je však velmi mnoho
         \end{itemize}
         \vspace{0.5em}
-        \item Two fundamental approaches 
+        \item Dva základní přístupy
         \begin{itemize}
-            \item \textbf{Manual Evaluation} - Human annotators judge a quality of the candidate translation
-            \item \textbf{Automatic Evaluation} - An automatic metric automatically compare the candidate
-                with a reference translation (produced by human translators)
+            \item \textbf{Manuální evaluace} - Lidé hodnotí kvalitu přeložených vět ručně
+            \item \textbf{Automatická evaluace} - Automatická metrika měří podobnost
+                s~referenčním překladem
 
         \end{itemize}
         
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Thesis Goals}
+\begin{frame}{Cíle diplomové práce}
     \begin{itemize}
-        \item Both approaches are explored in this thesis
+        \item V diplomové práci zkoumám oba přístupy
         \vspace{0.5em}
-    \item \textbf{Manual evaluation}
+    \item \textbf{Manuální evaluace}
         \begin{enumerate}
-            \item Propose a new manual evaluation method
+            \item Navrhnout novou manuální evaluační metodu,
             \begin{itemize}
-                \item This method should be easier for judges, faster and more robust
+                \item která by bude jednodušší a rychlejší pro anotátory a spolehlivější
             \end{itemize}
-            \item Develop a user friendly annotation interface
-            \item Conduct an evaluation experiment
-            \item Reuse the collected annotations to evaluate new, unseen sentences
+            \item Navrhnout uživatelský přívětivé anotační prostředí
+            \item Provést evaluační experiment
+            \item Použít získanou databázi anotací pro evaluaci nových, neviděných vět
         \end{enumerate}
         \vspace{0.5em}
-    \item \textbf{Automatic evaluation}
+    \item \textbf{Automatická evaluace}
         \begin{enumerate}
-            \item Perform a broad comparison of existing automatic metrics
-            \item Compare them qualitatively and quantitatively
-            \item Organize WMT Metrics Task competition
+            \item Provést rešerši existujících metrik
+            \item Porovnat zkoumané metriky kvalitativně i kvantitativně
+            \item Zorganizovat soutěž automatických metrik v rámci WMT
         \end{enumerate}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{WMT Official Evaluation Method}
+\begin{frame}{Stávající evaluační metoda používaná na WMT}
     \begin{itemize}
-        \item Judges rank whole sentences relatively to each other
-        \item Difficult and slow for long sentences
+        \item Anotátoři porovnávají celé věty relativně vůči sobě
+        \item Pro dlouhé věty to může být náročné a pomalé
     \end{itemize}
     \begin{center}
         \includegraphics[width=6cm]{rankingtask.png}
@@ -133,18 +134,18 @@
 \end{frame}
 
     
-\begin{frame}{SegRanks - Proposed Method}
+\begin{frame}{SegRanks - Navrhovaná metoda}
     \begin{itemize}
-        \item Split sentences into shorter segments
-        \item Merge identical candidate segments produced by different systems
-        \item Rank translations (relatively to each other) of each source segment separately
+        \item Věta je rozdělena na kratší segmenty (úseky)
+        \item Shodné segmenty vyprodukované různými systémy jsou sjednoceny
+        \item Anotátoři porovnávají pouze krátké segmenty
     \end{itemize}
     \begin{center}
         \includegraphics[width=10cm]{screenshot-small.png}
     \end{center}
 \end{frame}
 
-\begin{frame}{Segment Extraction}
+\begin{frame}{Extrakce segmentů}
     \begin{center}
         \includegraphics[width=10cm]{tree-align.pdf}
     \end{center}
@@ -156,17 +157,15 @@
     %\end{center}
 %\end{frame}
 
-\begin{frame}{Experiments 1/4}
+\begin{frame}{Provedené experimenty 1/4}
     \begin{itemize}
-        \item A large evaluation experiment on EN-CS WMT14 data conducted
-        \item The overall ranking of MT systems obtained by this method is very similar
-            to the official WMT system ranking
-        \item To estimate robustness of the annotation method, I measured annotator agreements
+        \item Provedl jsem evaluační experiment na datech WMT ve směru do češtiny
+        \item Celkové hodnocení systémů získané novou metodou je velmi podobné oficiálnímu WMT hodnocení
     \end{itemize}
-    \begin{cvarblock}[8cm]{Annotator Agreements}
+    \begin{cvarblock}[8cm]{Anotátorské shody}
     \begin{center}
         \begin{tabular}{r|cc}
-            & WMT official & SegRanks \\
+            & WMT & SegRanks \\
             \hline
             intra-annotator $\kappa$ & 0.448 &  0.593      \\
             inter-annotator $\kappa$ & 0.360 &  0.397      \\
@@ -175,52 +174,51 @@
     \end{cvarblock}
 \end{frame}
 
-\begin{frame}{Experiments 2/4}
+\begin{frame}{Provedené experimenty 2/4}
     \begin{itemize}
-        \item Reuse the collected annotations to evaluate new, unseen sentences
-        \item 58.8 \% of segments of unseen sentences were already annotated
+        \item Využití získané databáze při evaluaci nových, neviděných vět
+        \item 58.8 \% segmentů z nových vět se nachází v databázi
         \vspace{0.5em}
-        \item Computing system scores using only matched segments does not work
+        \item Počítání skóre pouze na těchto segmentech však nefunguje
         \begin{itemize}
-            \item Systems are more likely to agree on better translations 
-            \item Unseen systems are very overestimated
+            \item Překladové systémy se častěji shodnou na kvalitnějších překladech, než na těch horších
+            \item Nové, neviděné překlady jsou proto velmi nadhodnoceny
         \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Experiments 3/4}
+\begin{frame}{Provedené experimenty 3/4}
     \begin{itemize}
-        \item The task is to extrapolate ranks of the unseen segments
-        \item Take the rank of the closest segment (KNN for $k=1$)
-        \item Does not work, the closest segments are usually better
+        \item Potřeba extrapolovat hodnocení i neviděných segmentů
+        \item Přirozené řešení je použít hodnocení nejbližšího segmentu, který je v databázi (KNN pro $k=1$)
+        \item Bohužel nefunguje, nejbližší segmenty mají většinou lepší hodnocení
     \end{itemize}
     \begin{center}
         \includegraphics[width=8cm]{per-distance.pdf}
     \end{center}
 \end{frame}
 
-\begin{frame}{Experiments 4/4}
+\begin{frame}{Provedené experimenty 4/4}
     \begin{itemize}
-        \item Use the collected annotations to tune a statistical MT system
-        \item \textbf{Minimum Error Rate Training} finds optimal weights of loglinear model
+        \item Nakonec jsem použil databázi anotací pro ladění statistického strojového překladače
+        \item Metoda \textbf{MERT} nalezne optimální váhy loglineárního modelu
+        \item Optimalizované překladače použity pro přeložení testovací sady a manuálně vyhodnoceny
     \end{itemize}
-    \begin{cvarblock}{Results}
+    \begin{cvarblock}{Výsledky}
         \begin{center}
-  \begin{tabular}{r|c|cc|cc}
-    & \textbf{\#Mert} & \multicolumn{2}{|c|}{\textbf{Automatic}} & \multicolumn{2}{|c}{\textbf{Manual}} \\
-    & \textbf{iter-} & \multicolumn{2}{|c|}{\textbf{Evaluation}} & \multicolumn{2}{|c}{\textbf{Evaluation}} \\
-    \textbf{Tunable metric} & \textbf{ations} & \textbf{BLEU} & \textbf{CDER}  & \textbf{Better} & \textbf{Worse} \\
+  \begin{tabular}{r|c|cc}
+    \textbf{Metrika použitá k ladění} & \textbf{iterace} & \textbf{Lepší} & \textbf{Horší} \\
     \hline
-    \metric{BLEU} (baseline) & 11 & \textbf{0.1782} & \textbf{0.3855} & --- & --- \\
-    \metric{ExactMatch}      & 20 & 0.1637 & 0.3674 & 22 \% & 38 \% \\
-    \metric{PenalizeUnknown} &  8 & 0.1772 & 0.3850 & \textbf{34 \%} & \textbf{25 \%} \\
-    \metric{SegRanksBLEU}    &  8 & 0.1753 & 0.3835 & 29 \% & 49 \% \\
+    \metric{BLEU} (baseline) & 11 &  --- & --- \\
+    \metric{ExactMatch}      & 20 &  22 \% & 38 \% \\
+    \metric{PenalizeUnknown} &  8 & \textbf{34 \%} & \textbf{25 \%} \\
+    \metric{SegRanksBLEU}    &  8 & 29 \% & 49 \% \\
   \end{tabular}
         \end{center}
     \end{cvarblock}
 \end{frame}
     
-\begin{frame}{Metrics Task in a Nutshell}
+\begin{frame}{Soutěž automatických metrik v kostce}
     \vspace{-0.5em}
     \begin{center}
 %    \includegraphics<2>[width=10cm]{metrics-task-diagram-1.png}
@@ -233,18 +231,16 @@
    \end{center}
 \end{frame}
 
-\begin{frame}{Two subtasks}
+\begin{frame}{Dvě podúlohy}
     %\pause
     \begin{columns}[T]
         \begin{column}{8cm}
           \begin{itemize}
-              \item \textbf{System level}
+              \item \textbf{Úrověn systémů}
             \begin{itemize}
-
-              \item Participants compute one score for the whole test set, as
-                  translated by each of the systems
-              \item Pearson correlation coefficient between these scores and
-                  official human scores is computed
+              \item Metrika vyprodukovala jedno skóre pro celý přeložený dokument
+              \item Pro každou metriku jsem vypočítal korelaci mezi metrikou a
+                  oficiálním lidským skórem
             \end{itemize}
           \end{itemize}
       \end{column}
@@ -259,12 +255,10 @@
   \begin{columns}
       \begin{column}{8cm}
           \begin{itemize}
-              \item \textbf{Sentence level}
+              \item \textbf{Úroveň vět}
             \begin{itemize}
-              \item Participants compute one score for each sentence of
-                  each system's translation
-              \item Kendall's $\tau$ correlation coefficient of pairwise comparisons given
-                  by humans and the metric is computed
+              \item Metrika vyprodukovala jedno skóre pro každou přeloženou větu
+              \item Vypočítal jsem korelaci mezi lidskými párovými porovnánimi a těmi danými metrikou
             \end{itemize}
           \end{itemize}
       \end{column}
@@ -276,29 +270,31 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Metrics Task Summary}
+\begin{frame}{Shrnutí soutěže strojových metrik}
     \begin{itemize}
-        \item 23 metrics from 12 research groups, 6 baseline metrics
+        \item 23 metrik od 12 vědeckých týmů, 6 baseline metrik
         \begin{itemize}
-            \item Most of them are described in the thesis
+            \item Většina z nich je popsána v diplomové práci
         \end{itemize}
         \vspace{0.5em}
-        \item Introduced and discussed several changes towards fairer metaevaluation
+        \item Představil jsem a v práci diskutuji některé změny, které vedou ke spravedlivější
+            evaluaci metrik
         \begin{itemize}
-            \item Changed correlation measure in the system level task
-            \item Metric ties considered neither concordant nor discordant in the sentence level
+            \item Změnil jsem korelační míru použitou na úrovni systémů
+            \item Shodne hodnocení metriky není považováno za špatné ani dobré
+            \item Zavedl jsem počítání konfidenčních intervalů
         \end{itemize}
         \vspace{0.5em}
 
-        \item Scripts published together with human judgments
+        \item Zveřejnil jsem všechny skripty společně s testovacími daty
         \begin{itemize}
-            \item Anyone can reproduce the results and use it to evaluate new metrics
+            \item Každý tak může zreprodukovat výsledky nebo vyhodnotit novou metriku
         \end{itemize}
         \vspace{0.5em}
-        \item Chef's tips for metric developers:
+        \item Tipy šéfkuchaře pro vývoj nových metrik:
         \begin{itemize}
-            \item Use features from various linguistic layers
-            \item Tune parameters of your metric
+            \item Používejte rysy z různých jazykových vrstev
+            \item Nezapomeňte ladit parametry své metriky
         \end{itemize}
           \hfill\raisebox{0pt}[0pt][0pt]{\includegraphics[width=2cm]{chef_says_okay.png}}
     \end{itemize}
