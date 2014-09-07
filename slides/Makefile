@@ -1,4 +1,6 @@
-all: main.tex
+all: english.pdf czech.pdf
+
+%.pdf: %.tex
 	pdflatex $<
 
 clean:
