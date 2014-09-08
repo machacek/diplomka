@@ -1,4 +1,4 @@
-all: english.pdf czech.pdf
+all: final.pdf
 
 %.pdf: %.tex
 	pdflatex $<
